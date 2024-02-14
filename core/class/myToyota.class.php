@@ -338,7 +338,7 @@ class myToyota extends eqLogic {
       $output = [];
       $vehicle = [];
   
-      $cmd          = 'nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/synchro.py';
+      $cmd          = 'sudo nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/synchro.py';
       $cmd         .= ' --vin ' . $vin;
       $cmd         .= ' --username ' . $username;
       $cmd         .= ' --loglevel warning';
@@ -381,7 +381,7 @@ class myToyota extends eqLogic {
       $myToyotaPath         	  = realpath(dirname(__FILE__) . '/../../ressources');
       $output = [];
   
-      $cmd          = 'nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/data.py';
+      $cmd          = 'sudo nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/data.py';
       $cmd         .= ' --username ' . $username;
       $cmd         .= ' --loglevel debug';
       $cmdbis       = $cmd . ' --password ********';
@@ -411,7 +411,7 @@ class myToyota extends eqLogic {
       $nomvehicule = str_replace(' ', '_', strval($eqLogic->getName()));
   
       if ($idvehicule!='Aucun' && $idvehicule!=''){
-        $cmd          = 'nice -n 19 ' . $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/myToyotad.py';
+        $cmd          = 'sudo nice -n 19 ' . $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/myToyotad.py';
         $cmd         .= ' --apikey ' . jeedom::getApiKey('myToyota');
         $cmd         .= ' --callback ' . network::getNetworkAccess('internal', 'proto:127.0.0.1:port:comp') . '/plugins/myToyota/core/php/jeemyToyota.php';
         $cmd         .= ' --nomvehicule ' . $nomvehicule;
