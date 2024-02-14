@@ -57,7 +57,7 @@ class myToyota extends eqLogic {
 
   
   // Fonction exécutée automatiquement toutes les 30 minutes par Jeedom
-  public static function cron() {    
+  public static function cron30() {    
     $debug = false;
     $idvehicule = 'Aucun';
     foreach (eqLogic::byType('myToyota', true) as $eqLogic) {
