@@ -1,0 +1,451 @@
+<div id="myToyota_widget_flat_ID" class="eqLogic-widget eqLogic noResize myToyota_widget_flat myToyota_widget_flat_#id# myToyota" style="min-width:400px !important; max-width:400px !important; min-height:670px; max-height:670px; text-align:center; border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="dashboard">
+
+	<div class="text-center widget-name">
+		<span class="reportModeVisible">#name_display# <span class="object_name">#object_name#</span></span>
+	   	<a href="#eqLink#" class="reportModeHidden" style="color:var(--eqTitle-color)!important;"><img class="logo_car#id#" id="logo" src=""></img> #name_display# <span class="object_name">#object_name#</span></a>
+	   	<span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#" onclick="jeedom.cmd.execute({id: #refresh_id#});">
+		   <i class="fas fa-sync" style="color:var(--eqTitle-color)!important;"></i>
+	   	</span>
+	</div>
+			
+	<div class="container-fluid">
+		
+		<div>
+			
+			<div class="col-xs-6" id="tile" style="height:100px; width: 185px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Verrouillage</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-unlock-alt"></i></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#doorLockState_id#"></span></div>
+			</div>
+			
+			<div class="col-xs-6" id="tile" style="height:100px; width:185px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Sécurité</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-shield-alt"></i></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="securisedMode#id#"></span></div>
+			</div>
+			
+			<div class="col-xs-6 all_info_display#id#" id="tile" style="height:100px; width:185px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Toutes les portes</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><img src="plugins/myToyota/core/img/doors_blue.png" style="height:24px"></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#allDoorsState_id#"></span></div>
+			</div>
+			
+			<div class="col-xs-6 all_info_display#id#" id="tile" style="height:100px; width:185px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Toutes les fenêtres</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><img src="plugins/myToyota/core/img/windows_blue.png" style="height:24px"></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#allWindowsState_id#"></span></div>
+			</div>
+							
+			<div class="col-xs-2 cmd-widget" id="tile" style="height:50px; width:80px;">
+				<div id="picture" style="height:30px; width:80px; padding-top: 8px;"><i class="Cmd#presence_id#"></i></div>
+				<div id="distance" style="height:20px; width:80px; padding-top: 3px;"><span class="Cmd#distance_id#"></span></div>
+			</div>
+			
+			<div class="col-xs-10" id="tile" style="height:50px; width:290px;">
+				<div class="col-xs-1"></div>
+				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_oil#id#"><img src="plugins/myToyota/core/img/oil_grey.png" height="40" title="Huile moteur OK"/></span></div>
+				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_brake#id#"><img src="plugins/myToyota/core/img/brake_grey.png" height="40" title="Freins OK"/></span></div>
+				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_tire#id#"><img src="plugins/myToyota/core/img/tire_grey.png" height="40" title="Pression des pneus OK"/></span></div>
+				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_washingfluid#id#"><img src="plugins/myToyota/core/img/washingfluid_grey.png" height="40" title="Liquide de lave-glace OK"/></span></div>
+				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_vehicle#id#"><img src="plugins/myToyota/core/img/vehicle_grey.png" height="40" title="Statut Véhicule OK"/></span></div>
+				<div class="col-xs-1"></div>
+			</div>
+			
+			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Niveau carburant</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-gas-pump"></i></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#remaining_fuel_id#"></span><span id="titre_tile"> %</span></div>
+			</div>
+			
+			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Km restants (thermique)</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-map-pin"></i></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
+			</div>
+			
+			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;"></div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"></div>
+				<div class="col-xs-12" id="hybride_vide" style="height:50px;"><span></span><span> </span></div>				
+			</div>
+							
+			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;"></div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"></div>
+				<div class="col-xs-12" id="hybride_vide" style="height:50px;"><span></span><span> </span></div>				
+			</div>
+							
+			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;"></div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"></div>
+				<div class="col-xs-12" id="hybride_vide" style="height:50px;"><span></span><span> </span></div>				
+			</div>
+							
+			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;"></div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"></div>
+				<div class="col-xs-12" id="hybride_vide" style="height:50px;"><span></span><span> </span></div>				
+			</div>
+							
+			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;"></div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"></div>
+				<div class="col-xs-12" id="hybride_vide" style="height:50px;"><span></span><span> </span></div>				
+			</div>
+
+			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;"></div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"></div>
+				<div class="col-xs-12" id="hybride_vide" style="height:50px;"><span></span><span> </span></div>				
+			</div>
+
+			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Batterie</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-car-battery"></i></div>
+				<div class="col-xs-12 #chargingLevelHv_history#" id="value_tile" style="height:50px;" data-cmd_id="#chargingLevelHv_id#"><span class="Cmd#chargingLevelHv_id#"></span><span id="titre_tile"> %</span></div>				
+			</div>
+							
+			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Km restants (électrique)</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-map-pin"></i></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#beRemainingRangeElectric_id#"></span><span id="titre_tile"> km</span></div>				
+			</div>
+			
+			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Prise</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-plug"></i></div>
+				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#connectorStatus_id#"></span></div>				
+			</div>
+			
+			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">Recharge</div>
+				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-charging-station"></i></div>
+				<div class="col-xs-12" id="value_tile" style="height:30px;"><span class="Cmd#chargingStatus_id#"></span></div>
+				<div class="col-xs-12" id="value_tile_2" style="height:20px;"><span class="Cmd#chargingEndTime_id#"></span></div>					
+			</div>
+
+			<div class="col-xs-12" id="tile" style="height:100px; width:380px;">
+				
+				<div class="col-xs-2" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-cogs"></i></div>
+				<div class="col-xs-10" id="titre_tile_2" style="height:50px;">Actions</div>
+			
+				<!-- <button class="btn cmd action" data-cmd_id="#refresh_id#" title="Rafraichir" onclick="jeedom.cmd.execute({id: #refresh_id#});" style="color: var(--txt-color) !important;"><i class="fa-lg icon fas fa-sync-alt"></i></button> -->
+				<button class="btn cmd action" data-cmd_id="#doorLock_id#" title="Verrouiller" onclick="jeedom.cmd.execute({id: #doorLock_id#});"><i class="fa-lg icon fas fa-lock"></i></button>
+				<button class="btn cmd action" data-cmd_id="#doorUnlock_id#" title="Déverrouiller" onclick="jeedom.cmd.execute({id: #doorUnlock_id#});"><i class="fa-lg icon fas fa-lock-open"></i></button>
+				<button class="btn cmd action" data-cmd_id="#climateNow_id#" title="Ventiler" onclick="jeedom.cmd.execute({id: #climateNow_id#});"><i class="fa-lg icon fas fa-fan"></i></button>
+				<button class="btn cmd action" data-cmd_id="#stopClimateNow_id#" title="Stop Ventiler" onclick="jeedom.cmd.execute({id: #stopClimateNow_id#});"><i class="fa-lg icon fas fa-ban"></i></button>
+				<button id="charge_btn#id#" class="btn cmd action" data-cmd_id="#chargeNow_id#" title="Charger" onclick="jeedom.cmd.execute({id: #chargeNow_id#});"><i class="fa-lg icon fas fa-charging-station"></i></button>
+				<button id="stopcharge_btn#id#" class="btn cmd action" data-cmd_id="#stopChargeNow_id#" title="Stop Charger" onclick="jeedom.cmd.execute({id: #stopChargeNow_id#});"><i class="fa-lg icon fas fa-power-off"></i></button>
+				<button class="btn cmd action" data-cmd_id="#lightFlash_id#" title="Appel de phares" onclick="jeedom.cmd.execute({id: #lightFlash_id#});"><i class="fa-lg icon fas fa-lightbulb"></i></button>
+				<button class="btn cmd action" data-cmd_id="#hornBlow_id#" title="Klaxonner" onclick="jeedom.cmd.execute({id: #hornBlow_id#});"><i class="fa-lg icon fas fa-volume-up"></i></button>
+				<button class="btn cmd action" data-cmd_id="#vehicleFinder_id#" title="Recherche véhicule"><i class="fa-lg icon fas fa-map-marked"></i></button>
+				<script>
+					$('.cmd[data-cmd_id=#vehicleFinder_id#]').on('click', function () {
+						$('#md_modal').dialog({title: "Recherche Véhicule"});
+						$('#md_modal').load('index.php?v=d&plugin=myToyota&modal=VehicleFinder.myToyota&eqLogic_id='+'#id#').dialog('open');
+					});
+				</script>
+				<button class="btn cmd action" data-cmd_id="#sendPOI_id#" title="Envoi POI"><i class="fa-lg icon fas fa-map-marker-alt"></i></button>
+				<script>
+					$('.cmd[data-cmd_id=#sendPOI_id#]').on('click', function () {
+						$('body').append('<div id="mod_sendPOI" style="overflow-x: hidden; overflow-y: hidden;"/>');
+						$("#mod_sendPOI").dialog({
+								title: "Envoi POI",
+								closeText: '',
+								autoOpen: false,
+								modal: true,
+								height: 240,
+								width: 447
+						});
+						//jQuery.ajaxSetup({async: false});
+						$('#mod_sendPOI').load('index.php?v=d&plugin=myToyota&modal=SendPOI.myToyota&eqLogic_id='+'#id#');
+						//jQuery.ajaxSetup({async: true});
+														
+						$('#mod_sendPOI').dialog('open');
+					});
+				</script>
+			</div>
+
+			<div class="col-xs-12" id="column" style="height:25px; width:385px;">
+				<div id="last_update">Dernière connexion avec le véhicule : <span class="Cmd#lastUpdate_id# state"></span></div>
+			</div>
+			
+		</div>
+		
+	</div>
+	
+	#divGraphInfo#
+	
+	<script>
+    
+		//----- Theme colors & optional parameters
+		var logo = $('.logo_car#id#')[0];
+		var source = "";
+		if ( '#vehicle_brand#id##' == 1 )  {
+			//source = "plugins/myToyota/core/img/logo_Toyota_white.png";
+		}
+		if ( '#vehicle_brand#id##' == 2 )  {
+			//source = "plugins/myToyota/core/img/logo_mini_white.png";
+		}
+		//logo.src = source;
+
+		function setTheme#id#() {
+			var link = document.createElement('link');
+			link.type = 'text/css';
+			link.rel = 'stylesheet';
+			
+			if ($('body').attr('data-theme').endsWith('Dark')) {
+				link.href = 'plugins/myToyota/core/template/dashboard/myToyota_dashboard_style_dark.css';
+			}
+			else if ($('body').attr('data-theme').endsWith('Light')) {
+				link.href = 'plugins/myToyota/core/template/dashboard/myToyota_dashboard_style_light.css';
+			}
+			else if ($('body').attr('data-theme').endsWith('Legacy')) {
+				link.href = 'plugins/myToyota/core/template/dashboard/myToyota_dashboard_style_legacy.css';
+			}
+			document.head.appendChild(link);
+		}
+
+		function timedSetTheme#id#(occurence = 0){
+			if ($('.myToyota_widget_flat_#id#').length == 0) {
+				return;
+			}
+			if ( $('body')[0].hasAttribute('data-theme') != true )  {
+				occurence++;
+				if (occurence > 40){
+					return;
+				}
+				setTimeout( () => { timedSetTheme#id#(occurence); }, 500 );
+				return;
+			}
+			setTheme#id#();
+		}
+		
+		if ( $('body')[0].hasAttribute('data-theme') == true )  {
+			setTheme#id#();
+		}
+		else  {
+			timedSetTheme#id#(0);
+		}
+			
+		$('body').on('changeThemeEvent', function (event,theme) {
+			setTheme#id#();
+		});
+		
+		
+		//----- Electric / Combustion / Hybrid
+		if ( '#vehicle_type#id##' == 'Electrique' )  {
+			$('.combustion_engine#id#').hide();
+			//$('.myToyota_widget_flat_#id#').css('min-height', 670);
+			//$('.myToyota_widget_flat_#id#').css('max-height', 670);
+		}
+		if ( '#vehicle_type#id##' == 'Hybride' || '#vehicle_type#id##' == 'Essence')  {
+			$('.electric_engine#id#').hide();
+			//$('.myToyota_widget_flat_#id#').css('min-height', 560);
+			//$('.myToyota_widget_flat_#id#').css('max-height', 560);
+		}
+		if ( '#vehicle_type#id##' != 'Electrique' && '#vehicle_type#id##' != 'Hybride Rechargeable' )  {
+			$('#charge_btn#id#').hide();
+			$('#stopcharge_btn#id#').hide();
+		}
+		
+		//----- Presence
+		jeedom.cmd.update['#presence_id#'] =function(_options) {
+			if ( _options.display_value == 1 )  {
+				$('.Cmd#presence_id#').empty().append('<i class="fas fa-house-user" style="font-size:1.5em;" title="Présence domicile<br/>Oui"></i>');
+			}
+			if ( _options.display_value == 0 )  {
+				$('.Cmd#presence_id#').empty().append('<i class="fas fa-house-user" style="font-size:1.5em; color:rgb(185,58,62);" title="Présence domicile<br/>Non"></i>');
+			}
+		}
+		jeedom.cmd.update['#presence_id#']({display_value: '#presence#'});
+		
+		jeedom.cmd.update['#distance_id#'] =function(_options) {
+			if ( parseFloat(_options.display_value) <= parseFloat('#home_distance#id##' ) )  {
+				if ( parseFloat(_options.display_value) < 1000 ) { $('.Cmd#distance_id#').empty().append('<span>'+ parseFloat(_options.display_value).toFixed(0) +' m</span>'); }
+				else { $('.Cmd#distance_id#').empty().append('<span>'+ (parseFloat(_options.display_value)/1000).toFixed(1) +' km</span>'); }
+			}
+			else { 
+				if ( parseFloat(_options.display_value) < 1000 ) { $('.Cmd#distance_id#').empty().append('<span style="color:rgb(185,58,62) !important;">'+ parseFloat(_options.display_value).toFixed(0) +' m</span>'); }
+				else { $('.Cmd#distance_id#').empty().append('<span style="color:rgb(185,58,62) !important;">'+ (parseFloat(_options.display_value)/1000).toFixed(1) +' km</span>'); }
+			}
+		}
+		jeedom.cmd.update['#distance_id#']({display_value: '#distance#'});
+		
+		
+		//----- Lockstate
+		jeedom.cmd.update['#doorLockState_id#'] = function(_options) {
+			if ( _options.display_value == "UNLOCKED" || _options.display_value == "PARTIALLY_LOCKED" )  {
+				$('.Cmd#doorLockState_id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">Déverrouillé</span>');
+				$('.securisedMode#id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">Non sécurisé</span>');
+			}
+			if ( _options.display_value == "LOCKED" || _options.display_value == "SELECTIVE_LOCKED" )  {
+				$('.Cmd#doorLockState_id#').empty().append('<span>Verrouillé</span>');
+				$('.securisedMode#id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">Non sécurisé</span>');
+			}
+			if (  _options.display_value == "SECURED" )  {
+				$('.Cmd#doorLockState_id#').empty().append('<span>Verrouillé</span>');
+				$('.securisedMode#id#').empty().append('<span>Sécurisé</span>');
+			}
+			if ( _options.display_value == "UNKNOWN" || _options.display_value == "not available" )  {
+				$('.Cmd#doorLockState_id#').empty().append('<span> - </span>');
+				$('.securisedMode#id#').empty().append('<span> - </span>');
+			}
+		}
+		jeedom.cmd.update['#doorLockState_id#']({display_value:'#doorLockState#'});	
+
+			
+		//----- Combustion engine
+		jeedom.cmd.update['#beRemainingRangeFuelKm_id#'] = function(_options) {
+			$('.Cmd#beRemainingRangeFuelKm_id#').empty().append('<span>'+_options.display_value+'</span>');
+		}
+		jeedom.cmd.update['#beRemainingRangeFuelKm_id#']({display_value:'#beRemainingRangeFuelKm#'});
+		
+		jeedom.cmd.update['#remaining_fuel_id#'] = function(_options) {
+			$('.Cmd#remaining_fuel_id#').empty().append('<span>'+_options.display_value+'</span>');
+		}
+		jeedom.cmd.update['#remaining_fuel_id#']({display_value:'#remaining_fuel#'});	
+			
+		
+		//----- Electric engine
+		jeedom.cmd.update['#beRemainingRangeElectric_id#'] = function(_options) {
+			$('.Cmd#beRemainingRangeElectric_id#').empty().append('<span>'+_options.display_value+'</span>');
+		}
+		jeedom.cmd.update['#beRemainingRangeElectric_id#']({display_value:'#beRemainingRangeElectric#'});
+			
+		jeedom.cmd.update['#chargingLevelHv_id#'] = function(_options) {
+			$('.Cmd#chargingLevelHv_id#').empty().append('<span>'+_options.display_value+'</span>');
+		}
+		jeedom.cmd.update['#chargingLevelHv_id#']({display_value:'#chargingLevelHv#'});
+			
+		jeedom.cmd.update['#connectorStatus_id#'] = function(_options) {
+			if ( _options.display_value == "1" )  {			
+				$('.Cmd#connectorStatus_id#').empty().append('<span>Connectée</span>');
+			}
+			if ( _options.display_value == "0" || _options.display_value == "" )  {			
+				$('.Cmd#connectorStatus_id#').empty().append('<span>Déconnectée</span>');
+			}
+		}
+		jeedom.cmd.update['#connectorStatus_id#']({display_value:'#connectorStatus#'});
+				
+		jeedom.cmd.update['#chargingStatus_id#'] = function(_options) {
+			if ( _options.display_value == "DEFAULT" || _options.display_value == "ERROR" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">Erreur</span>');
+			}
+			if ( _options.display_value == "CHARGING" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span>En cours</span>');
+			}
+			if ( _options.display_value == "COMPLETE" || _options.display_value == "FULLY_CHARGED" || _options.display_value == "FINISHED_FULLY_CHARGED" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span>Complète</span>');
+			}
+			if ( _options.display_value == "FINISHED_NOT_FULL" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span>Interrompue</span>');
+			}
+			if ( _options.display_value == "NOT_CHARGING" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span>Aucune</span>');
+			}
+			if ( _options.display_value == "PLUGGED_IN" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span>Branchée</span>');
+			}
+			if ( _options.display_value == "WAITING_FOR_CHARGING" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span>En attente</span>');
+			}
+			if ( _options.display_value == "TARGET_REACHED" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span>Atteinte</span>');
+			}
+			if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" )  {	
+				$('.Cmd#chargingStatus_id#').empty().append('<span> - </span>');
+			}
+		}
+		jeedom.cmd.update['#chargingStatus_id#']({display_value:'#chargingStatus#'});
+		
+		jeedom.cmd.update['#chargingEndTime_id#'] = function(_options) {
+			if ( _options.display_value != "not available" )  {
+				$('.Cmd#chargingEndTime_id#').empty().append('<span>Recharge terminée</br>(100%) à '+_options.display_value+'</span>');
+			}
+			else  {
+				$('.Cmd#chargingEndTime_id#').empty().append('<span></span>');		
+			}
+		}
+		jeedom.cmd.update['#chargingEndTime_id#']({display_value:'#chargingEndTime#'});
+		
+		
+		//----- Doors
+		jeedom.cmd.update['#allDoorsState_id#'] = function(_options) {
+			if ( _options.display_value == "OPEN" )  {
+				$('.Cmd#allDoorsState_id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span>');
+			}
+			if ( _options.display_value == "CLOSED" )  {
+				$('.Cmd#allDoorsState_id#').empty().append('<span>Fermées</span>');
+			}
+			if ( _options.display_value == "UNKNOWN" || _options.display_value == "not available" )  {
+				$('.Cmd#allDoorsState_id#').empty().append('<span> - </span>');
+			}
+		}
+		jeedom.cmd.update['#allDoorsState_id#']({display_value:'#allDoorsState#'});
+		
+
+		//----- Windows
+		jeedom.cmd.update['#allWindowsState_id#'] = function(_options) {
+			if ( _options.display_value == "OPEN" )  {
+				$('.Cmd#allWindowsState_id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span>');
+			}
+			if ( _options.display_value == "CLOSED" )  {
+				$('.Cmd#allWindowsState_id#').empty().append('<span>Fermées</span>');
+			}
+			if ( _options.display_value == "UNKNOWN" || _options.display_value == "not available" )  {
+				$('.Cmd#allWindowsState_id#').empty().append('<span> - </span>');
+			}
+		}
+		jeedom.cmd.update['#allWindowsState_id#']({display_value:'#allWindowsState#'});
+
+
+		//----- Last update
+		jeedom.cmd.update['#lastUpdate_id#'] = function(_options) {
+			if ( _options.display_value == "not available")  { 
+				$('.Cmd#lastUpdate_id#').empty().append('<span>'+"inconnue"+'</span>');
+			}
+			else { $('.Cmd#lastUpdate_id#').empty().append('<span>'+_options.display_value+'</span>'); 
+			}
+		}
+		jeedom.cmd.update['#lastUpdate_id#']({display_value:'#lastUpdate#'});	
+
+
+		//----- Messages
+/*		jeedom.cmd.update['#vehicleMessages_id#'] = function(_options) {
+			var messages = jQuery.parseJSON(_options.display_value);
+			
+			jQuery.each(messages.checkControlMessages,function(key,message){
+				if ( message.type == "ENGINE_OIL" ) {
+					//if ( message.severity == "OK" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_grey.png" height="40" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_orange.png" height="40" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_red.png" height="40" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+				}
+				if ( message.type == "BRAKE_FLUID" ) {
+					//if ( message.severity == "OK" ) { $('.icon_brake#id#').empty().append('<img src="plugins/myToyota/core/img/brake_grey.png" height="40" title="Freins - Criticité : '+message.severity+'<br/>'+message.description+'"/>'); }
+					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_brake#id#').empty().append('<img src="plugins/myToyota/core/img/brake_orange.png" height="40" title="Freins - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_brake#id#').empty().append('<img src="plugins/myToyota/core/img/brake_red.png" height="40" title="Freins - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+				}
+				if ( message.type == "TIRE_PRESSURE" ) {
+					//if ( message.severity == "OK" ) { $('.icon_tire#id#').empty().append('<img src="plugins/myToyota/core/img/tire_grey.png" height="40" title="Pression des pneus - Criticité : '+message.severity+'<br/>'+message.description+'"/>'); }
+					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_tire#id#').empty().append('<img src="plugins/myToyota/core/img/tire_orange.png" height="40" title="Pression des pneus - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_tire#id#').empty().append('<img src="plugins/myToyota/core/img/tire_red.png" height="40" title="Pression des pneus - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+				}
+				if ( message.type == "WASHING_FLUID" ) {
+					//if ( message.severity == "OK" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/washingfluid_grey.png" height="40" title="Liquide de lave-glace - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_washingfluid#id#').empty().append('<img src="plugins/myToyota/core/img/washingfluid_orange.png" height="40"  title="Liquide de lave-glace - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_washingfluid#id#').empty().append('<img src="plugins/myToyota/core/img/washingfluid_red.png" height="40"  title="Liquide de lave-glace - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+				}
+				if ( message.type == "VEHICLE_CHECK" ) {
+					//if ( message.severity == "OK" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/vehicle_grey.png" height="40" title="Véhicule - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/vehicle_orange.png" height="40"  title="Véhicule - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/vehicle_red.png" height="40"  title="Véhicule - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+				}
+			});
+		}
+		jeedom.cmd.update['#vehicleMessages_id#']({display_value:'#vehicleMessages#'});
+*/		
+		
+	</script>
+
+</div>

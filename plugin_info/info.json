@@ -1,0 +1,35 @@
+{
+	"id" : "myToyota",
+	"name" : "myToyota",
+	"description" : {
+		"fr_FR": "Plugin permettant l'interrogation des services myToyota (attention: ne fonctionne pas pour les véhicules encore sous myT) pour Jeedom"
+	},
+	"licence" : "AGPL",
+	"author" : "Noyax37",
+	"require" : "4.2.0",
+	"category" : "devicecommunication",
+	"hasDependency" : true,
+	"hasOwnDeamon" : false,
+	"maxDependancyInstallTime" : 120,
+	"changelog" : "https://jeedom.github.io/plugin-template/#language#/changelog",
+	"documentation" : "https://jeedom.github.io/plugin-template/#language#/",
+	"changelog_beta" : "https://jeedom.github.io/plugin-template/#language#/beta/changelog",
+	"documentation_beta" : "https://jeedom.github.io/plugin-template/#language#/beta/",
+	"link" : {
+		"forum":"Lien vers le forum",
+		"video" : "Lien vers une video"
+	},
+	"language": [
+		"fr_FR"
+	],
+	"compatibility": [
+		"miniplus",
+		"smart",
+		"rpi",
+		"docker",
+		"diy",
+		"mobile",
+		"v4",
+		"atlas"
+	]
+}

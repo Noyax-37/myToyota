@@ -1,0 +1,17 @@
+{
+  "pre-install": {
+  },
+  "apt": {
+  },
+  "pip3": { 
+  },
+  "npm": {
+  },
+  "yarn": {
+  },
+  "plugin": {
+  },
+  "post-install" : {
+    "script" : "plugins/myToyota/ressources/post-install.sh"
+  }
+}
