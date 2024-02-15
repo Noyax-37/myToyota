@@ -39,7 +39,7 @@ async def get_information():
     vehicule["windowPassengerFront"] = 'UNKNOWN'
     vehicule["windowPassengerRear"] = 'UNKNOWN'
     vehicule["allWindowsState"] = 'UNKNOWN'
-    vehicule['trunk_state'] = 'UNKNOW?'
+    vehicule['trunk_state'] = 'UNKNOW'
 
     cars = await client.get_vehicles(metric=True)
     for car in cars:
@@ -124,7 +124,7 @@ async def get_information():
                     vehicule["allWindowsState"] = 'OPEN'
 
             if hasattr(car.lock_status.doors,'trunk'):
-                vehicule['trunk_state'] = car.lock_status.doors.trunk
+                vehicule['trunk_state'] = car.lock_status.doors.trunk.closed
             if hasattr(car.lock_status.hood, 'closed'):
                 vehicule['hood_state'] = car.lock_status.hood.closed
 
@@ -157,8 +157,8 @@ async def get_information():
                 vehicule['vehicleMessages'] = '"' + str(car.notifications[0].message).replace(u'\xa0', u' ') + '"'
             vehicule['gps_coordinates'] = ''
 
-            if hasattr(car.lock_status.last_updated , 'strftime'):
-                vehicule['lastUpdate'] = str(car.lock_status.last_updated.strftime('%d-%m-%Y à %H:%M:%S'))
+            if hasattr(car.location.timestamp , 'strftime'):
+                vehicule['lastUpdate'] = str(car.location.timestamp.strftime('%d-%m-%Y à %H:%M:%S'))
             vehicule['totalEnergyCharged'] = 'UNKNOW'
             vehicule['chargingSessions'] = 'UNKNOW'
 
