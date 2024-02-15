@@ -51,10 +51,10 @@ class myToyota extends eqLogic {
   */
 
   
-  * Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
+  // Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
   public static function cron15() {
     $dt = time();
-    if (date( "i", $dt )=="15"{
+    if (date( "i", $dt )=="15" || date( "i", $dt )=="45") {
       system::kill('myToyotad.py');
     }
   }
