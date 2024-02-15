@@ -50,10 +50,15 @@ class myToyota extends eqLogic {
   public static function cron10() {}
   */
 
-  /*
+  
   * Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
-  public static function cron15() {}
-  */
+  public static function cron15() {
+    $dt = time();
+    if (date( "i", $dt )=="15"{
+      system::kill('myToyotad.py');
+    }
+  }
+  
 
   
   // Fonction exécutée automatiquement toutes les 30 minutes par Jeedom
@@ -120,6 +125,8 @@ class myToyota extends eqLogic {
     $this->createCmd('model', 'Modèle', 2, 'info', 'string'); //car_line_name
     $this->createCmd('year', 'Année', 3, 'info', 'string'); //manufactured_date
     $this->createCmd('type', 'Type', 4, 'info', 'string'); //electrique, hybride, ...
+
+    $this->createCmd('carburant', 'Carburant', 70, 'info', 'string'); //essence ou diesel
 
     $this->createCmd('mileage', 'Kilométrage', 5, 'info', 'numeric'); //odometer
 
@@ -339,11 +346,11 @@ class myToyota extends eqLogic {
       $vehicle = [];
   
       $cmd          = 'sudo nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/synchro.py';
-      $cmd         .= ' --vin ' . $vin;
-      $cmd         .= ' --username ' . $username;
       $cmd         .= ' --loglevel warning';
-      $cmdbis       = $cmd . ' --password ********';
+      $cmdbis       = $cmd . ' -- username ***** --password ***** --vin *****';
+      $cmd         .= ' --username ' . $username;
       $cmd         .= ' --password ' . $password;
+      $cmd         .= ' --vin ' . $vin;
       log::add('myToyota', 'info', ' lancement programme : ' . $cmdbis);
       $result = exec('nohup ' . $cmd, $output);
       foreach ($output as $i => $value){
@@ -382,9 +389,9 @@ class myToyota extends eqLogic {
       $output = [];
   
       $cmd          = 'sudo nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/data.py';
-      $cmd         .= ' --username ' . $username;
       $cmd         .= ' --loglevel debug';
-      $cmdbis       = $cmd . ' --password ********';
+      $cmdbis       = $cmd . ' -- username ***** --password *****';
+      $cmd         .= ' --username ' . $username;
       $cmd         .= ' --password ' . $password;
       log::add('myToyota', 'info', ' lancement programme : ' . $cmdbis);
       $result = exec('nohup ' . $cmd, $output);
@@ -417,11 +424,12 @@ class myToyota extends eqLogic {
         $cmd         .= ' --nomvehicule ' . $nomvehicule;
         $cmd         .= ' --idvehicule ' . $eqLogic->getId();
         $cmd         .= ' --loglevel '. log::convertLogLevel(log::getLogLevel(__CLASS__));
+        $cmdbis       = $cmd . ' -- username ***** --password ***** --vin *****';
         $cmd         .= ' --username ' . $eqLogic->getConfiguration('username');
         $cmd         .= ' --password ' . $eqLogic->getConfiguration('password');
         $cmd         .= ' --vin ' . $eqLogic->getConfiguration('vehicle_vin');
   
-        log::add('myToyota', 'debug', ' Exécution du service : ' . $cmd);
+        log::add('myToyota', 'debug', ' Exécution du service : ' . $cmdbis);
         $result = exec('nohup ' . $cmd . ' >> ' . log::getPathToLog('myToyota_' . $nomvehicule) . ' 2>&1 &');
         if (strpos(strtolower($result), 'error') !== false || strpos(strtolower($result), 'traceback') !== false) {
             log::add('myToyota', 'error', '[myToyota]-----' . $result);

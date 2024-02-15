@@ -37,70 +37,81 @@ async def get_information():
         if (car.vin) == vin:
             print("OK => Le vehicule est bien present")
             trouve = 1
-            try:
-                codebrand = car._vehicle_info.brand
-                if codebrand == 'T':
-                    vehicule["brand"] = 'Toyota'
+            codebrand = car._vehicle_info.brand
+            if codebrand == 'T':
+                vehicule["brand"] = 'Toyota'
+            else:
+                vehicule["brand"] = 'voir avec Noyax pour ajouter le code'
+            vehicule["model"] = car._vehicle_info.car_line_name
+            vehicule["year"] = car._vehicle_info.manufactured_date
+            if car._vehicle_info.extended_capabilities.electric_pulse:
+                type = "Electrique"
+            else:
+                if car._vehicle_info.extended_capabilities.hybrid_pulse:
+                    type = "Hybride"
                 else:
-                    vehicule["brand"] = 'voir avec Noyax pour ajouter le code'
-                vehicule["model"] = car._vehicle_info.car_line_name
-                vehicule["year"] = car._vehicle_info.manufactured_date
-                if car._vehicle_info.extended_capabilities.electric_pulse:
-                    type = "Electrique"
-                else:
-                    if car._vehicle_info.extended_capabilities.hybrid_pulse:
-                        type = "Hybride"
+                    if car._vehicle_info.extended_capabilities.drive_pulse:
+                        type = "Essence"
                     else:
-                        if car._vehicle_info.extended_capabilities.drive_pulse:
-                            type = "Essence"
+                        if car._vehicle_info.extended_capabilities.hydrogen_pulse:
+                            type = "Hydrogene"
                         else:
-                            if car._vehicle_info.extended_capabilities.hydrogen_pulse:
-                                type = "Hydrogene"
-                            else:
-                                type = 'Inconnu'
-                vehicule["type"] = type
-                vehicule["mileage"] = car.dashboard.odometer
-                if car.lock_status.doors != None:
-                    vehicule["doorDriverFront"] = 'OPEN'
-                    vehicule["doorDriverRear"] = 'OPEN'
-                    vehicule["doorPassengerFront"] = 'OPEN'
-                    vehicule["doorPassengerRear"] = 'OPEN'
-                    vehicule["doorLockState"] = 'UNLOCKED'
-                    vehicule["allDoorsState"] = 'OPEN'
-                    if car.lock_status.doors.driver_seat.closed:
-                        vehicule["doorDriverFront"] = 'CLOSED'
-                    if car.lock_status.doors.driver_rear_seat.closed:
-                        vehicule["doorDriverRear"] = 'CLOSED'
-                    if car.lock_status.doors.passenger_seat.closed:
-                        vehicule["doorPassengerFront"] = 'CLOSED'
-                    if car.lock_status.doors.passenger_rear_seat.closed:
-                        vehicule["doorPassengerRear"] = 'CLOSED'
-                    if car.lock_status.doors.driver_seat.closed and car.lock_status.doors.driver_rear_seat.closed and car.lock_status.doors.passenger_seat.closed and car.lock_status.doors.passenger_rear_seat.closed:
-                        vehicule["allDoorsState"] = 'CLOSED'
-                    if car.lock_status.doors.driver_seat.locked and car.lock_status.doors.driver_rear_seat.locked and car.lock_status.doors.passenger_seat.locked and car.lock_status.doors.passenger_rear_seat.locked:
-                        vehicule["doorLockState"] = 'LOCKED'
+                            type = 'Inconnu'
 
-                if car.lock_status.windows != None:
+            vehicule["type"] = type
+            vehicule["mileage"] = car.dashboard.odometer
+            if car.lock_status.doors != None:
+                vehicule["doorDriverFront"] = 'OPEN'
+                vehicule["doorDriverRear"] = 'OPEN'
+                vehicule["doorPassengerFront"] = 'OPEN'
+                vehicule["doorPassengerRear"] = 'OPEN'
+                vehicule["doorLockState"] = 'UNLOCKED'
+                vehicule["allDoorsState"] = 'OPEN'
+                if car.lock_status.doors.driver_seat.closed:
+                    vehicule["doorDriverFront"] = 'CLOSED'
+                elif car.lock_status.doors.driver_seat.closed==None:
+                    vehicule["doorDriverFront"] = 'UNKNOW'
+                if car.lock_status.doors.driver_rear_seat.closed:
+                    vehicule["doorDriverRear"] = 'CLOSED'
+                if car.lock_status.doors.passenger_seat.closed:
+                    vehicule["doorPassengerFront"] = 'CLOSED'
+                if car.lock_status.doors.passenger_rear_seat.closed:
+                    vehicule["doorPassengerRear"] = 'CLOSED'
+                if car.lock_status.doors.driver_seat.closed and car.lock_status.doors.driver_rear_seat.closed and car.lock_status.doors.passenger_seat.closed and car.lock_status.doors.passenger_rear_seat.closed:
+                    vehicule["allDoorsState"] = 'CLOSED'
+                if car.lock_status.doors.driver_seat.locked and car.lock_status.doors.driver_rear_seat.locked and car.lock_status.doors.passenger_seat.locked and car.lock_status.doors.passenger_rear_seat.locked:
+                    vehicule["doorLockState"] = 'LOCKED'
+
+            if car.lock_status.windows != None:
+                if car.lock_status.windows.driver_seat.closed:
+                    vehicule["windowDriverFront"] = 'CLOSED'
+                else:
                     vehicule["windowDriverFront"] = 'OPEN'
+                if car.lock_status.windows.driver_rear_seat.closed:
+                    vehicule["windowDriverRear"] = 'CLOSED'
+                else:
                     vehicule["windowDriverRear"] = 'OPEN'
+                if car.lock_status.windows.passenger_seat.closed:
+                    vehicule["windowPassengerFront"] = 'CLOSED'
+                else:
                     vehicule["windowPassengerFront"] = 'OPEN'
-                    vehicule["doorPassengerRear"] = 'OPEN'
-                    vehicule["doorLockState"] = 'OPEN'
+                if car.lock_status.windows.passenger_rear_seat.closed:
+                    vehicule["windowPassengerRear"] = 'CLOSED'
+                else:
+                    vehicule["windowPassengerRear"] = 'OPEN'
+                if car.lock_status.windows.driver_seat.closed or car.lock_status.windows.driver_rear_seat.closed or car.lock_status.windows.passenger_seat.closed or car.lock_status.windows.passenger_rear_seat.closed:
+                    vehicule["allWindowsState"] = 'CLOSED'
+                else:
                     vehicule["allWindowsState"] = 'OPEN'
-                    if car.lock_status.windows.driver_seat.closed:
-                        vehicule["windowDriverFront"] = 'CLOSED'
-                    if car.lock_status.windows.driver_rear_seat.closed:
-                        vehicule["windowDriverRear"] = 'CLOSED'
-                    if car.lock_status.windows.passenger_seat.closed:
-                        vehicule["windowPassengerFront"] = 'CLOSED'
-                    if car.lock_status.windows.passenger_rear_seat.closed:
-                        vehicule["doorPassengerRear"] = 'CLOSED'
-                    if car.lock_status.windows.driver_seat.closed or car.lock_status.windows.driver_rear_seat.closed or car.lock_status.windows.passenger_seat.closed or car.lock_status.windows.passenger_rear_seat.closed:
-                        vehicule["allWindowsState"] = 'CLOSED'
-            except:
-                print('donnée absente')
-            eqpmt['vehicule'] = vehicule
-            print (eqpmt)
+
+            if hasattr(car.lock_status.doors,'trunk'):
+                vehicule['trunk_state'] = car.lock_status.doors.trunk
+
+
+
+
+
+            print (vehicule)
             # urllib.request.urlretrieve(car._vehicle_info.image, "../data/" + vin + ".jpg")
             sys.exit()
         else:

@@ -44,7 +44,11 @@ if (isset($result['device'])) {
         $eqlogic = eqLogic::byId(intval($key), 'myToyota');
         //if (is_object($eqlogic)) {
             foreach ($data as $key2 => $value) {
-                log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = ' . strval($value));
+                if ($key2 == 'vin'){
+                    log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = *****');
+                } else {
+                    log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = ' . strval($value));
+                }
                 if ($key2 == 'PID'){
                     //log::add('myToyota','debug',"Message du programme myToyota. PId de l'équipement : " . $value);
                     posix_kill(intval($value), 15);

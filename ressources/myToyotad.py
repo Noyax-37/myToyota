@@ -39,6 +39,7 @@ async def get_information():
     vehicule["windowPassengerFront"] = 'UNKNOWN'
     vehicule["windowPassengerRear"] = 'UNKNOWN'
     vehicule["allWindowsState"] = 'UNKNOWN'
+    vehicule['trunk_state'] = 'UNKNOW?'
 
     cars = await client.get_vehicles(metric=True)
     for car in cars:
@@ -63,12 +64,19 @@ async def get_information():
                     type = "Hybride"
                 else:
                     if car._vehicle_info.extended_capabilities.drive_pulse:
-                        type = "Essence"
+                        type = "Thermique"
                     else:
                         if car._vehicle_info.extended_capabilities.hydrogen_pulse:
                             type = "Hydrogene"
                         else:
                             type = 'Inconnu'
+            
+            if type == "Hybride" or type == "Thermique":
+                if car._vehicle_info.fuel_type == 'B':
+                    vehicule['carburant'] = 'Essence'
+                else:
+                    vehicule['carburant'] = 'Diesel'
+
             vehicule["type"] = type
             vehicule["mileage"] = car.dashboard.odometer
             if car.lock_status.doors != None:
@@ -78,7 +86,6 @@ async def get_information():
                 vehicule["doorPassengerRear"] = 'OPEN'
                 vehicule["doorLockState"] = 'UNLOCKED'
                 vehicule["allDoorsState"] = 'OPEN'
-                logging.info("porte " + str(car.lock_status.doors.driver_seat.closed))
                 if car.lock_status.doors.driver_seat.closed:
                     vehicule["doorDriverFront"] = 'CLOSED'
                 elif car.lock_status.doors.driver_seat.closed==None:
@@ -95,7 +102,6 @@ async def get_information():
                     vehicule["doorLockState"] = 'LOCKED'
 
             if car.lock_status.windows != None:
-                logging.info("window " + str(car.lock_status.windows.driver_seat.closed))
                 if car.lock_status.windows.driver_seat.closed:
                     vehicule["windowDriverFront"] = 'CLOSED'
                 else:
@@ -117,8 +123,10 @@ async def get_information():
                 else:
                     vehicule["allWindowsState"] = 'OPEN'
 
-            vehicule['trunk_state'] = car.lock_status.doors.trunk.closed
-            vehicule['hood_state'] = car.lock_status.hood.closed
+            if hasattr(car.lock_status.doors,'trunk'):
+                vehicule['trunk_state'] = car.lock_status.doors.trunk
+            if hasattr(car.lock_status.hood, 'closed'):
+                vehicule['hood_state'] = car.lock_status.hood.closed
 
             vehicule['moonroof_state'] = 'UNKNOWN'
 
@@ -131,19 +139,26 @@ async def get_information():
             vehicule['tireRearRight_pressure'] = 0
             vehicule['tireRearRight_target'] = 0
 
-            vehicule['chargingStatus'] = car.dashboard.charging_status
+            if hasattr(car.dashboard,'charging_status'):
+                vehicule['chargingStatus'] = car.dashboard.charging_status
             vehicule['connectorStatus'] = False
-            vehicule['beRemainingRangeElectric'] = car.dashboard.battery_range
+            if hasattr(car.dashboard,'battery_range'):
+                vehicule['beRemainingRangeElectric'] = car.dashboard.battery_range
             vehicule['chargingLevelHv'] = 'UNKNOWN'
-            vehicule['chargingEndTime'] = car.dashboard.remaining_charge_time
+            if hasattr(car.dashboard,'remaining_charge_time'):
+                vehicule['chargingEndTime'] = car.dashboard.remaining_charge_time
 
-            vehicule['beRemainingRangeFuelKm'] = car.dashboard.fuel_range
-            vehicule['remaining_fuel'] = car.dashboard.fuel_level
+            if car._vehicle_info.extended_capabilities.fuel_range_available:
+                vehicule['beRemainingRangeFuelKm'] = car.dashboard.fuel_range
+            if car._vehicle_info.extended_capabilities.fuel_level_available:
+                vehicule['remaining_fuel'] = car.dashboard.fuel_level
 
-            vehicule['vehicleMessages'] = '"' + str(car.notifications[0].message).replace(u'\xa0', u' ') + '"'
+            if hasattr(car.notifications,'message'):
+                vehicule['vehicleMessages'] = '"' + str(car.notifications[0].message).replace(u'\xa0', u' ') + '"'
             vehicule['gps_coordinates'] = ''
 
-            vehicule['lastUpdate'] = str(car.lock_status.last_updated.strftime('%d-%m-%Y à %H:%M:%S'))
+            if hasattr(car.lock_status.last_updated , 'strftime'):
+                vehicule['lastUpdate'] = str(car.lock_status.last_updated.strftime('%d-%m-%Y à %H:%M:%S'))
             vehicule['totalEnergyCharged'] = 'UNKNOW'
             vehicule['chargingSessions'] = 'UNKNOW'
 
