@@ -46,6 +46,7 @@ if (isset($result['device'])) {
             foreach ($data as $key2 => $value) {
                 if ($key2 == 'vin'){
                     log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = *****');
+                    $vin = $value;
                 } else {
                     log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = ' . strval($value));
                 }
@@ -56,10 +57,15 @@ if (isset($result['device'])) {
 					$cmd = $eqlogic->getCmd('info',$key2);
 					if (is_object($cmd)){
 						$cmd->event(strval($value));
+                        if ($key2 == 'gps_coordinates'){
+                            $coordinates = explode(",", $value);
+                            //log::add('myToyota','info',"Message du programme myToyota. Localisation véhicule : " . $value . ' ' . $coordinates[0] . ' ' . $coordinates[1]);
+                        }
 					}
 				}
             }
         //}
     }
+    myToyota::chercheLycos($vin, $coordinates[0], $coordinates[1]);
 }
 

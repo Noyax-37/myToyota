@@ -42,7 +42,12 @@ try {
       ajax::success($result);
     }
     
-  
+    if (init('action') == 'gps') {
+      $result = myToyota::getGPSCoordinates(init('vin'));
+      ajax::success($result);
+    }
+      
+    
 
     throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));
     /*     * *********Catch exeption*************** */

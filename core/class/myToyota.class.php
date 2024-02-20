@@ -40,10 +40,11 @@ class myToyota extends eqLogic {
   public static function cron() {}
   */
 
-  /*
-  * Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
-  public static function cron5() {}
-  */
+/*  
+  // Fonction exécutée automatiquement toutes les 5 minutes par Jeedom
+  public static function cron5() {
+  }
+*/
 
   /*
   * Fonction exécutée automatiquement toutes les 10 minutes par Jeedom
@@ -65,10 +66,13 @@ class myToyota extends eqLogic {
   public static function cron30() {    
     $debug = false;
     $idvehicule = 'Aucun';
+    system::kill('myToyotad.py');
     foreach (eqLogic::byType('myToyota', true) as $eqLogic) {
       $nameVehicule = $eqLogic->getName();
       log::add('myToyota', 'debug', " récupération des données du véhicule : " . '  ' . $nameVehicule);
       myToyota::interromyToyota($eqLogic);
+      $coordinates = myToyota::getGPSCoordinates($eqLogic->getConfiguration('vehicle_vin'));
+      myToyota::getDistanceLocation($coordinates('latitude'), $coordinates('longitude'));
     }
   }
 
@@ -330,7 +334,7 @@ class myToyota extends eqLogic {
 			$cmd->setSubType($subType);
 			if (!empty($template)) { $cmd->setTemplate($template[0], $template[1]); }
 			$cmd->save();
-			log::add('myBMW', 'debug', 'Add command '.$cmd->getName().' (LogicalId : '.$cmd->getLogicalId().')');
+			log::add('myToyota', 'debug', 'Add command '.$cmd->getName().' (LogicalId : '.$cmd->getLogicalId().')');
         }
   }
 
@@ -347,7 +351,7 @@ class myToyota extends eqLogic {
   
       $cmd          = 'sudo nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/synchro.py';
       $cmd         .= ' --loglevel warning';
-      $cmdbis       = $cmd . ' -- username ***** --password ***** --vin *****';
+      $cmdbis       = $cmd . ' --username ***** --password ***** --vin *****';
       $cmd         .= ' --username ' . $username;
       $cmd         .= ' --password ' . $password;
       $cmd         .= ' --vin ' . $vin;
@@ -364,6 +368,10 @@ class myToyota extends eqLogic {
         if (substr($value,0,4) == "Nom ") {
           $vehicle['attributes']['model'] = substr($value,5);
         }
+        if (substr($value,0,4) == "Capa ") {
+          $vehicle['attributes']['capa'] = substr($value,5);
+        }
+
 
       }
       
@@ -390,7 +398,7 @@ class myToyota extends eqLogic {
   
       $cmd          = 'sudo nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/data.py';
       $cmd         .= ' --loglevel debug';
-      $cmdbis       = $cmd . ' -- username ***** --password *****';
+      $cmdbis       = $cmd . ' --username ***** --password *****';
       $cmd         .= ' --username ' . $username;
       $cmd         .= ' --password ' . $password;
       log::add('myToyota', 'info', ' lancement programme : ' . $cmdbis);
@@ -424,7 +432,7 @@ class myToyota extends eqLogic {
         $cmd         .= ' --nomvehicule ' . $nomvehicule;
         $cmd         .= ' --idvehicule ' . $eqLogic->getId();
         $cmd         .= ' --loglevel '. log::convertLogLevel(log::getLogLevel(__CLASS__));
-        $cmdbis       = $cmd . ' -- username ***** --password ***** --vin *****';
+        $cmdbis       = $cmd . ' --username ***** --password ***** --vin *****';
         $cmd         .= ' --username ' . $eqLogic->getConfiguration('username');
         $cmd         .= ' --password ' . $eqLogic->getConfiguration('password');
         $cmd         .= ' --vin ' . $eqLogic->getConfiguration('vehicle_vin');
@@ -443,8 +451,99 @@ class myToyota extends eqLogic {
         log::add('myToyota', 'info', '---------------------------------------------------------------');
       }
     }
-  
-  
+
+    public static function getToyotaEqLogic($vehicle_vin)
+    {
+      foreach ( eqLogic::byTypeAndSearhConfiguration('myToyota', 'vehicle_vin') as $myToyota ) {
+        if ( $myToyota->getConfiguration('vehicle_vin') == $vehicle_vin )   {
+          $eqLogic = $myToyota;
+          break;
+        }
+      }
+      return $eqLogic;
+    }
+    
+    public function getDistanceLocation($lat1, $lng1)
+    {
+      if ( $this->getConfiguration("option_localisation") == "jeedom" ) {
+        $lat2 = config::byKey('info::latitude','core','0');
+        $lng2 = config::byKey('info::longitude','core','0');
+      }
+      else if ( $this->getConfiguration("option_localisation") == "manual" || $this->getConfiguration("option_localisation") == "vehicle") {
+        $lat2 = $this->getConfiguration("home_lat");
+        $lng2 = $this->getConfiguration("home_long");
+      }	
+      else {
+        $lat2 = 0;
+        $lng2 = 0;
+      }
+      
+      $earth_radius = 6371; // Terre = sphère de 6371km de rayon
+      $rla1 = deg2rad( floatval($lat1) );
+      $rlo1 = deg2rad( floatval($lng1) );
+      $rla2 = deg2rad( floatval($lat2) );
+      $rlo2 = deg2rad( floatval($lng2) );
+      $dlo = ($rlo2 - $rlo1) / 2;
+      $dla = ($rla2 - $rla1) / 2;
+      $a = (sin($dla) * sin($dla)) + cos($rla1) * cos($rla2) * (sin($dlo) * sin($dlo));
+      $d = 2 * atan2(sqrt($a), sqrt(1 - $a));
+      return round(($earth_radius * $d * 1000), 1); //retour en m
+    }
+
+    public function getDistanceLocation2($eqLogic, $lat1, $lng1)
+    {
+      if ( $eqLogic->getConfiguration("option_localisation") == "jeedom" ) {
+        $lat2 = config::byKey('info::latitude','core','0');
+        $lng2 = config::byKey('info::longitude','core','0');
+      }
+      else if ( $eqLogic->getConfiguration("option_localisation") == "manual" || $eqLogic->getConfiguration("option_localisation") == "vehicle") {
+        $lat2 = $eqLogic->getConfiguration("home_lat");
+        $lng2 = $eqLogic->getConfiguration("home_long");
+      }	
+      else {
+        $lat2 = 0;
+        $lng2 = 0;
+      }
+      log::add('myToyota', 'info', '[myToyota] Lat et long ' . $lat2 . ' ' . $lng2);
+      
+      $earth_radius = 6371; // Terre = sphère de 6371km de rayon
+      $rla1 = deg2rad( floatval($lat1) );
+      $rlo1 = deg2rad( floatval($lng1) );
+      $rla2 = deg2rad( floatval($lat2) );
+      $rlo2 = deg2rad( floatval($lng2) );
+      $dlo = ($rlo2 - $rlo1) / 2;
+      $dla = ($rla2 - $rla1) / 2;
+      $a = (sin($dla) * sin($dla)) + cos($rla1) * cos($rla2) * (sin($dlo) * sin($dlo));
+      $d = 2 * atan2(sqrt($a), sqrt(1 - $a));
+      return round(($earth_radius * $d * 1000), 1); //retour en m
+    }
+
+    public static function chercheLycos($vin, $latitude, $longitude){
+      $eqLogic = myToyota::getToyotaEqLogic($vin);
+      $distance = myToyota::getDistanceLocation2($eqLogic, $latitude, $longitude); //en metres
+      log::add('myToyota', 'info', '[myToyota] distance avec le domicile ' . $distance . ' aux coordonnées ' . $latitude . ' ' . $longitude);
+			$eqLogic->checkAndUpdateCmd('distance', $distance);
+			if ( $distance <= $eqLogic->getConfiguration("home_distance") ) { $eqLogic->checkAndUpdateCmd('presence', 1); }
+			else { $eqLogic->checkAndUpdateCmd('presence', 0); }
+    }
+    
+    public static function getGPSCoordinates($vin)
+    {
+      $eqLogic = self::getToyotaEqLogic($vin);
+      $cmd = $eqLogic->getCmd(null, 'gps_coordinates');
+      
+      if ( is_object($cmd) )  {
+        $coordinates = explode(",", $cmd->execCmd());
+        $gps = array( "latitude" => $coordinates[0], "longitude" => $coordinates[1] );
+      }
+      else  {
+        $gps = array( "latitude" => '0.000000', "longitude" => '0.000000' );
+      }
+      
+      log::add('myToyota', 'debug', '| Result getGPSCoordinates() : '.json_encode($gps));
+      return $gps;
+    }
+    
 
 
 }
@@ -470,7 +569,53 @@ class myToyotaCmd extends cmd {
 
   // Exécution d'une commande
   public function execute($_options = array()) {
-  }
+    
+		$eqLogic = $this->getEqLogic(); 										// On récupère l'éqlogic de la commande $this
+		$logical = $this->getLogicalId();
+		log::add('myToyota', 'debug', '┌─Command execution : '.$logical);
+		
+		try {
+            switch ($logical) {
+                case 'refresh':
+                    myToyota::interromyToyota($eqLogic);
+					          break;
+                case 'hornBlow':
+                    //$eqLogic->doHornBlow();
+                    break;
+                case 'lightFlash':
+                    //$eqLogic->doLightFlash();
+                    break;
+                case 'doorLock':
+                    //$eqLogic->doDoorLock();
+                    break;
+                case 'doorUnlock':
+                    //$eqLogic->doDoorUnlock();
+                    break;
+                case 'climateNow':
+                    //$eqLogic->doClimateNow();
+                    break;
+				        case 'stopClimateNow':
+                    //$eqLogic->stopClimateNow();
+                    break;
+				        case 'chargeNow':
+                    //$eqLogic->doChargeNow();
+                    break;
+				        case 'stopChargeNow':
+					          //$eqLogic->stopChargeNow();
+					          break;
+				        default:
+                    throw new \Exception("Unknown command", 1);
+                    break;
+            }
+        } catch (Exception $e) {
+            echo 'Exception : ',  $e->getMessage(), "\n";
+            log::add('myToyota', 'debug', '└─Command execution error : '.$logical.' - '.$e->getMessage());
+        }
+		
+		$eqLogic->refreshWidget();
+	}
+	
+
 
   /*     * **********************Getteur Setteur*************************** */
 }

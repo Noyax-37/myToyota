@@ -165,6 +165,51 @@ function all_data()  {
 	
 };
 
+function getCoordinates()  {
+
+	$('#div_home_lat').empty();
+	$('#div_home_long').empty();
+	
+	//$('#div_alert').showAlert({message: '{{Récupération des informations en cours}}', level: 'warning'});	
+	$.ajax({													// fonction permettant de faire de l'ajax
+		type: "POST", 											// methode de transmission des données au fichier php
+		url: "plugins/myToyota/core/ajax/myToyota.ajax.php", 			// url du fichier php
+		data: {
+			action: "gps",
+			vin: $('.eqLogicAttr[data-l2key=vehicle_vin]').value(),
+			},
+		dataType: 'json',
+			error: function (request, status, error) {
+			handleAjaxError(request, status, error);
+			},
+		success: function (data) { 			
+
+			if (data.state != 'ok') {
+				$('#div_alert').showAlert({message: '{{Erreur lors de la récupération des informations}}', level: 'danger'});
+				return;
+			}
+			else  {
+				if ( data.result['latitude'] == "" || data.result['longitude'] == "" )  {
+					$('#div_alert').showAlert({message: '{{Aucunes coordonnées disponibles}}', level: 'danger'});
+				}
+				else  {
+				$('#div_home_lat').append('<input id="input_home_lat" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_lat" placeholder="Latitude de votre domicile" value="'+data.result['latitude']+'" readonly>');
+				$('#div_home_long').append('<input id="input_home_long" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_long" placeholder="Longitude de votre domicile" value="'+data.result['longitude']+'" readonly>');
+				}
+			}
+			//$('#div_alert').showAlert({message: '{{Récupération des informations terminée avec succès}}', level: 'success'});
+		}
+	});
+
+}
+
+$('#bt_gps').on('click',function() {
+ 
+	$('.btn[data-action=save]').click();
+	setTimeout(getCoordinates,2000);
+	
+});
+
 
 $('#bt_Synchronization').on('click',function() {
  
@@ -178,4 +223,5 @@ $('#bt_Data').on('click',function() {
 	setTimeout(all_data,1000);
 	
 });
+
 

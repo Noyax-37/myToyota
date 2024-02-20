@@ -40,6 +40,7 @@ async def get_information():
     vehicule["windowPassengerRear"] = 'UNKNOWN'
     vehicule["allWindowsState"] = 'UNKNOWN'
     vehicule['trunk_state'] = 'UNKNOW'
+    vehicule['hood_state'] = 'UNKNOW'
 
     cars = await client.get_vehicles(metric=True)
     for car in cars:
@@ -66,10 +67,7 @@ async def get_information():
                     if car._vehicle_info.extended_capabilities.drive_pulse:
                         type = "Thermique"
                     else:
-                        if car._vehicle_info.extended_capabilities.hydrogen_pulse:
-                            type = "Hydrogene"
-                        else:
-                            type = 'Inconnu'
+                        type = 'Inconnu'
             
             if type == "Hybride" or type == "Thermique":
                 if car._vehicle_info.fuel_type == 'B':
@@ -124,9 +122,15 @@ async def get_information():
                     vehicule["allWindowsState"] = 'OPEN'
 
             if hasattr(car.lock_status.doors,'trunk'):
-                vehicule['trunk_state'] = car.lock_status.doors.trunk.closed
+                if car.lock_status.doors.trunk.closed:
+                    vehicule['trunk_state'] = 'CLOSED'
+                else:
+                    vehicule['trunk_state'] == 'OPEN'
             if hasattr(car.lock_status.hood, 'closed'):
-                vehicule['hood_state'] = car.lock_status.hood.closed
+                if car.lock_status.hood.closed:
+                    vehicule['hood_state'] = 'CLOSED'
+                else:
+                    vehicule['hood_state'] = 'OPEN'
 
             vehicule['moonroof_state'] = 'UNKNOWN'
 
@@ -159,6 +163,7 @@ async def get_information():
 
             if hasattr(car.location.timestamp , 'strftime'):
                 vehicule['lastUpdate'] = str(car.location.timestamp.strftime('%d-%m-%Y à %H:%M:%S'))
+                vehicule['gps_coordinates'] = str(car.location.latitude) + ',' + str(car.location.longitude)
             vehicule['totalEnergyCharged'] = 'UNKNOW'
             vehicule['chargingSessions'] = 'UNKNOW'
 
