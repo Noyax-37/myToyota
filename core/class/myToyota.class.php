@@ -55,7 +55,7 @@ class myToyota extends eqLogic {
   // Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
   public static function cron() {
     $dt = time();
-    if (date( "i", $dt )!="00" || date( "i", $dt )!="30") {
+    if (date( "i", $dt )!="00" || date( "i", $dt )!="01" || date( "i", $dt )!="30" || date( "i", $dt )!="31") {
       system::kill('myToyotad.py');
     }
   }
@@ -87,6 +87,11 @@ class myToyota extends eqLogic {
   */
 
   /*     * *********************Méthodes d'instance************************* */
+
+  // Fonction pour exclure un sous répertoire de la sauvegarde
+  public static function backupExclude() {
+		return ['ressources/venv'];
+	}
 
   // Fonction exécutée automatiquement avant la création de l'équipement
   public function preInsert() {
@@ -198,6 +203,7 @@ class myToyota extends eqLogic {
 
     $this->createCmd('totalEnergyCharged', 'Charge électrique totale', 61, 'info', 'numeric');
     $this->createCmd('chargingSessions', 'Sessions de charge', 62, 'info', 'string');
+    $this->createCmd('services', 'Services', 63, 'info', 'string');
 
 	}
 
@@ -523,7 +529,7 @@ class myToyota extends eqLogic {
       $eqLogic = myToyota::getToyotaEqLogic($vin);
       $nomvehicule = $eqLogic->getName();
       $distance = myToyota::getDistanceLocation2($eqLogic, $latitude, $longitude); //en metres
-      log::add('myToyota', 'info', '[myToyota] ' . $nomvehicule . ': distance avec le domicile ' . $distance);
+      log::add('myToyota', 'info', '[myToyota] ' . $nomvehicule . ': distance avec le domicile ' . $distance . ' mètre(s)');
 			$eqLogic->checkAndUpdateCmd('distance', $distance);
 			if ( $distance <= $eqLogic->getConfiguration("home_distance") ) { $eqLogic->checkAndUpdateCmd('presence', 1); }
 			else { $eqLogic->checkAndUpdateCmd('presence', 0); }

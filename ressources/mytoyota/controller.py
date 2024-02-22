@@ -104,7 +104,6 @@ class Controller:
                 resp = await client.post(
                     self._authenticate_url, json=data
                 )  # , headers=standard_headers)
-                _LOGGER.error("data json : " + str(data))
                 _LOGGER.debug(format_httpx_response(resp))
 
                 if resp.status_code != HTTPStatus.OK:
