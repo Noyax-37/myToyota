@@ -37,6 +37,7 @@
 					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#mileage_id#"></span><span id="titre_tile"> km</span></div>
 				</div>
 				
+				<!-- affichage si véhicule thermique -->
 				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px;">
 					<div class="col-xs-8" id="titre_tile" style="height:70px;">Niveau carburant</div>
 					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-gas-pump"></i></div>
@@ -44,6 +45,45 @@
 				</div>
 				
 				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px;">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Km restants (thermique)</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
+				</div>
+				
+				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px; background:linear-gradient(-45deg, transparent 49%, rgb(80,120,170) 49% 51%, transparent 51% 100%);">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Batterie</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-car-battery"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#chargingLevelHv_id#"></span><span id="titre_tile"> %</span></div>				
+				</div>
+								
+				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px; background:linear-gradient(-45deg, transparent 49%, rgb(80,120,170) 49% 51%, transparent 51% 100%);">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Km restants (électrique)</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeElectric_id#"></span><span id="titre_tile"> km</span></div>				
+				</div>
+				
+				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px; background:linear-gradient(-45deg, transparent 49%, rgb(80,120,170) 49% 51%, transparent 51% 100%);">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Prise</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-plug"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#connectorStatus_id#"></span></div>				
+				</div>
+				
+				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px; background:linear-gradient(-45deg, transparent 49%, rgb(80,120,170) 49% 51%, transparent 51% 100%);">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Recharge</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-charging-station"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:40px;"><span class="Cmd#chargingStatus_id#"></span></div>
+					<div class="col-xs-12" id="value_tile_2" style="height:30px;"><span class="Cmd#chargingEndTime_id#"></span></div>					
+				</div>
+				<!-- fin affichage si véhicule thermique -->
+
+				<!-- affichage si véhicule électrique -->
+				<div class="col-xs-4 electric_engine#id#" id="tile" style="height:140px; width:140px;" background:linear-gradient(-45deg, transparent 49%, rgb(80,120,170) 49% 51%, transparent 51% 100%);>
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Niveau carburant</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-gas-pump"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#remaining_fuel_id#"></span><span id="titre_tile"> %</span></div>
+				</div>
+				
+				<div class="col-xs-4 electric_engine#id#" id="tile" style="height:140px; width:140px;" background:linear-gradient(-45deg, transparent 49%, rgb(80,120,170) 49% 51%, transparent 51% 100%);>
 					<div class="col-xs-8" id="titre_tile" style="height:70px;">Km restants (thermique)</div>
 					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
@@ -73,7 +113,48 @@
 					<div class="col-xs-12" id="value_tile" style="height:40px;"><span class="Cmd#chargingStatus_id#"></span></div>
 					<div class="col-xs-12" id="value_tile_2" style="height:30px;"><span class="Cmd#chargingEndTime_id#"></span></div>					
 				</div>
-						
+				<!-- fin affichage si véhicule électrique -->
+
+				<!-- affichage si véhicule PHEV -->
+				<div class="col-xs-4 combustion_phev#id#" id="tile" style="height:140px; width:140px;">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Niveau carburant</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-gas-pump"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#remaining_fuel_id#"></span><span id="titre_tile"> %</span></div>
+				</div>
+				
+				<div class="col-xs-4 combustion_phev#id#" id="tile" style="height:140px; width:140px;">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Km restants (thermique)</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
+				</div>
+				
+				<div class="col-xs-4 combustion_phev#id#" id="tile" style="height:140px; width:140px;">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Batterie</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-car-battery"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#chargingLevelHv_id#"></span><span id="titre_tile"> %</span></div>				
+				</div>
+								
+				<div class="col-xs-4 combustion_phev#id#" id="tile" style="height:140px; width:140px;">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Km restants (électrique)</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeElectric_id#"></span><span id="titre_tile"> km</span></div>				
+				</div>
+				
+				<div class="col-xs-4 combustion_phev#id#" id="tile" style="height:140px; width:140px;">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Prise</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-plug"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:70px;"><span class="Cmd#connectorStatus_id#"></span></div>				
+				</div>
+				
+				<div class="col-xs-4 combustion_phev#id#" id="tile" style="height:140px; width:140px;">
+					<div class="col-xs-8" id="titre_tile" style="height:70px;">Recharge</div>
+					<div class="col-xs-4" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-charging-station"></i></div>
+					<div class="col-xs-12" id="value_tile" style="height:40px;"><span class="Cmd#chargingStatus_id#"></span></div>
+					<div class="col-xs-12" id="value_tile_2" style="height:30px;"><span class="Cmd#chargingEndTime_id#"></span></div>					
+				</div>
+				<!-- fin affichage si véhicule PHEV -->
+
+
 			</div>			
 			
 			<!-- Column N°2 -->
@@ -247,7 +328,7 @@
 					<div class="col-xs-2" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-location-arrow"></i></div>
 					<div class="col-xs-10" id="titre_tile_2" style="height:50px;">Localisation</div>
 					<div id="location">
-						<iframe class="myMap" id="myFrame#id#" style="height:255px;"" src="https://maps.google.com/maps?hl=fr&ie=utf8&output=embed&q=#gps_coordinates#"></iframe>
+						<iframe class="myMap" id="myFrame#id#" style="height:255px;" src="https://maps.google.com/maps?hl=fr&ie=utf8&output=embed&q=#gps_coordinates#"></iframe>
 					</div>
 				</div>
 			
@@ -422,20 +503,25 @@
 	
 	
 	//----- Electric / Combustion / Hybrid
-	if ( '#vehicle_type#id##' == 'ELECTRIC' )  {
+	if ( '#vehicle_type#id##' == 'Electrique' )  {
 		$('.combustion_engine#id#').hide();
-		$('.fuel_chart#id#').hide();
+		$('.combustion_phev#id#').hide();
 	}
-	if ( '#vehicle_type#id##' == 'COMBUSTION' )  {
+	if ( '#vehicle_type#id##' == 'Hybride' || '#vehicle_type#id##' == 'Thermique')  {
 		$('.electric_engine#id#').hide();
-		$('.charge_chart#id#').hide();
+		$('.combustion_phev#id#').hide();
 		$('.charge_sessions#id#').hide();
+		$('.charge_chart#id#').hide();
 	}
-	if ( '#vehicle_type#id##' != 'ELECTRIC' && '#vehicle_type#id##' != 'PLUGIN_HYBRID' )  {
+	if ( '#vehicle_type#id##' == 'Hybride Rechargeable')  {
+		$('.electric_engine#id#').hide();
+		$('.combustion_engine#id#').hide();
+	}
+	if ( '#vehicle_type#id##' != 'Electrique' && '#vehicle_type#id##' != 'Hybride Rechargeable' )  {
 		$('#charge_btn#id#').hide();
 		$('#stopcharge_btn#id#').hide();
 	}
-	
+
 
 	//----- Location
 	jeedom.cmd.update['#gps_coordinates_id#'] =function(_options) {

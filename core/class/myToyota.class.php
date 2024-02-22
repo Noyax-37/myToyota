@@ -53,9 +53,9 @@ class myToyota extends eqLogic {
 
   
   // Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
-  public static function cron15() {
+  public static function cron() {
     $dt = time();
-    if (date( "i", $dt )=="15" || date( "i", $dt )=="45") {
+    if (date( "i", $dt )!="00" || date( "i", $dt )!="30") {
       system::kill('myToyotad.py');
     }
   }
@@ -72,7 +72,7 @@ class myToyota extends eqLogic {
       log::add('myToyota', 'debug', " récupération des données du véhicule : " . '  ' . $nameVehicule);
       myToyota::interromyToyota($eqLogic);
       $coordinates = myToyota::getGPSCoordinates($eqLogic->getConfiguration('vehicle_vin'));
-      myToyota::getDistanceLocation($coordinates('latitude'), $coordinates('longitude'));
+//      myToyota::getDistanceLocation2($eqlogic, $coordinates['latitude'], $coordinates['longitude']);
     }
   }
 
@@ -504,7 +504,8 @@ class myToyota extends eqLogic {
         $lat2 = 0;
         $lng2 = 0;
       }
-      log::add('myToyota', 'info', '[myToyota] Lat et long ' . $lat2 . ' ' . $lng2);
+      $nomvehicule = $eqLogic->getName();
+      log::add('myToyota', 'info', '[myToyota] dernière position de ' . $nomvehicule . ': Lat et long ' . $lat2 . ' ' . $lng2);
       
       $earth_radius = 6371; // Terre = sphère de 6371km de rayon
       $rla1 = deg2rad( floatval($lat1) );
@@ -520,8 +521,9 @@ class myToyota extends eqLogic {
 
     public static function chercheLycos($vin, $latitude, $longitude){
       $eqLogic = myToyota::getToyotaEqLogic($vin);
+      $nomvehicule = $eqLogic->getName();
       $distance = myToyota::getDistanceLocation2($eqLogic, $latitude, $longitude); //en metres
-      log::add('myToyota', 'info', '[myToyota] distance avec le domicile ' . $distance . ' aux coordonnées ' . $latitude . ' ' . $longitude);
+      log::add('myToyota', 'info', '[myToyota] ' . $nomvehicule . ': distance avec le domicile ' . $distance);
 			$eqLogic->checkAndUpdateCmd('distance', $distance);
 			if ( $distance <= $eqLogic->getConfiguration("home_distance") ) { $eqLogic->checkAndUpdateCmd('presence', 1); }
 			else { $eqLogic->checkAndUpdateCmd('presence', 0); }

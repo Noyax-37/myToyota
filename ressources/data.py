@@ -51,7 +51,7 @@ async def get_information():
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         print(f"Summary année: {[[x] for x in await car.get_summary(date.today() - timedelta(days=365), date.today(), summary_type=SummaryType.YEARLY)]}")
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-        #print(f"Trips: f{await car.get_trips(date.today() - timedelta(days=7), date.today(), full_route=True)}")
+        print(f"Trips: f{await car.get_trips(date.today() - timedelta(days=7), date.today(), full_route=True)}")
         #print(f"Huile: {car._vehicle_info.}")
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
         print(f"dump all: {car._dump_all()}")
