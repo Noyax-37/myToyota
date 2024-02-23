@@ -149,6 +149,8 @@ async def get_information():
             if hasattr(car.dashboard,'battery_range'):
                 vehicule['beRemainingRangeElectric'] = car.dashboard.battery_range
             vehicule['chargingLevelHv'] = 'UNKNOWN'
+            if hasattr(car.dashboard,'range'):
+                vehicule['beRemainingRangeTotal'] = car.dashboard.range
             if hasattr(car.dashboard,'remaining_charge_time'):
                 vehicule['chargingEndTime'] = car.dashboard.remaining_charge_time
 
@@ -167,7 +169,7 @@ async def get_information():
             vehicule['totalEnergyCharged'] = 'UNKNOW'
             vehicule['chargingSessions'] = 'UNKNOW'
             if car.service_history != None:
-                vehicule['services'] = '"' + str(car.service_history) + '"' #str("{'customer_created_record': False, 'mileage': 12518, 'notes': None, 'operations_performed': None, 'ro_number': None, 'service_category': 'HSC', 'service_date': '2022-11-25', 'service_history_id': '368156928', 'service_provider': 'ARVERNE AUTOMOBILES', 'servicing_dealer': None, 'unit': 'km'}, {'customer_created_record': False, 'mileage': 3810, 'notes': None, 'operations_performed': None, 'ro_number': None, 'service_category': 'HSC', 'service_date': '2021-12-04', 'service_history_id': '330053612', 'service_provider': 'ARVERNE AUTOMOBILES', 'servicing_dealer': None, 'unit': 'km'}, {'customer_created_record': False, 'mileage': 3810, 'notes': None, 'operations_performed': None, 'ro_number': None, 'service_category': 'MNT', 'service_date': '2021-12-04', 'service_history_id': '330056078', 'service_provider': 'ARVERNE AUTOMOBILES', 'servicing_dealer': None, 'unit': 'km'}, {'customer_created_record': False, 'mileage': None, 'notes': None, 'operations_performed': None, 'ro_number': None, 'service_category': 'VDE', 'service_date': '2020-11-06', 'service_history_id': '330056077', 'service_provider': 'ARVERNE AUTOMOBILES', 'servicing_dealer': None, 'unit': None}")
+                vehicule['services'] = '"' + str(car.service_history) + '"'
 
 
 #    $this->createCmd('climateNow_status', 'Statut climatiser', 49, 'info', 'string');

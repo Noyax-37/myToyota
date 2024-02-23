@@ -204,6 +204,7 @@ class myToyota extends eqLogic {
     $this->createCmd('totalEnergyCharged', 'Charge électrique totale', 61, 'info', 'numeric');
     $this->createCmd('chargingSessions', 'Sessions de charge', 62, 'info', 'string');
     $this->createCmd('services', 'Services', 63, 'info', 'string');
+    $this->createCmd('beRemainingRangeTotal', 'Km restant (global)', 64, 'info', 'numeric');
 
 	}
 
