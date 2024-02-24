@@ -232,12 +232,19 @@ class myToyota extends eqLogic {
   public function toHtml($_version = 'dashboard') {
     	
 		$this->emptyCacheWidget(); 		//vide le cache. Pratique pour le développement
-				
+		
 		$panel = false;
 		if ($_version == 'panel') {
 			$panel = true;
-			$_version = 'dashboard';
+			//$_version = 'dashboard';
 		}
+
+    $UtilTemplate = $this->getConfiguration("UtilTemplate", "1"); // Récupération du template choisi (par défaut : horizontal)
+    if (($UtilTemplate == "0") && ($_version == 'dashboard')) {
+      return parent::toHtml($_version);
+    }else{
+      $_version = 'dashboard';
+    }
 		
 		/*if ($this->getConfiguration('widget_template') == 0) {
 			return parent::toHtml($_version);

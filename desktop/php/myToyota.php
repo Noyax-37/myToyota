@@ -150,6 +150,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Utilisation du template}} <sup><i class="fas fa-question-circle tooltips" title="{{A cocher pour modifier l'affichage sur le dashboard}}"></i></sup></label>
+								<div class="col-lg-7 tooltips">
+									<input type="checkbox" id="util_template" class="eqLogicAttr configKey" data-l1key="configuration" data-l2key="UtilTemplate"/>
+								</div>
+							</div>
+
+							<br>
+
 							<legend><i class="fas fa-cogs"></i> {{Paramètres du compte et du véhicule}}</legend>
 
 							<div class="form-group">
@@ -233,7 +242,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										</select>
 									</div>
 								</div>
-								
+
 								<div class="form-group" id="gps_coordinates">		
 									<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
 									<div class="col-sm-2" id="div_home_lat">
