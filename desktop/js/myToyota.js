@@ -129,7 +129,7 @@ function synchronize()  {
 				$('#div_type').append('<input id="type" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_type" placeholder="Type de véhicule" value="'+data.result['attributes']['driveTrain']+'" readonly>');
 				
 				$('#div_img').empty();
-				var img ='<img id="car_img" src="plugins/myToyota/data/' + vin + '.png" style="height:300px" />';
+				var img ='<img id="car_img" src="plugins/myToyota/data/' + data.result['vin'] + '.png" style="height:300px" />';
 				$('#div_img').append(img);
 			}
 			$('#div_alert').showAlert({message: '{{Synchronisation terminée avec succès}}', level: 'success'});

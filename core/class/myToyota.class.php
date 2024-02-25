@@ -362,6 +362,8 @@ class myToyota extends eqLogic {
       $myToyotaPath         	  = realpath(dirname(__FILE__) . '/../../ressources');
       $output = [];
       $vehicle = [];
+      $vehicle['vin'] = $vin;
+      $retours = 0;
   
       $cmd          = 'sudo nice -n 19 '. $myToyotaPath . '/venv/bin/python3 ' . $myToyotaPath . '/synchro.py';
       $cmd         .= ' --loglevel warning';
@@ -375,12 +377,15 @@ class myToyota extends eqLogic {
         log::add('myToyota', 'info', $value);
         if (substr($value,0,4) == "Type") {
           $vehicle['attributes']['driveTrain'] = substr($value,5);
+          $retours += 1;
         }
         if (substr($value,0,4) == "Date") {
           $vehicle['attributes']['year'] = substr($value,5);
+          $retours += 1;
         }
         if (substr($value,0,4) == "Nom ") {
           $vehicle['attributes']['model'] = substr($value,5);
+          $retours += 1;
         }
         if (substr($value,0,4) == "Capa ") {
           $vehicle['attributes']['capa'] = substr($value,5);
@@ -389,7 +394,7 @@ class myToyota extends eqLogic {
 
       }
       
-      if (strpos(strtolower($result), 'error') !== false || strpos(strtolower($result), 'traceback') !== false) {
+      if ((strpos(strtolower($result), 'error') !== false || strpos(strtolower($result), 'traceback') !== false) && ($retours != 3)) {
           log::add('myToyota', 'error', 'Erreur pendant la synchro : ' . $result);
           return false;
       }
