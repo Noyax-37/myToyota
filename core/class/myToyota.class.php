@@ -452,8 +452,8 @@ class myToyota extends eqLogic {
         $cmd         .= ' --idvehicule ' . $eqLogic->getId();
         $cmd         .= ' --loglevel '. log::convertLogLevel(log::getLogLevel(__CLASS__));
         $cmdbis       = $cmd . ' --username ***** --password ***** --vin *****';
-        $cmd         .= ' --username ' . $eqLogic->getConfiguration('username');
-        $cmd         .= ' --password ' . $eqLogic->getConfiguration('password');
+        $cmd         .= " --username '" . $eqLogic->getConfiguration('username') . "'";
+        $cmd         .= " --password '" . $eqLogic->getConfiguration('password') . "'";
         $cmd         .= ' --vin ' . $eqLogic->getConfiguration('vehicle_vin');
   
         log::add('myToyota', 'debug', ' Exécution du service : ' . $cmdbis);

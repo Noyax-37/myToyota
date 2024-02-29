@@ -63,6 +63,8 @@ sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir pyudev
 echo 90 > ${PROGRESS_FILE}
 sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir importlib_metadata
 echo 95 > ${PROGRESS_FILE}
+sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir simplekml
+echo 98 > ${PROGRESS_FILE}
 
 date
 rm ${PROGRESS_FILE}

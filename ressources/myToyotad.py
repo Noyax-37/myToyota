@@ -166,6 +166,8 @@ async def get_information():
             if hasattr(car.location.timestamp , 'strftime'):
                 vehicule['lastUpdate'] = str(car.location.timestamp.strftime('%d-%m-%Y à %H:%M:%S'))
                 vehicule['gps_coordinates'] = str(car.location.latitude) + ',' + str(car.location.longitude)
+
+
             vehicule['totalEnergyCharged'] = 'UNKNOW'
             vehicule['chargingSessions'] = 'UNKNOW'
             if car.service_history != None:
@@ -237,8 +239,8 @@ logging.info('myToyota------ Callback : ' + str(CALLBACK))
 logging.info('myToyota------ Nom du vehicule : ' + str(nomvehicule))
 logging.info('myToyota------ VIN du vehicule : ' + str(vin))
 logging.info("myToyota------ ID de l'equipement : " + str(idvehicule))
-logging.info("myToyota------ Nom du compte : " + str(USERNAME))
-logging.info('myToyota------ Passord du compte : *******')
+logging.info("myToyota------ Nom du compte : " + '*******') #USERNAME)
+logging.info('myToyota------ Passord du compte : ' + '*******') #PASSWORD) 
 
 if not JEEDOM_COM.test():
     logging.error('MODEM------ Network communication issues. Please fix your Jeedom network configuration.')

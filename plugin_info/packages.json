@@ -2,6 +2,7 @@
   "pre-install": {
   },
   "apt": {
+    "git" : {}
   },
   "pip3": { 
   },
