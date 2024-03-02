@@ -205,9 +205,11 @@ class myToyota extends eqLogic {
     $this->createCmd('chargingSessions', 'Sessions de charge', 62, 'info', 'string');
     $this->createCmd('services', 'Services', 63, 'info', 'string');
     $this->createCmd('beRemainingRangeTotal', 'Km restant (global)', 64, 'info', 'numeric');
+    $this->createCmd('moy_sem', 'Moyenne semaine', 65, 'info', 'string');
+    $this->createCmd('trajets', 'trajet 7 derniers jours', 66, 'info', 'string');
 
 	}
-
+  
   // Fonction exécutée automatiquement avant la suppression de l'équipement
   public function preRemove() {
   }

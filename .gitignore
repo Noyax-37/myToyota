@@ -24,3 +24,5 @@ data/NMTK33BX20R153664.png
 *.kml
 
 ressources/gps_kml.py
+
+core/template/dashboard/carte.html

@@ -4,11 +4,12 @@
 """recuperation des donnees de base"""
 import asyncio
 import urllib.request
-from datetime import date, timedelta
+from datetime import date, timedelta, timezone
 
 from mytoyota.client import MyT
 from mytoyota.models.summary import SummaryType
 import sys
+import json
 import argparse
 try:
     from jeedom.jeedom import *
@@ -17,7 +18,8 @@ except ImportError as ex:
     print(ex)
     sys.exit(1)
 
-
+def utc_to_local(utc_dt):
+    return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 async def get_information():
     pid = str(os.getpid())
@@ -43,6 +45,7 @@ async def get_information():
     vehicule['hood_state'] = 'UNKNOW'
 
     cars = await client.get_vehicles(metric=True)
+    moyennes= ''
     for car in cars:
         await car.update()
         logging.info("Vin du vehicule trouve : " + car.vin)
@@ -164,7 +167,7 @@ async def get_information():
             vehicule['gps_coordinates'] = ''
 
             if hasattr(car.location.timestamp , 'strftime'):
-                vehicule['lastUpdate'] = str(car.location.timestamp.strftime('%d-%m-%Y à %H:%M:%S'))
+                vehicule['lastUpdate'] = str(utc_to_local(car.location.timestamp).strftime('%d-%m-%Y à %H:%M:%S'))
                 vehicule['gps_coordinates'] = str(car.location.latitude) + ',' + str(car.location.longitude)
 
 
@@ -172,6 +175,25 @@ async def get_information():
             vehicule['chargingSessions'] = 'UNKNOW'
             if car.service_history != None:
                 vehicule['services'] = '"' + str(car.service_history) + '"'
+            moy_sem = dict()
+            for moyennes in await car.get_summary(date.today() - timedelta(days=7), date.today(), summary_type=SummaryType.YEARLY):
+                moy_sem = {'conso_moy':moyennes.average_fuel_consumed,'vit_moy':moyennes.average_speed,
+                    'distance_tot':moyennes.distance,'duree_tot':str(moyennes.duration),
+                    'distance_ev':moyennes.ev_distance,'duree_ev':str(moyennes.ev_duration),
+                    'conso_essence':moyennes.fuel_consumed}
+            vehicule['moy_sem'] = json.dumps(moy_sem)
+            i = 1
+            mestrajet = dict()
+            for trajets in await car.get_trips(date.today() - timedelta(days=7), date.today(), full_route=False):
+                mestrajet[str('trajet' + str(i))] = {'debut_trajet': str(utc_to_local(trajets.start_time).strftime('%d-%m-%Y %H:%M:%S')),
+                    'conso_moy':trajets.average_fuel_consumed,
+                    'distance_tot':trajets.distance,'duree_tot':str(trajets.duration),
+                    'distance_ev':trajets.ev_distance,'duree_ev':str(trajets.ev_duration),
+                    'conso_essence':trajets.fuel_consumed}
+                i+=1
+            vehicule['trajets'] = json.dumps(mestrajet)
+            
+
 
 
 #    $this->createCmd('climateNow_status', 'Statut climatiser', 49, 'info', 'string');
@@ -237,7 +259,7 @@ logging.info('myToyota------ Apikey : ' + str(APIKEY))
 logging.info('myToyota------ Log level : ' + str(log_level))
 logging.info('myToyota------ Callback : ' + str(CALLBACK))
 logging.info('myToyota------ Nom du vehicule : ' + str(nomvehicule))
-logging.info('myToyota------ VIN du vehicule : ' + str(vin))
+logging.info('myToyota------ VIN du vehicule : ' + '*******') # + str(vin))
 logging.info("myToyota------ ID de l'equipement : " + str(idvehicule))
 logging.info("myToyota------ Nom du compte : " + '*******') #USERNAME)
 logging.info('myToyota------ Passord du compte : ' + '*******') #PASSWORD) 
