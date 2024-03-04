@@ -173,8 +173,17 @@ async def get_information():
 
             vehicule['totalEnergyCharged'] = 'UNKNOW'
             vehicule['chargingSessions'] = 'UNKNOW'
+            i = 1
+            services = dict()
             if car.service_history != None:
-                vehicule['services'] = '"' + str(car.service_history) + '"'
+                for service in car.service_history:
+                    services[str('service' + str(i))] = {'date':str((service.service_date).strftime('%d-%m-%Y')), 'enregistrement_consommateur':service.customer_created_record,
+                               'compteur': str(service.odometer) + ' ' + service._distance_unit, 'notes': service.notes,
+                               'operations': service.operations_performed, 'ro_number': service.ro_number,
+                               'categorie': service.service_category, 'garage': service.service_provider,
+                               'concessionaire': service.servicing_dealer}
+                    i += 1
+                vehicule['services'] = json.dumps(services)
             moy_sem = dict()
             for moyennes in await car.get_summary(date.today() - timedelta(days=7), date.today(), summary_type=SummaryType.YEARLY):
                 moy_sem = {'conso_moy':moyennes.average_fuel_consumed,'vit_moy':moyennes.average_speed,
@@ -183,16 +192,15 @@ async def get_information():
                     'conso_essence':moyennes.fuel_consumed}
             vehicule['moy_sem'] = json.dumps(moy_sem)
             i = 1
-            mestrajet = dict()
+            mestrajets = dict()
             for trajets in await car.get_trips(date.today() - timedelta(days=7), date.today(), full_route=False):
-                mestrajet[str('trajet' + str(i))] = {'debut_trajet': str(utc_to_local(trajets.start_time).strftime('%d-%m-%Y %H:%M:%S')),
+                mestrajets[str('trajet' + str(i))] = {'debut_trajet': str(utc_to_local(trajets.start_time).strftime('%d-%m-%Y %H:%M:%S')),
                     'conso_moy':trajets.average_fuel_consumed,
                     'distance_tot':trajets.distance,'duree_tot':str(trajets.duration),
                     'distance_ev':trajets.ev_distance,'duree_ev':str(trajets.ev_duration),
                     'conso_essence':trajets.fuel_consumed}
-                i+=1
-            vehicule['trajets'] = json.dumps(mestrajet)
-            
+                i += 1
+            vehicule['trajets'] = json.dumps(mestrajets)
 
 
 

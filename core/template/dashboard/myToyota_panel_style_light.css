@@ -173,3 +173,10 @@
 	height: 325px;
 	overflow: auto;
 }
+
+.myToyota_panel_flat th.myToyota_stat_th,  td.myToyota_stat_td {
+	border: 1px solid black;
+	padding:4px 6px;
+	text-align: center;
+	vertical-align: middle;
+}

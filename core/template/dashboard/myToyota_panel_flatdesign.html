@@ -1,4 +1,4 @@
-<div id="myToyota_panel_flat_ID" class="eqLogic-widget eqLogic noResize myToyota_panel_flat myToyota_panel_flat_#id# myToyota" style="min-width:1392px !important; max-width:1392px !important; min-height:1650px; max-height:4650px; text-align:center; border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="panel">
+<div id="myToyota_panel_flat_ID" class="eqLogic-widget eqLogic noResize myToyota_panel_flat myToyota_panel_flat_#id# myToyota" style="min-width:1392px !important; max-width:1392px !important; min-height:650px; max-height:4650px; text-align:center; border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="panel">
 
 	<a href="#eqLink#" id="titre" style="#hideEqLogicName#"><img class="logo_car#id#" id="logo" style="vertical-align: bottom !important" src=""><span style="padding-left:10px;"> #name_display#</span></a>
 	<!-- <span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#" title="Rafraichir" style="margin-right:10px;" onclick="jeedom.cmd.execute({id: #refresh_id#});"><i id="refresh" class="fas fa-sync"></i></span> -->
@@ -293,7 +293,7 @@
 			</div>
 
 			<!-- Tableaux -->
-            <div class="col-xs-6 tab_stat" id="column" style="width: 1350px;">
+            <div class="col-xs-12 tab_stat" id="column" style="width: 1350px;">
                 <div class="col-xs-12 FONC_trajet" id="titre_tile_2">Statistiques et Trajets
                 </div>
                 <!-- Onglets -->
@@ -312,41 +312,48 @@
                             <div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
 								<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
 									<div class="myToyota_panel_flat_titre_tile " id="titre_tile">sur 7 jours glissants</div>
-									<div class="col-xs-12">
-										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:140px;">
+									<div>
+										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
+											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Nombre trajets</div>
+											<center><span class="FONC_trajets" id="FONC_trajets">---</span></center>
+										</div>
+										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Durée totale</div>
 											<center><span class="FONC_duree_totale" id="FONC_duree_totale">---</span></center>
 										</div>
-										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:140px;">
+										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Distance totale</div>
 											<center><span class="FONC_distance_totale" id="FONC_distance_totale">---</span> km</center>
 										</div>
-										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:140px;">
+										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Vitesse moyenne</div>
 											<center><span class="FONC_vitesse_moyenne" id="FONC_vitesse_moyenne">---</span> km/h</center>
 										</div>
-										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:140px;">
+										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Durée en ev</div>
 											<center><span class="FONC_duree_ev" id="FONC_duree_ev">---</span></center>
 										</div>
-										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:140px;">
+										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Distance en ev</div>
 											<center><span class="FONC_distance_ev" id="FONC_distance_ev">---</span> km</center>
 										</div>
-										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:140px;">
+										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Conso Carburant</div>
 											<center><span class="FONC_conso_essence" id="FONC_conso_essence">---</span> l</center>
 										</div>
-										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:140px;">
+										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Conso moyenne</div>
 											<center><span class="FONC_conso_moy" id="FONC_conso_moy">---</span> l/100</center>
 										</div>
 									</div>
 								</div>
+
+								<pre><br></pre>
 								<div class="myToyota_panel_flat_titre_tile " id="titre_tile2">Trajets en Hybride des 7 derniers jours
                                 </div>
-                                <div >
-                                    <table class="fixed_header tableCmd" id="table_cmd_hyd">
+								<br>
+                                <div class="tableHyd">
+                                    <table class="fixed_header tableCmdHyd" id="table_cmd_hyd">
                                     </table>
                                 </div>
                             </div>
@@ -359,23 +366,7 @@
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets essence
 							</div>
 							<div >
-								<table class="fixed_header tableCmd" id="table_cmd_ess">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Durée</th>
-											<th>Distance</th>
-											<th>Vitesse Moy.</th>
-											<th>kW Conso</th>
-											<th>Impact autonomie</th>
-											<th>Efficience</th>
-											<th>kW/100 km</th>
-											<th>Autonomie WLTP</th>
-										</tr>
-									</thead>
-									<tbody>
-										
-									</tbody>
+								<table class="fixed_header tableCmdEss" id="table_cmd_ess">
 								</table>
 							</div>
 						</div>
@@ -388,23 +379,7 @@
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets électrique
 							</div>
 							<div >
-								<table class="fixed_header tableCmd" id="table_cmd_elec">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Durée</th>
-											<th>Distance</th>
-											<th>Vitesse Moy.</th>
-											<th>kW Conso</th>
-											<th>Impact autonomie</th>
-											<th>Efficience</th>
-											<th>kW/100 km</th>
-											<th>Autonomie WLTP</th>
-										</tr>
-									</thead>
-									<tbody>
-										
-									</tbody>
+								<table class="fixed_header tableCmdElec" id="table_cmd_elec">
 								</table>
 							</div>
 						</div>
@@ -417,23 +392,7 @@
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets PHEV
 							</div>
 							<div >
-								<table class="fixed_header tableCmd" id="table_cmd_phev">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Durée</th>
-											<th>Distance</th>
-											<th>Vitesse Moy.</th>
-											<th>kW Conso</th>
-											<th>Impact autonomie</th>
-											<th>Efficience</th>
-											<th>kW/100 km</th>
-											<th>Autonomie WLTP</th>
-										</tr>
-									</thead>
-									<tbody>
-										
-									</tbody>
+								<table class="fixed_header tableCmdPhev" id="table_cmd_phev">
 								</table>
 							</div>
 						</div>
@@ -1032,6 +991,35 @@
 	//----- Messages
 	jeedom.cmd.update['#vehicleMessages_id#'] = function(_options) {
        	var messages = json_decode(_options.display_value);
+		var table_html= "";
+		table_html += '<thead><tr class="myToyota_service_tr">';
+		table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 2px;">Date</th>';
+		table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 2px;">Km</th>';
+		table_html += '<th class="myToyota_stat_th" style="width: 30%; height: 25px; padding-left: 2px;">Code</th>';
+		table_html += '<th class="myToyota_stat_th" style="width: 50%; height: 25px; padding-left: 2px;">Garage</th>';
+		table_html += '</tr></thead>';
+		table_html += '<tbody>';
+		nbtrajets = count(messages);
+		for (message in messages){
+			//var trajets = JSON.parse(_options.display_value);
+			console.log('-------- Tab services -----' + message);
+			if (messages[message].categorie == 'HSC'){
+				cat = 'Bilan de santé Hybride';
+			}else if (messages[message].categorie == 'VDE'){
+				cat = 'Livraison véhicule';
+			}else{
+				cat = messages[message].categorie;
+			}
+			table_html += '<tr>'
+			table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+messages[message].date+'</span></td>';
+			table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+messages[message].compteur+'</span></td>';
+			table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+cat+'</span></td>';
+			table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+messages[message].garage+'</span></td>';
+			table_html += '</tr>';
+		};
+		table_html += '</tbody>';
+		$('.table_message#id#').empty().append(table_html);
+	};
 		
 /*		JSON.each(messages.checkControlMessages,function(key,message){
 			if ( message.type == "ENGINE_OIL" ) {
@@ -1071,8 +1059,8 @@
 		});
 		table_html += '</ul>';
 		$('.table_message#id#').empty().append(table_html);
-	*/	}
-	jeedom.cmd.update['#vehicleMessages_id#']({display_value:'#vehicleMessages#'});
+	*/
+	jeedom.cmd.update['#vehicleMessages_id#']({display_value:'#services#'});
 	
 
 	//------ Charts
@@ -1393,13 +1381,15 @@
 	jeedom.cmd.update['#moy_sem_id#'] = function(_options) {
 			$(function() {
 				var x = JSON.parse(_options.display_value);
-				$('.FONC_duree_totale').empty().append('<span>'+x.duree_tot+'</span>'); //
-				$('.FONC_distance_totale').empty().append('<span>'+x.distance_tot+'</span>'); //
-				$('.FONC_vitesse_moyenne').empty().append('<span>'+x.vit_moy+'</span>'); //
-				$('.FONC_duree_ev').empty().append('<span>'+x.duree_ev+'</span>'); //
-				$('.FONC_distance_ev').empty().append('<span>'+x.distance_ev+'</span>'); //
-				$('.FONC_conso_essence').empty().append('<span>'+x.conso_essence+'</span>'); 
-				$('.FONC_conso_moy').empty().append('<span>'+x.conso_moy+'</span>'); 
+				if (x.duree_tot!=undefined){
+					$('.FONC_duree_totale').empty().append('<span>'+x.duree_tot+'</span>'); //
+					$('.FONC_distance_totale').empty().append('<span>'+x.distance_tot+'</span>'); //
+					$('.FONC_vitesse_moyenne').empty().append('<span>'+x.vit_moy+'</span>'); //
+					$('.FONC_duree_ev').empty().append('<span>'+x.duree_ev+'</span>'); //
+					$('.FONC_distance_ev').empty().append('<span>'+x.distance_ev+'</span>'); //
+					$('.FONC_conso_essence').empty().append('<span>'+x.conso_essence+'</span>'); 
+					$('.FONC_conso_moy').empty().append('<span>'+x.conso_moy+'</span>'); 
+				}
 			});
 		}
 		jeedom.cmd.update['#moy_sem_id#']({display_value:'#moy_sem#'});	
@@ -1408,31 +1398,32 @@
 			$(function() {
 				var trajets = JSON.parse(_options.display_value);
 				var table_html= "";
-				table_html += '<thead><tr>';
-				table_html += '<th style="width: 10%; height: 25px; padding-left: 12px;">{{Début}}</th>';
-				table_html += '<th style="width: 10%; height: 25px; padding-left: 12px;">{{Durée}}</th>';
-				table_html += '<th style="width: 10%; height: 25px; padding-left: 12px;">{{Distance}}</th>';
-				table_html += '<th style="width: 10%; height: 25px; padding-left: 12px;">{{Temps en ev}}</th>';
-				table_html += '<th style="width: 10%; height: 25px; padding-left: 12px;">{{Distance en ev}}</th>';
-				table_html += '<th style="width: 10%; height: 25px; padding-left: 12px;">{{Conso Carburant}}</th>';
-				table_html += '<th style="width: 10%; height: 25px; padding-left: 12px;">{{Moyenne de conso}}</th>';
+				table_html += '<thead><tr class="myToyota_stat_tr">';
+				table_html += '<th class="myToyota_stat_th" style="width: 15%; height: 25px; padding-left: 12px;">Début</th>';
+				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Durée</th>';
+				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Distance</th>';
+				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Temps en ev</th>';
+				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Distance en ev</th>';
+				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Conso Carburant</th>';
+				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Moyenne de conso</th>';
 				table_html += '</tr></thead>';
 				table_html += '<tbody>';
-//				trajets.forEach(([keys]) => console.log('prout')); //,value]) => {
+				nbtrajets = count(trajets);
+				$('.FONC_trajets').empty().append('<span>'+nbtrajets+'</span>');
 				for(trajet in trajets){
 					console.log('-------- Tab cmd HYD -----' + trajet);
 					table_html += '<tr>'
-					table_html += '<td><input type="text" class="eqLogicAttr form-control input-sm" style="background-color: transparent !important;" value="'+trajets[trajet].debut_trajet+'" readonly="true"></td>';
-					table_html += '<td><input type="text" class="eqLogicAttr form-control input-sm" style="background-color: transparent !important;" value="'+trajets[trajet].duree_tot+'" readonly="true"></td>';
-					table_html += '<td><input type="text" class="eqLogicAttr form-control input-sm" style="background-color: transparent !important;" value="'+trajets[trajet].distance_tot+'" readonly="true"></td>';
-					table_html += '<td><input type="text" class="eqLogicAttr form-control input-sm" style="background-color: transparent !important;" value="'+trajets[trajet].duree_ev+'" readonly="true"></td>';
-					table_html += '<td><input type="text" class="eqLogicAttr form-control input-sm" style="background-color: transparent !important;" value="'+trajets[trajet].distance_ev+'" readonly="true"></td>';
-					table_html += '<td><input type="text" class="eqLogicAttr form-control input-sm" style="background-color: transparent !important;" value="'+trajets[trajet].conso_essence+'" readonly="true"></td>';
-					table_html += '<td><input type="text" class="eqLogicAttr form-control input-sm" style="background-color: transparent !important;" value="'+trajets[trajet].conso_moy+'" readonly="true"></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].debut_trajet+'</span></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].duree_tot+'</span></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].distance_tot+' km</span></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].duree_ev+'</span></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].distance_ev+' km</span></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].conso_essence+' litre(s)</span></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].conso_moy+' l/100km</span></td>';;
 					table_html += '</tr>';
 				};
 				table_html += '</tbody>';
-				$('.tableCmd').empty().append(table_html);
+				$('.tableCmdHyd').empty().append(table_html);
 			});
 		}
 		jeedom.cmd.update['#trajets_id#']({display_value:'#trajets#'});	

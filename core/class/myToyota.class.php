@@ -87,6 +87,36 @@ class myToyota extends eqLogic {
   */
 
   /*     * *********************Méthodes d'instance************************* */
+  // * Permet d'indiquer des éléments supplémentaires à remonter dans les informations de configuration
+  // * lors de la création semi-automatique d'un post sur le forum community
+  public static function getConfigForCommunity() {
+    if (!file_exists('/var/www/html/plugins/myToyota/plugin_info/info.json')) {
+      log::add('myToyota','warning','Pas de fichier info.json');
+    }
+    $data = json_decode(file_get_contents('/var/www/html/plugins/myToyota/plugin_info/info.json'), true);
+    if (!is_array($data)) {
+        log::add('myToyota','warning','Impossible de décoder le fichier info.json');
+    }
+    try {
+        $core_version = $data['pluginVersion'];
+    } catch (\Exception $e) {
+        log::add('myToyota','warning','Impossible de récupérer la version.');
+    }
+  
+    $hw = jeedom::getHardwareName();
+    if ($hw == 'diy')
+        $hw = trim(shell_exec('systemd-detect-virt'));
+    if ($hw == 'none')
+        $hw = 'diy';
+    $distrib = trim(shell_exec('. /etc/*-release && echo $ID $VERSION_ID'));
+    $res = 'OS: ' . $distrib . ' on ' . $hw;
+    $res .= ' ; PHP: ' . phpversion();
+    $res .= ' ; Python: ' . trim(shell_exec("python3 -V | cut -d ' ' -f 2"));
+    $res .= '<br/>myToyota: version ' . $core_version;
+    $res .= ' ; cmds: ' . count(cmd::searchConfiguration('', myToyota::class));
+    return $res;
+  }
+   
 
   // Fonction pour exclure un sous répertoire de la sauvegarde
   public static function backupExclude() {
@@ -207,7 +237,6 @@ class myToyota extends eqLogic {
     $this->createCmd('beRemainingRangeTotal', 'Km restant (global)', 64, 'info', 'numeric');
     $this->createCmd('moy_sem', 'Moyenne semaine', 65, 'info', 'string');
     $this->createCmd('trajets', 'trajet 7 derniers jours', 66, 'info', 'string');
-
 	}
   
   // Fonction exécutée automatiquement avant la suppression de l'équipement
