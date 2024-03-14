@@ -16,6 +16,10 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__) . "/../../../../core/php/core.inc.php";
+if (!class_exists('myToyota')) {
+	require_once __DIR__ . '/../../core/class/myToyota.class.php';
+}
+
 set_time_limit(15);
 
 if (!jeedom::apiAccess(init('apikey'), 'myToyota')) {

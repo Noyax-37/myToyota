@@ -156,11 +156,13 @@ async def get_information():
                 vehicule['beRemainingRangeTotal'] = car.dashboard.range
             if hasattr(car.dashboard,'remaining_charge_time'):
                 vehicule['chargingEndTime'] = car.dashboard.remaining_charge_time
-
+            
+            vehicule['beRemainingRangeFuelKm'] = '---'
+            vehicule['remaining_fuel'] = '---'
             if car._vehicle_info.extended_capabilities.fuel_range_available:
-                vehicule['beRemainingRangeFuelKm'] = car.dashboard.fuel_range
+                vehicule['beRemainingRangeFuelKm'] = str(car.dashboard.fuel_range)
             if car._vehicle_info.extended_capabilities.fuel_level_available:
-                vehicule['remaining_fuel'] = car.dashboard.fuel_level
+                vehicule['remaining_fuel'] = str(car.dashboard.fuel_level)
 
             if hasattr(car.notifications,'message'):
                 vehicule['vehicleMessages'] = '"' + str(car.notifications[0].message).replace(u'\xa0', u' ') + '"'

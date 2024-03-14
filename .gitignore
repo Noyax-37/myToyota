@@ -26,3 +26,5 @@ data/NMTK33BX20R153664.png
 ressources/gps_kml.py
 
 core/template/dashboard/carte.html
+
+data/myToyota_token.json

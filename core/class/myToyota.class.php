@@ -18,6 +18,11 @@
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
+if (!class_exists('myToyota_API')) {
+	require_once __DIR__ . '/../../3rdparty/myToyota_API.php';
+}
+
+
 class myToyota extends eqLogic {
   /*     * *************************Attributs****************************** */
 
@@ -165,9 +170,9 @@ class myToyota extends eqLogic {
     $this->createCmd('year', 'Année', 3, 'info', 'string'); //manufactured_date
     $this->createCmd('type', 'Type', 4, 'info', 'string'); //electrique, hybride, ...
 
-    $this->createCmd('carburant', 'Carburant', 70, 'info', 'string'); //essence ou diesel
+    $this->createCmd('carburant', 'Carburant', 5, 'info', 'string', 1); //essence ou diesel
 
-    $this->createCmd('mileage', 'Kilométrage', 5, 'info', 'numeric'); //odometer
+    $this->createCmd('mileage', 'Kilométrage', 6, 'info', 'numeric', 1); //odometer
 
     $this->createCmd('doorLockState', 'Verrouillage', 6, 'info', 'string');
     $this->createCmd('allDoorsState', 'Toutes les portes', 7, 'info', 'string');
@@ -366,7 +371,7 @@ class myToyota extends eqLogic {
    */
 
   /*     * **********************Getteur Setteur*************************** */
-	private function createCmd($commandName, $commandDescription, $order, $type, $subType, $template = [])
+	private function createCmd($commandName, $commandDescription, $order, $type, $subType, $historized = 0, $template = [])
 	{	
 		$cmd = $this->getCmd(null, $commandName);
         if (!is_object($cmd)) {
@@ -377,9 +382,11 @@ class myToyota extends eqLogic {
 			$cmd->setLogicalId($commandName);
 			$cmd->setType($type);
 			$cmd->setSubType($subType);
+      $cmd->setIsHistorized($historized);
 			if (!empty($template)) { $cmd->setTemplate($template[0], $template[1]); }
 			$cmd->save();
-			log::add('myToyota', 'debug', 'Add command '.$cmd->getName().' (LogicalId : '.$cmd->getLogicalId().')');
+      if ($historized==0) {$hist = 'non';}else{$hist='oui';}
+			log::add('myToyota', 'debug', 'Add command '.$cmd->getName().' (LogicalId : '.$cmd->getLogicalId().'), historisé : ' . $hist);
         }
   }
 
@@ -595,7 +602,38 @@ class myToyota extends eqLogic {
       log::add('myToyota', 'debug', '| Result getGPSCoordinates() : '.json_encode($gps));
       return $gps;
     }
-    
+
+    public function getConnection()
+    {
+        $vin = $this->getConfiguration("vehicle_vin");
+        $username = $this->getConfiguration("username");
+        $password = $this->getConfiguration("password");
+        $brand = 'T'; //$this->getConfiguration("vehicle_brand");
+        if ($brand == 'T'){
+          $constructeur = 'Toyota';
+        }else if ($brand=='L'){
+          $constructeur = 'Lexus';
+        }
+        log::add('myToyota', 'debug', '| Result user : '. substr($username,0,3) . '***' . substr($username,-3,3) . ' ; password : '. substr($password,0,2) . '***' . substr($password,-2,2) . ' ; vin : '. substr($vin,0,3) . '***' . substr($vin,-3,3) . ' ; constructeur : ' . $constructeur);
+        $myConnection = new MyToyota_API($username, $password, $vin, $brand);
+        return $myConnection;
+  	}
+
+
+    public function update_datas($eqLogic)
+    {
+      $myConnection = $eqLogic->getConnection();
+      //log::add('myToyota', 'debug', '| Result telemetry : ' . ($myConnection));
+      $result = $myConnection->getTelemetry();
+      $telemetry = json_decode($result->body);
+      log::add('myToyota', 'debug', '| Return telemetry body :' . str_replace('\n','',json_encode($telemetry)));
+
+      $result = $myConnection->getLocationEndPoint();
+      $locationEndpoint = json_decode($result->body);
+      log::add('myToyota', 'debug', '| Return location endpoint body :' . str_replace('\n','',json_encode($locationEndpoint)));
+
+
+    }
 
 
 }
@@ -638,6 +676,7 @@ class myToyotaCmd extends cmd {
                     //$eqLogic->doLightFlash();
                     break;
                 case 'doorLock':
+                    myToyota::update_datas($eqLogic);
                     //$eqLogic->doDoorLock();
                     break;
                 case 'doorUnlock':
