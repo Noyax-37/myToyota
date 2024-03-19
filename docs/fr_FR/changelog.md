@@ -4,6 +4,11 @@
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 
+
+- Ecriture de la doc
+- 
+
 # 19/01/2022
 
 - Optimisations V4.2

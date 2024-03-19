@@ -28,3 +28,5 @@ ressources/gps_kml.py
 core/template/dashboard/carte.html
 
 data/myToyota_token.json
+
+ressources/JsonPath-PHPP/

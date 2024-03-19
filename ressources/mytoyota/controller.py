@@ -53,6 +53,7 @@ class Controller:
         self._authorize_url = httpx.URL(AUTHORIZE_URL)
 
         # Do we have a cache file?
+        print(f"Fichier cache: {CACHE_FILENAME}")
         if CACHE_FILENAME.exists():
             with open(str(CACHE_FILENAME), "r", encoding="utf-8") as f:
                 cache_data = json.load(f)
@@ -244,6 +245,7 @@ class Controller:
                 "user-agent": "okhttp/4.10.0",
             },
         )
+        _LOGGER.debug('headers : ' + str(headers))
         # Add vin if passed
         if vin is not None:
             headers.update({"vin": vin})

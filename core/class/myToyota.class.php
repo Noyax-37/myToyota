@@ -21,6 +21,7 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 if (!class_exists('myToyota_API')) {
 	require_once __DIR__ . '/../../3rdparty/myToyota_API.php';
 }
+    
 
 
 class myToyota extends eqLogic {
@@ -624,9 +625,9 @@ class myToyota extends eqLogic {
     {
       $myConnection = $eqLogic->getConnection();
       //log::add('myToyota', 'debug', '| Result telemetry : ' . ($myConnection));
-      $result = $myConnection->getTelemetry();
-      $telemetry = json_decode($result->body);
-      log::add('myToyota', 'debug', '| Return telemetry body :' . str_replace('\n','',json_encode($telemetry)));
+      $result = $myConnection->getDevice();
+      $devices = json_decode($result->body);
+      log::add('myToyota', 'debug', '| Return devices body :' . str_replace('\n','',json_encode($devices)));
 
       $result = $myConnection->getLocationEndPoint();
       $locationEndpoint = json_decode($result->body);

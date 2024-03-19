@@ -111,29 +111,21 @@ class myToyota_API
 		
 		// $datetime = (new \DateTime('now', new DateTimeZone(config::byKey('timezone'))))->format('c');
 		$headers = [
-            'x-osname: iOS',
-            'x-brand: ' . $this->brand,
-            'accept: */*',
-            'x-channel: ONEAPP',
-            'brand: ' . $this->brand,
-            'x-region: EU',
-            'x-appbrand: ' . $this->brand,
-            'x-osversion: 16.7.2',
-            'accept-language: fr-FR,fr;q=0.9',
-            'region: EU',
-            'user-agent: Toyota/134 CFNetwork/1410.0.3 Darwin/22.6.0',
-            'accept-api-version: resource=2.0, protocol=1.0',
-            'x-appversion: 2.4.2',
-            'x-device-timezone : CEST',
-            'guid: ' . $this->uuid,
-            'x-guid : ' . $this->uuid,
-            'x-locale : fr-FR',
-            'authorization: Bearer ' . $this->access_token,
-            'x-correlationid : 7683DC30-D4DA-4FEC-850E-F3557A7DCEF4',
-            'x-user-region : FR',
-            'x-api-key : tTZipv6liF74PwMfk9Ed68AQ0bISswwf3iHQdqcF',
+          'x-appbrand: ' . $this->brand,
+          'x-osname: iOS',
+          'user-agent: Toyota/134 CFNetwork/1410.0.3 Darwin/22.6.0',
+          'x-region: EU',
+          'region: EU',
+          'brand: ' . $this->brand,
+          'x-channel: ONEAPP',
+          'x-osversion: 16.7.2',
+          'x-brand: ' . $this->brand,
+          'accept-language: fr-FR,fr;q=0.9',
+          'x-appversion: 2.4.2',
+          'accept: */*',
+          'accept-api-version: resource=2.0, protocol=1.0',
         ];
-     	return $headers;
+     return $headers;
 	}
 
     private function createToken() {
@@ -182,7 +174,6 @@ class myToyota_API
             return $this->refreshToken();
         } else {
             log::add('myToyota', 'debug', '| Token encore en cours');
-            return $this->refreshToken();
         }
 	}
 
@@ -293,7 +284,12 @@ class myToyota_API
         $data6 = json_decode($result6->body, true);
         
         //$this->uuid = '';
-        $this->$uuid = base64_decode($tokenId);
+      	$expToken = explode('.', $data6['access_token']);
+      
+      	
+        $uuid = json_decode(base64_decode(strtr($expToken[1], '-_', '+/,'), true));
+      	log::add('myToyota', 'debug', '| uuid: ' . $uuid->{'uuid'});
+        $this->uuid = $uuid->{'uuid'};
         $this->access_token = $data6['access_token'];
         $this->refresh_token = $data6['refresh_token'];
         $this->token_expiration = time() + $data6['expires_in'];
@@ -326,7 +322,15 @@ class myToyota_API
             $result1 = $this->_request($url, $method, $data, $headers);
             log::add('myToyota', 'debug', '| Result refreshToken() myToyota : ' . $result1->body);
             $data1 = json_decode($result1->body, true);
-            //$this->$uuid = base64_decode($data1['access_token']);
+
+            $expToken = explode('.', $data1['access_token']);
+      
+      	
+            $uuid = json_decode(base64_decode(strtr($expToken[1], '-_', '+/,'), true));
+              log::add('myToyota', 'debug', '| uuid: ' . $uuid->{'uuid'});
+    
+
+            $this->uuid = $uuid->{'uuid'};
             $this->access_token = $data1['access_token'];
             $this->refresh_token = $data1['refresh_token'];
             $this->token_expiration = time() + $data1['expires_in'];
@@ -334,36 +338,56 @@ class myToyota_API
             log::add('myToyota', 'debug', '| Result refreshToken() myToyota : Token sauvegardé');
     }
 
-    private function refreshData()
-    {
-        $test = ['x-device-timezone : CEST',
-        'guid: ' . $this->uuid,
-        'x-guid : ' . $this->uuid,
-        'x-locale : fr-FR',
-        'authorization: Bearer ' . $this->access_token,
-        'x-correlationid : 7683DC30-D4DA-4FEC-850E-F3557A7DCEF4',
-        'x-user-region : FR',
-        'x-api-key : tTZipv6liF74PwMfk9Ed68AQ0bISswwf3iHQdqcF',
+	private function _setHeadersUpdate()   {				//Define headers update data
+        $headers = [
+            'x-appbrand: ' . $this->brand,
+            'x-osname: iOS',
+            'user-agent: Toyota/134 CFNetwork/1410.0.3 Darwin/22.6.0',
+            'x-region: EU',
+            'region: EU',
+            'brand: ' . $this->brand,
+            'x-channel: ONEAPP',
+            'x-osversion: 16.7.2',
+            'x-brand: ' . $this->brand,
+            'accept-language: fr-FR,fr;q=0.9',
+            'x-appversion: 2.4.2',
+            'accept: */*',
+            'accept-api-version: resource=2.0, protocol=1.0', //fin du default header
+            'authorization: Bearer ' . $this->access_token,
+            'x-device-timezone: CEST',
+            'x-correlationid: 7683DC30-D4DA-4FEC-850E-F3557A7DCEF4',
+            'guid: ' . $this->uuid,
+            'x-guid: ' . $this->uuid,
+            'x-locale: fr-FR',
+            'x-user-region: FR',
+            'x-api-key: tTZipv6liF74PwMfk9Ed68AQ0bISswwf3iHQdqcF',
+            'vin: ' . $this->vin,
         ];
+        return $headers;
+	}
 
-        log::add('myToyota', 'debug', '| Result refresData() myToyota : Ok');
-    }
-
-
-    public function getTelemetry()
+    public function getDevice()
     {
         $this->_checkAuth();
-		$headers = $this->_setDefaultHeaders();
-		log::add('myToyota', 'debug', '| Headers : '. json_encode($headers,JSON_UNESCAPED_SLASHES));
-		return $this->_request($this::API_BASE_URL . $this::VEHICLE_TELEMETRY_ENDPOINT, 'GET', null, $headers);
+		//$headers = $this->_setDefaultHeaders();
+        $headers = $this->_setHeadersUpdate();
+        //$headers = [
+        //    'vin :' . $this->vin,
+        //];
+        
+        log::add('myToyota', 'debug', '| Headers : '. json_encode($headers,JSON_UNESCAPED_SLASHES));
+		$return1 = json_decode($this->_request($this::API_BASE_URL . $this::VEHICLE_GUID_ENDPOINT, 'GET', null, $headers));
+		$return2 =  json_decode($this->_request($this::API_BASE_URL . $this::VEHICLE_LOCATION_ENDPOINT, 'GET', null, $headers));
+        log::add('myToyota', 'debug', '| VEHICLE_GUID_ENDPOINT : ' . str_replace('\n','',json_encode($return1)));
+        log::add('myToyota', 'debug', '| VEHICLE_LOCATION_ENDPOINT : ' . str_replace('\n','',json_encode($return2)));
     }
 
     public function getLocationEndPoint()
     {
         $this->_checkAuth();
-		$headers = $this->_setDefaultHeaders();
-		log::add('myToyota', 'debug', '| Headers : '. json_encode($headers,JSON_UNESCAPED_SLASHES));
-		return $this->_request($this::API_BASE_URL . $this::VEHICLE_LOCATION_ENDPOINT, 'GET', null, $headers);
+		$headers = $this->_setHeadersUpdate();
+//		log::add('myToyota', 'debug', '| Headers : '. json_encode($headers,JSON_UNESCAPED_SLASHES));
+//		return $this->_request($this::API_BASE_URL . $this::VEHICLE_LOCATION_ENDPOINT, 'GET', null, $headers);
     }
     
 }
