@@ -151,6 +151,9 @@ class myToyota extends eqLogic {
 		if (empty($this->getConfiguration('vehicle_vin'))) {
 			throw new Exception('Le d\'identification du véhicule ne peut pas être vide');
 		}
+		if (empty($this->getConfiguration('vehicle_brand'))) {
+			throw new Exception('La marque du véhicule ne peut pas être vide');
+		}
 
   }
 
@@ -391,14 +394,74 @@ class myToyota extends eqLogic {
         }
   }
 
-	public static function synchronize($vin, $username, $password)
+	public static function synchronize($vin, $username, $password, $brand)
     {
+      $eqLogic = self::getToyotaEqLogic($vin);
       
       log::add('myToyota', 'info', '┌─Command execution : synchronize');
           
       log::add('myToyota', 'info', '---------------------------------------------------------------');
       log::add('myToyota', 'info', '-----------------Démarrage synchro des données-----------------');
-      $myToyotaPath         	  = realpath(dirname(__FILE__) . '/../../ressources');
+
+      $myConnection = $eqLogic->getConnection();
+      $result = $myConnection->getDevice();
+      $devices = json_decode($result->body);
+      $vin = $eqLogic->getConfiguration('vehicle_vin');
+      log::add('myToyota', 'debug', '| Return devices body :' . $result->body);
+      log::add('myToyota', 'debug', '| Return nombre de véhicules :' . count($devices->payload) );
+
+      $return['erreur'] = 'erreur';
+
+      if ( count($devices->payload) == 0 )
+      {
+        log::add('myToyota', 'debug', '| Result getVehicles() : pas de véhicule trouvé avec service myToyota activé');
+        //log::add('myToyota', $eqLogic->getLogLevelFromHttpStatus($result->httpCode, '200 - OK'), '└─fin de la synchronisation : ['.$result->httpCode.']');
+      }
+      else
+      {
+        $vehicles = $devices->payload;
+        foreach ($vehicles as $vehicle)
+        {
+          log::add('myToyota', 'debug', '| Result vin() : ' . $vehicle->vin);
+          if ( $vehicle->vin == $vin )
+          {
+            //if ( isset($vehicle->attributes->brand) ) { $eqLogic->checkAndUpdateCmd('brand', $vehicle->attributes->brand); } else { $eqLogic->checkAndUpdateCmd('brand', 'not available'); }
+            if ( isset($vehicle->modelName) ) { 
+              $eqLogic->checkAndUpdateCmd('model', $vehicle->modelName);
+              $return['modelName'] = $vehicle->modelName;
+            } else { 
+              $eqLogic->checkAndUpdateCmd('model', 'not available'); 
+            }
+            if ( isset($vehicle->manufacturedDate) ) { 
+              $return['modelYear'] = date("d-m-Y", strtotime($vehicle->manufacturedDate));
+              $eqLogic->checkAndUpdateCmd('year', $return['modelYear']);
+            } else { 
+              $eqLogic->checkAndUpdateCmd('year', 'not available'); 
+            }
+            //if ( isset($vehicle->attributes->driveTrain) ) { $eqLogic->checkAndUpdateCmd('type', $vehicle->attributes->driveTrain); } else { $eqLogic->checkAndUpdateCmd('type', 'not available'); }
+            log::add('myToyota', 'debug', '| Result getDevice() : '.str_replace('\n','',json_encode($vehicle)));
+            //log::add('myToyota', $eqLogic->getLogLevelFromHttpStatus($result->httpCode, '200 - OK'), '└─End of synchronisation : ['.$result->httpCode.']');
+            if ($vehicle->extendedCapabilities->hybridPulse){
+              $return['driveTrain'] = 'Hybride';
+            }
+            if ( isset($vehicle->stockPicReference)) {
+              $filename = dirname(__FILE__).'/../../data/'.$vin.'.png';
+              $img = $vehicle->stockPicReference;
+              log::add('myToyota', 'debug', '| Result image : '. $img);
+              file_put_contents($filename,file_get_contents($img));
+            }
+            $return['erreur'] = 'ok';
+            log::add('myToyota', 'info', "| Result getVehicles() : ok c'est le VIN recherché");
+          } else {
+            log::add('myToyota', 'info', '| Result getVehicles() : pas le bon VIN');
+          }
+        }
+      }
+      return $return;
+  
+
+
+      /*      $myToyotaPath         	  = realpath(dirname(__FILE__) . '/../../ressources');
       $output = [];
       $vehicle = [];
       $vehicle['vin'] = $vin;
@@ -441,7 +504,7 @@ class myToyota extends eqLogic {
       log::add('myToyota', 'info', '---------------------------------------------------------------');
 
       return $vehicle;
-		
+*/		
 	  }
 	
     public static function all_data($username, $password)
@@ -609,7 +672,7 @@ class myToyota extends eqLogic {
         $vin = $this->getConfiguration("vehicle_vin");
         $username = $this->getConfiguration("username");
         $password = $this->getConfiguration("password");
-        $brand = 'T'; //$this->getConfiguration("vehicle_brand");
+        $brand = $this->getConfiguration("vehicle_brand");
         if ($brand == 'T'){
           $constructeur = 'Toyota';
         }else if ($brand=='L'){
@@ -623,15 +686,11 @@ class myToyota extends eqLogic {
 
     public function update_datas($eqLogic)
     {
-      $myConnection = $eqLogic->getConnection();
-      //log::add('myToyota', 'debug', '| Result telemetry : ' . ($myConnection));
-      $result = $myConnection->getDevice();
-      $devices = json_decode($result->body);
-      log::add('myToyota', 'debug', '| Return devices body :' . str_replace('\n','',json_encode($devices)));
-
       $result = $myConnection->getLocationEndPoint();
-      $locationEndpoint = json_decode($result->body);
-      log::add('myToyota', 'debug', '| Return location endpoint body :' . str_replace('\n','',json_encode($locationEndpoint)));
+      $location = json_decode($result->body);
+//      log::add('myToyota', 'debug', '| Return location endpoint body :' . $location);
+      log::add('myToyota', 'debug', '| Return location endpoint body0 :' . $result->body);
+      log::add('myToyota', 'debug', '| Return location endpoint body2 :' . $location->payload->vin);
 
 
     }

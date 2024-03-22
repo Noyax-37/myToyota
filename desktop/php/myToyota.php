@@ -178,6 +178,17 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									</div>
 							</div>
 
+							<div class="form-group">		
+									<label class="col-sm-4 control-label">{{Marque}}</label>
+									<div class="col-sm-4">
+										<select id="sel_brand" class="eqLogicAttr form-control" style="margin: 1px 0px;" data-l1key="configuration" data-l2key="vehicle_brand" placeholder="Marque du véhicule">
+											<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>
+											<option value="T">Toyota</option>
+											<option value="L">Lexus</option>
+										</select>
+									</div>
+								</div>   
+
 							<div id="div_vin" class="form-group">		
 								<label class="col-sm-4 control-label">{{VIN}}</label>
 								<div class="col-sm-4">

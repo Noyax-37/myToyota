@@ -30,7 +30,7 @@ try {
     ajax::init();
 
     if (init('action') == 'synchronize') {
-      $result = myToyota::synchronize(init('vin'),init('username'),init('pwd'));
+      $result = myToyota::synchronize(init('vin'),init('username'),init('pwd'),init('brand'));
       //$result['attributes']['model'] = init('vin');
       //$result['attributes']['year'] = init('username');
       //$result['attributes']['driveTrain'] = init('pwd');

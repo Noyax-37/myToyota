@@ -43,7 +43,7 @@ class myToyota_API
         $this->brand = $brand;
         $this->timeout = 60;
 
-        if (file_exists(dirname(__FILE__).'/../data/myToyota_token.json')) {
+        if (file_exists(dirname(__FILE__).'/../data/myToyota_' . $this->vin . '_token.json')) {
             $this->loadToken();
 		}
 		else  {
@@ -140,7 +140,7 @@ class myToyota_API
 
 	private function loadToken() {
 	
-		$array = json_decode(file_get_contents(dirname(__FILE__).'/../data/myToyota_token.json'), true);
+		$array = json_decode(file_get_contents(dirname(__FILE__).'/../data/myToyota_' . $this->vin . '_token.json'), true);
 		$this->uuid = $array['uuid'];
 		$this->access_token = $array['access_token'];
 		$this->refresh_token = $array['refresh_token'];
@@ -156,7 +156,7 @@ class myToyota_API
 			'refresh_token' => $this->refresh_token,
             'token_expiration' => $this->token_expiration,
 		);
-		file_put_contents(dirname(__FILE__).'/../data/myToyota_token.json', json_encode($array));
+		file_put_contents(dirname(__FILE__).'/../data/myToyota_' . $this->vin . '_token.json', json_encode($array));
 	}
 
 
@@ -340,27 +340,14 @@ class myToyota_API
 
 	private function _setHeadersUpdate()   {				//Define headers update data
         $headers = [
-            'x-appbrand: ' . $this->brand,
-            'x-osname: iOS',
-            'user-agent: Toyota/134 CFNetwork/1410.0.3 Darwin/22.6.0',
-            'x-region: EU',
-            'region: EU',
-            'brand: ' . $this->brand,
-            'x-channel: ONEAPP',
-            'x-osversion: 16.7.2',
-            'x-brand: ' . $this->brand,
-            'accept-language: fr-FR,fr;q=0.9',
-            'x-appversion: 2.4.2',
-            'accept: */*',
-            'accept-api-version: resource=2.0, protocol=1.0', //fin du default header
-            'authorization: Bearer ' . $this->access_token,
-            'x-device-timezone: CEST',
-            'x-correlationid: 7683DC30-D4DA-4FEC-850E-F3557A7DCEF4',
-            'guid: ' . $this->uuid,
-            'x-guid: ' . $this->uuid,
-            'x-locale: fr-FR',
-            'x-user-region: FR',
+            'content-type: application/json',
             'x-api-key: tTZipv6liF74PwMfk9Ed68AQ0bISswwf3iHQdqcF',
+            'x-guid: ' . $this->uuid,
+            'guid: ' . $this->uuid,
+            'authorization: Bearer ' . $this->access_token,
+            'x-channel: ONEAPP',
+            'x-brand: ' . $this->brand,
+            'user-agent: okhttp/4.10.0',
             'vin: ' . $this->vin,
         ];
         return $headers;
@@ -369,25 +356,21 @@ class myToyota_API
     public function getDevice()
     {
         $this->_checkAuth();
-		//$headers = $this->_setDefaultHeaders();
+		$url = $this::API_BASE_URL . $this::VEHICLE_GUID_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        //$headers = [
-        //    'vin :' . $this->vin,
-        //];
-        
-        log::add('myToyota', 'debug', '| Headers : '. json_encode($headers,JSON_UNESCAPED_SLASHES));
-		$return1 = json_decode($this->_request($this::API_BASE_URL . $this::VEHICLE_GUID_ENDPOINT, 'GET', null, $headers));
-		$return2 =  json_decode($this->_request($this::API_BASE_URL . $this::VEHICLE_LOCATION_ENDPOINT, 'GET', null, $headers));
-        log::add('myToyota', 'debug', '| VEHICLE_GUID_ENDPOINT : ' . str_replace('\n','',json_encode($return1)));
-        log::add('myToyota', 'debug', '| VEHICLE_LOCATION_ENDPOINT : ' . str_replace('\n','',json_encode($return2)));
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
     }
 
     public function getLocationEndPoint()
     {
         $this->_checkAuth();
-		$headers = $this->_setHeadersUpdate();
-//		log::add('myToyota', 'debug', '| Headers : '. json_encode($headers,JSON_UNESCAPED_SLASHES));
-//		return $this->_request($this::API_BASE_URL . $this::VEHICLE_LOCATION_ENDPOINT, 'GET', null, $headers);
+		$url = $this::API_BASE_URL . $this::VEHICLE_LOCATION_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
     }
     
 }
