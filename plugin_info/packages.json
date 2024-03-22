@@ -2,7 +2,6 @@
   "pre-install": {
   },
   "apt": {
-    "git" : {}
   },
   "pip3": { 
   },
@@ -13,5 +12,6 @@
   "plugin": {
   },
   "post-install" : {
+    "script" : "plugins/myToyota/ressources/post-install.sh"
   }
 }
