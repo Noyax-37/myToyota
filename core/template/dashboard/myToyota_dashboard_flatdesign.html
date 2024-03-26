@@ -43,7 +43,7 @@
 			
 			<div class="col-xs-10" id="tile" style="height:50px; width:290px;">
 				<div class="col-xs-1"></div>
-				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_oil#id#"><img src="plugins/myToyota/core/img/oil_grey.png" height="40" title="Huile moteur OK"/></span></div>
+				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_oil#id#"><img src="plugins/myToyota/core/img/oil_grey.png" height="40" title="Huile moteur OK (à confirmer)"/></span></div>
 				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_brake#id#"><img src="plugins/myToyota/core/img/brake_grey.png" height="40" title="Freins OK"/></span></div>
 				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_tire#id#"><img src="plugins/myToyota/core/img/tire_grey.png" height="40" title="Pression des pneus OK"/></span></div>
 				<div class="col-xs-2" style="padding:5px !important;"><span class="icon_washingfluid#id#"><img src="plugins/myToyota/core/img/washingfluid_grey.png" height="40" title="Liquide de lave-glace OK"/></span></div>
@@ -379,39 +379,24 @@
 
 
 		//----- Messages
-/*		jeedom.cmd.update['#vehicleMessages_id#'] = function(_options) {
-			var messages = jQuery.parseJSON(_options.display_value);
-			
-			jQuery.each(messages.checkControlMessages,function(key,message){
-				if ( message.type == "ENGINE_OIL" ) {
-					//if ( message.severity == "OK" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_grey.png" height="40" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_orange.png" height="40" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_red.png" height="40" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-				}
-				if ( message.type == "BRAKE_FLUID" ) {
-					//if ( message.severity == "OK" ) { $('.icon_brake#id#').empty().append('<img src="plugins/myToyota/core/img/brake_grey.png" height="40" title="Freins - Criticité : '+message.severity+'<br/>'+message.description+'"/>'); }
-					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_brake#id#').empty().append('<img src="plugins/myToyota/core/img/brake_orange.png" height="40" title="Freins - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_brake#id#').empty().append('<img src="plugins/myToyota/core/img/brake_red.png" height="40" title="Freins - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-				}
-				if ( message.type == "TIRE_PRESSURE" ) {
-					//if ( message.severity == "OK" ) { $('.icon_tire#id#').empty().append('<img src="plugins/myToyota/core/img/tire_grey.png" height="40" title="Pression des pneus - Criticité : '+message.severity+'<br/>'+message.description+'"/>'); }
-					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_tire#id#').empty().append('<img src="plugins/myToyota/core/img/tire_orange.png" height="40" title="Pression des pneus - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_tire#id#').empty().append('<img src="plugins/myToyota/core/img/tire_red.png" height="40" title="Pression des pneus - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-				}
-				if ( message.type == "WASHING_FLUID" ) {
-					//if ( message.severity == "OK" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/washingfluid_grey.png" height="40" title="Liquide de lave-glace - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_washingfluid#id#').empty().append('<img src="plugins/myToyota/core/img/washingfluid_orange.png" height="40"  title="Liquide de lave-glace - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_washingfluid#id#').empty().append('<img src="plugins/myToyota/core/img/washingfluid_red.png" height="40"  title="Liquide de lave-glace - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-				}
-				if ( message.type == "VEHICLE_CHECK" ) {
-					//if ( message.severity == "OK" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/vehicle_grey.png" height="40" title="Véhicule - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/vehicle_orange.png" height="40"  title="Véhicule - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-					if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_vehicle#id#').empty().append('<img src="plugins/myToyota/core/img/vehicle_red.png" height="40"  title="Véhicule - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-				}
-			});
-		}
-		jeedom.cmd.update['#vehicleMessages_id#']({display_value:'#vehicleMessages#'});
-*/		
+	//----- Messages // sera à compléter avec les infos qui me seront fournies // voir myBMW_panel
+	jeedom.cmd.update['#vehicleMessages_id#'] = function(_options) {
+       	var messages = json_decode(_options.display_value);
+		for (message in messages){
+			//var trajets = JSON.parse(_options.display_value);
+			console.log('-------- icones -----' + message);
+			if ( message.type == "ENGINE_OIL" ) {
+				//if ( message.severity == "OK" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_grey.png" height="50" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+				if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_orange.png" height="50" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+				if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_red.png" height="50" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
+			}
+			$('.icon_brake#id#').empty();
+			$('.icon_tire#id#').empty();
+			$('.icon_washingfluid#id#').empty();
+			$('.icon_vehicle#id#').empty()
+		};
+	};
+	jeedom.cmd.update['#vehicleMessages_id#']({display_value:'#vehicleMessages#'});
 		
 	</script>
 

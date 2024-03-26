@@ -12,13 +12,16 @@ class myToyota_API
     const VEHICLE_GUID_ENDPOINT = '/v2/vehicle/guid';
     const VEHICLE_LOCATION_ENDPOINT = '/v1/location';
     const VEHICLE_HEALTH_STATUS_ENDPOINT = '/v1/vehiclehealth/status';
-    const VEHICLE_GLOBAL_REMOTE_STATUS_ENDPOINT = '/v1/global/remote/status';
+    const VEHICLE_GLOBAL_REMOTE_STATUS_ENDPOINT = '/v1/global/remote/status'; // update device 
     const VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT = '/v1/global/remote/electric/status';
-    const VEHICLE_TELEMETRY_ENDPOINT = '/v3/telemetry';
+    const VEHICLE_TELEMETRY_ENDPOINT = '/v3/telemetry'; // update device 
     const VEHICLE_NOTIFICATION_HISTORY_ENDPOINT = '/v2/notification/history';
     const VEHICLE_TRIPS_ENDPOINT = '/v1/trips?from=%s&to=%s&route=%s&summary=%s&limit=%s&offset=%s';
     const VEHICLE_SERVICE_HISTORY_ENDPONT = '/v1/servicehistory/vehicle/summary';
-		
+    const VEHICLE_REMOTE_CLIMATE_STATUS = '/v1/global/remote/climate-status'; // update device 
+    const VEHICLE_GLOBAL_REMOTE_COMMAND = '/v1/global/remote/command';
+    const VEHICLE_REMOTE_CLIMATE_CONTROL = '/v1/global/remote/climate-control';
+
     //Parameters
     private $username;
     private $password;
@@ -352,7 +355,7 @@ class myToyota_API
         ];
         return $headers;
 	}
-
+    
     public function getDevice()
     {
         $this->_checkAuth();
@@ -373,5 +376,163 @@ class myToyota_API
 		return $return;
     }
     
+    public function getRemoteStatusEndPoint() // update device 
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_STATUS_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function getTelemetryEndPoint() // update device 
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_TELEMETRY_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function getRemoteClimateStatus()  // update device 
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_STATUS;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function getClimateRemoteStatus()
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_CLIMATE_REMOTE_STATUS;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function getTripsEndpoint($from = "xxx", $to = "xxx", $route = false, $summary = true, $limit = 0, $offset = 0)
+    {
+        $this->_checkAuth();
+        if ($to== 'xxx'){
+            $to = date('Y-m-d');
+        }
+        if ($from== 'xxx'){
+            $from = date('Y-m-d', strtotime('-7 days', strtotime($to)));
+        }
+        //$to = date('Y-m-d', now());
+		$url = $this::API_BASE_URL . sprintf($this::VEHICLE_TRIPS_ENDPOINT, $from, $to, $route, $summary, $limit, $offset)  ;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+
+    public function remoteCommande()  // telecommande de quoi?
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_COMMAND;
+        $headers = $this->_setHeadersUpdate();
+        $data = array('command' => 'door-unlock');
+        $data = http_build_query($data);
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'POST', $data, $headers);
+		return $return;
+    }
+
+    public function remoteClimate()  // telecommande de quoi?
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_CONTROL;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function statusHealth() // santé du véhicule (huile + warning ...)
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_HEALTH_STATUS_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function historiqueNotification()
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_NOTIFICATION_HISTORY_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function remoteElectric() // à voir avec un véhicule électrique
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function historiqueService()
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_SERVICE_HISTORY_ENDPONT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function testPoubelle()
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_SERVICE_HISTORY_ENDPONT;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+
+
+    //    const VEHICLE_TRIPS_ENDPOINT = '/v1/trips?from=%s&to=%s&route=%s&summary=%s&limit=%s&offset=%s';
+
+    /* test 
+    VEHICLE_ASSOCIATION_ENDPOINT => 403
+    VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT => "description":"Extended capability either econnectVehicleStatusCapable or stellantisVehicleStatusCapable is not present for the VIN"
+        
+
+
+/*  Remote commande
+
+    const VEHICLE_GLOBAL_REMOTE_COMMAND = '/v1/global/remote/command';
+    const VEHICLE_REMOTE_CLIMATE_CONTROL = '/v1/global/remote/climate-control';
+                $data = array(
+                'client_id' => 'oneapp',
+                'code' => $authorizationCode,
+                'redirect_uri' => 'com.toyota.oneapp:/oauth2Callback',
+                'grant_type' => 'refresh_token',
+                'code_verifier' => 'plain',
+                'refresh_token' => $this->refresh_token,            
+            );
+            $data = http_build_query($data);
+                    
+            $result1 = $this->_request($url, $method, $data, $headers);
+
+
+*/
 }
 ?>

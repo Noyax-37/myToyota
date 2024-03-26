@@ -154,6 +154,7 @@ function all_data()  {
 			action: "all_data",
 			username: $('.eqLogicAttr[data-l2key=username]').value(),
 			pwd: $('.eqLogicAttr[data-l2key=password]').value(),
+			vin: $('.eqLogicAttr[data-l2key=vehicle_vin]').value(),
 			},
 		dataType: 'json',
 			error: function (request, status, error) {

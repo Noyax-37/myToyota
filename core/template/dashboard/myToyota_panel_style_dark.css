@@ -141,7 +141,7 @@
 .myToyota_panel_flat #liste_msg {
 	width: 440px;
 	height: 340px;
-	overflow: auto;
+	overflow: hidden;
 }
 
 .myToyota_panel_flat #last_update {
@@ -180,4 +180,3 @@
 	text-align: center;
 	vertical-align: middle;
 }
-
