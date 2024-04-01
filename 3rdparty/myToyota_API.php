@@ -19,8 +19,42 @@ class myToyota_API
     const VEHICLE_TRIPS_ENDPOINT = '/v1/trips?from=%s&to=%s&route=%s&summary=%s&limit=%s&offset=%s';
     const VEHICLE_SERVICE_HISTORY_ENDPONT = '/v1/servicehistory/vehicle/summary';
     const VEHICLE_REMOTE_CLIMATE_STATUS = '/v1/global/remote/climate-status'; // update device 
-    const VEHICLE_GLOBAL_REMOTE_COMMAND = '/v1/global/remote/command';
-    const VEHICLE_REMOTE_CLIMATE_CONTROL = '/v1/global/remote/climate-control';
+    const VEHICLE_GLOBAL_REMOTE_COMMAND = '/v1/global/remote/command';  // commandes diverses
+    const VEHICLE_REMOTE_CLIMATE_CONTROL = '/v1/global/remote/climate-control'; // commande on - off pour la clim
+
+    // à tester sur des véhicules qui en sont capables
+    const VEHICLE_REMOTE_CLIMATE_SETTING = '/v1/global/remote/climate-settings'; // commande réglage de la clim (GET et PUT) 
+                                                                                    //=> GET: 
+                                                                                    //{"status":{"messages":[{"responseCode":"ONE-GLOBAL-RS-10000","description":"Request Completed Successfully","detailedDescription":"Request Completed Successfully"}]},
+                                                                                        //"payload":{"temperature":null,"temperatureUnit":null,"minTemp":18.0,"maxTemp":29.0,"tempInterval":1.0,"acOperations":[],"settingsOn":true}}
+    const VEHICLE_REMOTE_AC_RESERVATION  = '/v1/global/remote/ac-reservation'; // commande et contrôle recharge ? (GET, POST, PUT et DELETE) 
+                                                                                    //=> GET: 
+                                                                                    //{"status":{"messages":[{"responseCode":"ONE-GLOBAL-RS-10000","description":"Request Completed Successfully","detailedDescription":"Request Completed Successfully"}]},
+                                                                                        //"payload":{"airConditioningReservation":[]}}
+
+                                                                                    //=> POST:
+                                                                                    //{"status":{"messages":[{"responseCode":"ONE-GLOBAL-RS-10201","description":"[temperatureUnit:Missing temperatureUnit in the request, 
+                                                                                                                                                                    //temperature:Missing/Invalid temperature in the request, 
+                                                                                                                                                                    //reservationType:Invalid/Missing reservationType in the request. Allowed values are ONE_TIME, REPETITION]",
+                                                                                                                                                                    //"detailedDescription":"Invalid Input"}]}}
+    const VEHICLE_REMOTE_ELECTRIC_COMMAND = '/v1/global/remote/electric/command'; // commande de (?) (POST)
+                                                                                    //=> POST:
+                                                                                    //{"status":{"messages":[{"responseCode":"ONE-GLOBAL-RS-40004","description":"Invalid Command. 
+                                                                                        //Allowed commands are CHARGE_NOW, RESERVE_CHARGE and SET_CHARGING_TIME",
+                                                                                        //"detailedDescription":"Invalid Command. Allowed commands are CHARGE_NOW, RESERVE_CHARGE and SET_CHARGING_TIME"}]}}
+    const VEHICLE_REMOTE_CHARGING_SCHEDULE = '/v1/global/remote/electric/charging-schedule/{id}'; // commande période de recharge ? (DELETE et PUT) (POST sans {id})
+                                                                                    //=> POST:
+                                                                                    //{"status":{"messages":[{"responseCode":"ONE-GLOBAL-RS-10201",
+                                                                                        //"description":"Invalid/Missing type in the requestmust not be nullInvalid/Missing day in the requestInvalid/Missing day in the requestmust not be null.validation failed for the field - startTimedaysdaysenabledtype",
+                                                                                        //"detailedDescription":"Invalid Input"}]}}
+    const VEHICLE_REMOTE_PROFILE_SETTING = '/v1/global/remote/profile-settings'; // commande ? (POST, GET et PUT)  => apparemment pour paramétrer des utilisateurs 'guest' sur des périodes par jour... => aucun intéret
+    const VEHICLE_REMOTE_REALTIME_STATUS = '/v1/global/remote/electric/realtime-status'; // commande ? (POST)
+                                                                                    //=> POST:
+                                                                                    //{"status":{"messages":[{"responseCode":"ONE-GLOBAL-RC-10004","description":"Extended capability either econnectVehicleStatusCapable or stellantisVehicleStatusCapable is not present for the VIN",
+                                                                                        //"detailedDescription":"Extended capability either econnectVehicleStatusCapable or stellantisVehicleStatusCapable is not present for the VIN"}]}}
+    const VEHICLE_REMOTE_LEGACY_PROFILE_SETTING = '/v1/legacy/remote/profile-settings'; // commande ? (GET et PUT)
+    const VEHICLE_REMOTE_REFRESH_CLIMATE_STATUS = '/v1/global/remote/refresh-climate-status'; // commande clim ? (POST)
+    const VEHICLE_REMOTE_REFRESH_STATUS = '/v1/global/remote/refresh-status'; // commande clim ? (POST)
 
     //Parameters
     private $username;
@@ -32,6 +66,64 @@ class myToyota_API
     private $refresh_token;
     private $uuid;
     private $timeout;
+
+
+
+    //zone de tests ***************************************************************************
+    public function testPoubelle_post($commande) // création d'une ressource
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_REFRESH_STATUS;
+        $headers = $this->_setHeadersUpdate();
+      	$headers[] = [ 'x-correlationid: D7F048C1-F0A1-4920-AA37-264C8A1FB4A3' ];
+        
+        $data = json_encode(array('command' => $commande));
+        //$data = http_build_query($data);
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'POST', $data, $headers);
+		return $return;
+    }
+
+    public function testPoubelle_put($commande) // mise à jour d'une ressource
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+      	$headers[] = [ 'x-correlationid: D7F048C1-F0A1-4920-AA37-264C8A1FB4A3' ];
+        
+        $data = json_encode(array('command' => $commande));
+        //$data = http_build_query($data);
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'PUT', $data, $headers);
+		return $return;
+    }
+
+    public function testPoubelle_get() // récupération des infos d'une ressource
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_SETTING;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function testPoubelle_delete($commande) // destruction d'une ressource
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT;
+        $headers = $this->_setHeadersUpdate();
+      	$headers[] = [ 'x-correlationid: D7F048C1-F0A1-4920-AA37-264C8A1FB4A3' ];
+        
+        $data = json_encode(array('command' => $commande));
+        //$data = http_build_query($data);
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'DELETE', $data, $headers);
+		return $return;
+    }
+
+
+    //fin zone de tests ************************************************************************
 
 
     public function  __construct($username, $password, $vin, $brand)
@@ -64,6 +156,9 @@ class myToyota_API
         $ch = curl_init();
 
         $headers = [];
+        
+        //$proxy = '192.168.1.106:8888';
+        //curl_setopt($ch, CURLOPT_PROXY, $proxy);
 
         // Default CURL options
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -434,25 +529,32 @@ class myToyota_API
     }
 
 
-    public function remoteCommande()  // telecommande de quoi?
+    public function remoteCommande($commande)  // telecommande de quoi? Portes + ... = {door-lock, door-unlock, engine-start, engine-stop, hazard-on, hazard-off, power-window-on, power-window-off, 
+                                                        //ac-settings-on, sound-horn, buzzer-warning, find-vehicle, ventilation-on, trunk-lock, trunk-unlock}
     {
         $this->_checkAuth();
 		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_COMMAND;
         $headers = $this->_setHeadersUpdate();
-        $data = array('command' => 'door-unlock');
-        $data = http_build_query($data);
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+      	$headers[] = [ 'x-correlationid: D7F048C1-F0A1-4920-AA37-264C8A1FB4A3' ];
+        
+        $data = json_encode(array('command' => $commande));
+        //$data = http_build_query($data);
+        log::add('myToyota', 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
 		$return = $this->_request($url, 'POST', $data, $headers);
 		return $return;
     }
 
-    public function remoteClimate()  // telecommande de quoi?
+    public function remoteClimate($commande)  // telecommande de quoi? Clim
     {
         $this->_checkAuth();
 		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_CONTROL;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
-		$return = $this->_request($url, 'GET', null, $headers);
+        $headers[] = [ 'x-correlationid: D7F048C1-F0A1-4920-AA37-264C8A1FB4A3' ];
+        
+        $data = json_encode(array('command' => $commande));
+        //$data = http_build_query($data);
+        log::add('myToyota', 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
+		$return = $this->_request($url, 'POST', $data, $headers);
 		return $return;
     }
 
@@ -496,10 +598,20 @@ class myToyota_API
 		return $return;
     }
 
-    public function testPoubelle()
+    public function remoteClimateSettings() // A tester sur véhicule capable
     {
         $this->_checkAuth();
-		$url = $this::API_BASE_URL . $this::VEHICLE_SERVICE_HISTORY_ENDPONT;
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_SETTING;
+        $headers = $this->_setHeadersUpdate();
+        log::add('myToyota', 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function remoteACReservation() // A tester sur véhicule capable
+    {
+        $this->_checkAuth();
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_AC_RESERVATION;
         $headers = $this->_setHeadersUpdate();
         log::add('myToyota', 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
@@ -513,24 +625,94 @@ class myToyota_API
     /* test 
     VEHICLE_ASSOCIATION_ENDPOINT => 403
     VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT => "description":"Extended capability either econnectVehicleStatusCapable or stellantisVehicleStatusCapable is not present for the VIN"
-        
-
+     
+    
+dm.n
 
 /*  Remote commande
 
-    const VEHICLE_GLOBAL_REMOTE_COMMAND = '/v1/global/remote/command';
-    const VEHICLE_REMOTE_CLIMATE_CONTROL = '/v1/global/remote/climate-control';
-                $data = array(
-                'client_id' => 'oneapp',
-                'code' => $authorizationCode,
-                'redirect_uri' => 'com.toyota.oneapp:/oauth2Callback',
-                'grant_type' => 'refresh_token',
-                'code_verifier' => 'plain',
-                'refresh_token' => $this->refresh_token,            
-            );
-            $data = http_build_query($data);
-                    
-            $result1 = $this->_request($url, $method, $data, $headers);
+        DefaultConstructorMarker defaultConstructorMarker2 = null;
+        DOOR_LOCK_17P = new RemoteCommand("DOOR_LOCK_17P", 2, "door-lock", aVar2, i11, defaultConstructorMarker2);
+        DOOR_UNLOCK_17P = new RemoteCommand("DOOR_UNLOCK_17P", 3, "door-unlock", aVar, i10, defaultConstructorMarker);
+        HAZARD_ON_17P = new RemoteCommand("HAZARD_ON_17P", 4, "hazard-on", aVar2, i11, defaultConstructorMarker2);
+        HAZARD_OFF_17P = new RemoteCommand("HAZARD_OFF_17P", 5, "hazard-off", aVar, i10, defaultConstructorMarker);
+        SOUND_HORN = new RemoteCommand("SOUND_HORN", 6, "sound-horn", aVar2, i11, defaultConstructorMarker2);
+        HEAD_LIGHTS = new RemoteCommand("HEAD_LIGHTS", 7, "headlight-on", aVar, i10, defaultConstructorMarker);
+
+
+    public enum ActionType {
+    DoorLock("door-lock"),
+    DoorUnlock("door-unlock"),
+    Open("open"),
+    Close("close"),
+    Activate("activate"),
+    Deactivate("deactivate"),
+    Navigate("navigate"),
+    CarLocationNavigate("car-location-navigate"),
+    ViewMore("view more"),
+    Display(Constants.ScionAnalytics.MessageType.DISPLAY_NOTIFICATION),
+    ClickBar("click-bar"),
+    ViewDestinations("view my destinations"),
+    Home("home"),
+    Work("work"),
+    Favourites("favourites"),
+    SendToCar("send-to-car"),
+    Remove("remove"),
+    Save("save"),
+    Favourite("favourite"),
+    FavouriteLimitReached("favourite-limit-reached"),
+    Skip("skip"),
+    Start("start"),
+    Cancel("cancel"),
+    CancelButton("cancel-button"),
+    MileageSubmit("mileage-submit"),
+    MileageReload("mileage-reload"),
+    MileageRestart("mileage-restart"),
+    BlacklistedContactDealer("blacklisted-contact-dealer"),
+    BlacklistedCancel("blacklisted-cancel"),
+    ActivateServices("activate-services"),
+    SaveUpcomingCharge("save-upcoming-charge"),
+    Overview("overview"),
+    Trips("trips"),
+    Search(FirebaseAnalytics.Event.SEARCH),
+    OpenSearchFilters("open-search-filters"),
+    CarLocationCenter("car-location-center"),
+    UserLocationCenter("user-location-center"),
+    ChargingStationDetails("charging-station-details"),
+    CarLocationDetails("car-location-details"),
+    Unlock("unlock"),
+    Share(FirebaseAnalytics.Event.SHARE),
+    CarLocationShare("car-location-share"),
+    SeePrices("see-prices"),
+    SeeMyReview("see-my-review"),
+    StartClimate("start-climate"),
+    StopClimate("stop-climate"),
+    HazardLights("hazard-lights"),
+    TurnHeadlights("turn-headlights"),
+    WindowsClose("windows-close"),
+    Horn("horn"),
+    TrunkLock("trunk-lock"),
+    Buzzer("buzzer"),
+    TrunkUnlock("trunk-unlock"),
+    AccessSharing("access-sharing"),
+    ChargingHistory("charging-history"),
+    StartCharging("start-charging"),
+    StopCharging("stop-charging"),
+    OverrideSmartCharging("override-smart-charging"),
+    SmartCharging("smart-charging"),
+    SeeHowItWorks("see-how-it-works"),
+    SelectChargeState("select-charge-state"),
+    SelectChargeTime("select-charge-time"),
+    SelectCharger("select-charger"),
+    ManageRfid("manage-rfid"),
+    AddRfid("add-rfid"),
+    SaveNewFrid("save-new-rfid"),
+    ErrorRetry("error-retry"),
+    SeeUseAccess("see-user-access"),
+    AddUsers("add-users"),
+    Accept("accept"),
+    Decline("decline");
+
 
 
 */

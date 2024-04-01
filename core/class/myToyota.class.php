@@ -77,8 +77,8 @@ class myToyota extends eqLogic {
       $nameVehicule = $eqLogic->getName();
       log::add('myToyota', 'debug', " récupération des données du véhicule : " . '  ' . $nameVehicule);
       myToyota::interromyToyota($eqLogic);
-      $coordinates = myToyota::getGPSCoordinates($eqLogic->getConfiguration('vehicle_vin'));
-//      myToyota::getDistanceLocation2($eqlogic, $coordinates['latitude'], $coordinates['longitude']);
+      //$coordinates = myToyota::getGPSCoordinates($eqLogic->getConfiguration('vehicle_vin'));
+      //myToyota::getDistanceLocation2($eqlogic, $coordinates['latitude'], $coordinates['longitude']);
     }
   }
 
@@ -453,14 +453,20 @@ class myToyota extends eqLogic {
             //if ( isset($vehicle->attributes->driveTrain) ) { $eqLogic->checkAndUpdateCmd('type', $vehicle->attributes->driveTrain); } else { $eqLogic->checkAndUpdateCmd('type', 'not available'); }
             log::add('myToyota', 'debug', '| Result getDevice() : '.str_replace('\n','',json_encode($vehicle)));
             //log::add('myToyota', $eqLogic->getLogLevelFromHttpStatus($result->httpCode, '200 - OK'), '└─End of synchronisation : ['.$result->httpCode.']');
-            if ($vehicle->extendedCapabilities->hybridPulse){
-              $return['driveTrain'] = 'Hybride';
-            } else if ($vehicle->extendedCapabilities->electricPulse){
-              $return['driveTrain'] = 'Electrique';
-            } else if ($vehicle->extendedCapabilities->drivePulse){
-              $return['driveTrain'] = 'Thermique';
-            } else {
-              $return['driveTrain'] = 'Inconnu';
+            if (isset($vehicle->extendedCapabilities)){
+              $capabilities = json_encode($vehicle->extendedCapabilities);
+              $eqLogic->setConfiguration('capabilities', $capabilities);
+              $eqLogic->save();
+              log::add('myToyota', 'info', '| Result extendedCapabilities : ' . $capabilities);
+              if ($vehicle->extendedCapabilities->hybridPulse){
+                $return['driveTrain'] = 'Hybride';
+              } else if ($vehicle->extendedCapabilities->electricPulse){
+                $return['driveTrain'] = 'Electrique';
+              } else if ($vehicle->extendedCapabilities->drivePulse){
+                $return['driveTrain'] = 'Thermique';
+              } else {
+                $return['driveTrain'] = 'Inconnu';
+              }
             }
             log::add('myToyota', 'info', '| Result type de motorisation : ' . $return['driveTrain']);
             if (isset($vehicle->fuelType)){
@@ -536,7 +542,11 @@ class myToyota extends eqLogic {
         $result = $myConnection->remoteElectric();
         log::add('myToyota', 'info', '| Retour remote electric : ' . $result->body);
 
+        $result = $myConnection->remoteClimateSettings();
+        log::add('myToyota', 'info', '| Retour remote climate setting : ' . $result->body);
 
+        $result = $myConnection->remoteACReservation();
+        log::add('myToyota', 'info', '| Retour remote AC reservation : ' . $result->body);
 
       }
 
@@ -552,6 +562,7 @@ class myToyota extends eqLogic {
       $myConnection = $eqLogic->getConnection();
       $idvehicule = $eqLogic->getId();
       $nomvehicule = $eqLogic->getName();
+      $capabilities = json_decode($eqLogic->getConfiguration('capabilities'));
   
       if ($idvehicule!='Aucun' && $idvehicule!=''){
         log::add('myToyota', 'info', '| ----------------------------------------------------------------------------------------------');
@@ -564,9 +575,10 @@ class myToyota extends eqLogic {
         if ( isset($location->payload->vehicleLocation) ) { 
           $eqLogic->checkAndUpdateCmd('lastUpdate',date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
           $eqLogic->checkAndUpdateCmd('gps_coordinates', $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude);
+          myToyota::chercheLycos($eqLogic,$location->payload->vehicleLocation->latitude, $location->payload->vehicleLocation->longitude);
           log::add('myToyota', 'info', '| Dernière localisation connue: "' . 
-            $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude . '" le ' . 
-            date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
+                                            $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude . '" le ' . 
+                                            date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
         }
 
         // état des fenetres, portes, ...
@@ -899,7 +911,7 @@ class myToyota extends eqLogic {
         $lng2 = 0;
       }
       $nomvehicule = $eqLogic->getName();
-      log::add('myToyota', 'info', '[myToyota] dernière position de ' . $nomvehicule . ': Lat et long ' . $lat2 . ' ' . $lng2);
+      log::add('myToyota', 'info', '| dernière position de ' . $nomvehicule . ': Lat et long ' . $lat2 . ' ' . $lng2);
       
       $earth_radius = 6371; // Terre = sphère de 6371km de rayon
       $rla1 = deg2rad( floatval($lat1) );
@@ -913,11 +925,11 @@ class myToyota extends eqLogic {
       return round(($earth_radius * $d * 1000), 1); //retour en m
     }
 
-    public static function chercheLycos($vin, $latitude, $longitude){
-      $eqLogic = myToyota::getToyotaEqLogic($vin);
+    public static function chercheLycos($eqLogic, $latitude, $longitude){
+      //$eqLogic = myToyota::getToyotaEqLogic($vin);
       $nomvehicule = $eqLogic->getName();
       $distance = myToyota::getDistanceLocation2($eqLogic, $latitude, $longitude); //en metres
-      log::add('myToyota', 'info', '[myToyota] ' . $nomvehicule . ': distance avec le domicile ' . $distance . ' mètre(s)');
+      log::add('myToyota', 'info', '| ' . $nomvehicule . ': distance avec le domicile ' . $distance . ' mètre(s)');
 			$eqLogic->checkAndUpdateCmd('distance', $distance);
 			if ( $distance <= $eqLogic->getConfiguration("home_distance") ) { $eqLogic->checkAndUpdateCmd('presence', 1); }
 			else { $eqLogic->checkAndUpdateCmd('presence', 0); }
@@ -977,23 +989,43 @@ class myToyota extends eqLogic {
         return $myConnection;
   	}
 
-
-    public function update_datas($eqLogic)
+    public function commandes($eqLogic, $commande)
     {
-      $to = date('Y-m-d');
-      $from = date('Y-m-d', strtotime('-7 days', strtotime($to)));
-      $route = false;
-      $summary = true;
-      $limit = 50;
-      $offset = 0;
 
       $myConnection = $eqLogic->getConnection();
-      $result = $myConnection->testPoubelle(); //dernière localisation
+      $result = $myConnection->remoteCommande($commande); //commande envoyées vers véhicule
+      $resultCmde = json_decode($result->body);
+
+      log::add('myToyota', 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
+
+    }
+
+    public function commande_clim($eqLogic, $commande)
+    {
+
+      $myConnection = $eqLogic->getConnection();
+      $result = $myConnection->remoteClimate($commande); //commande envoyées vers véhicule
+      $resultCmde = json_decode($result->body);
+
+      log::add('myToyota', 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
+
+    }
+
+// zone de tests ********************************************************************************************
+
+    public function update_datas($eqLogic, $commande) // fonction de test pour développement
+    {
+
+      $myConnection = $eqLogic->getConnection();
+      $result = $myConnection->testPoubelle_post($commande);
       $tripsEndpoint = json_decode($result->body);
 
       log::add('myToyota', 'debug', '| retour ' . $result->body);
 
     }
+
+// fin zone de tests *****************************************************************************************
+
 /*
     $this->createCmd('doorLockState', 'Verrouillage', 6, 'info', 'string');
     $this->createCmd('allDoorsState', 'Toutes les portes', 7, 'info', 'string');
@@ -1045,28 +1077,43 @@ class myToyotaCmd extends cmd {
                     myToyota::interromyToyota($eqLogic);
 					          break;
                 case 'hornBlow':
+                    myToyota::commandes($eqLogic, 'sound-horn');
                     //$eqLogic->doHornBlow();
                     break;
-                case 'lightFlash':
+                case 'hazardOn':
+                    myToyota::commandes($eqLogic, 'hazard-on');
                     //$eqLogic->doLightFlash();
                     break;
-                case 'doorLock': // provisoirement bouton qui me sert pour tester les fonctions
-                    //myToyota::update_datas($eqLogic);
+                case 'hazardOff':
+                    myToyota::commandes($eqLogic, 'hazard-off');
+                    //$eqLogic->doLightFlash();
+                    break;
+                case 'lightFlash': // ne sert pas pour l'instant
+                    //myToyota::commandes($eqLogic, 'hazard-off');
+                    //$eqLogic->doLightFlash();
+                    break;
+                case 'doorLock': 
+                    myToyota::commandes($eqLogic, 'door-lock');
                     //$eqLogic->doDoorLock();
                     break;
                 case 'doorUnlock':
+                    myToyota::commandes($eqLogic, 'door-unlock');
                     //$eqLogic->doDoorUnlock();
                     break;
                 case 'climateNow':
+                    myToyota::commande_clim($eqLogic, 'engine-start');
                     //$eqLogic->doClimateNow();
                     break;
 				        case 'stopClimateNow':
-                    //$eqLogic->stopClimateNow();
+                  myToyota::commande_clim($eqLogic, 'engine-stop');
+                      //$eqLogic->stopClimateNow();
                     break;
-				        case 'chargeNow':
+				        case 'chargeNow': // provisoirement bouton qui me sert pour tester les fonctions (faire apparaitre le bouton dans le panel)
+                                    // commenter ligne $('#charge_btn#id#').hide();
+                    myToyota::update_datas($eqLogic, 'find-vehicle');
                     //$eqLogic->doChargeNow();
                     break;
-				        case 'stopChargeNow':
+				        case 'stopChargeNow': 
 					          //$eqLogic->stopChargeNow();
 					          break;
 				        default:

@@ -206,16 +206,22 @@
 					
 					<div class="col-xs-2" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-cogs"></i></div>
 					<div class="col-xs-10" id="titre_tile_2" style="height:50px;">Actions</div>
-					
+
 					<button class="btn cmd action" data-cmd_id="#refresh_id#" title="Rafraichir" onclick="jeedom.cmd.execute({id: #refresh_id#});"><i class="fa-lg icon fas fa-sync-alt"></i></button>
-					<button class="btn cmd action" data-cmd_id="#doorLock_id#" title="Verrouiller (non fonctionnel)" onclick="jeedom.cmd.execute({id: #doorLock_id#});"><i class="fa-lg icon fas fa-lock"></i></button>
-					<button class="btn cmd action" data-cmd_id="#doorUnlock_id#" title="Déverrouiller (non fonctionnel)" onclick="jeedom.cmd.execute({id: #doorUnlock_id#});"><i class="fa-lg icon fas fa-lock-open"></i></button>
-					<button class="btn cmd action" data-cmd_id="#climateNow_id#" title="Ventiler (non fonctionnel)" onclick="jeedom.cmd.execute({id: #climateNow_id#});"><i class="fa-lg icon fas fa-fan"></i></button>
-					<button class="btn cmd action" data-cmd_id="#stopClimateNow_id#" title="Stop Ventiler (non fonctionnel)" onclick="jeedom.cmd.execute({id: #stopClimateNow_id#});"><i class="fa-lg icon fas fa-ban"></i></button>
+					<button class="btn cmd action" data-cmd_id="#doorLock_id#" title="Verrouiller" onclick="jeedom.cmd.execute({id: #doorLock_id#});"><i class="fa-lg icon fas fa-lock"></i></button>
+					<button class="btn cmd action" data-cmd_id="#doorUnlock_id#" title="Déverrouiller" onclick="jeedom.cmd.execute({id: #doorUnlock_id#});"><i class="fa-lg icon fas fa-lock-open"></i></button>
+					<button class="btn cmd action" data-cmd_id="#climateNow_id#" title="Start Clim" onclick="jeedom.cmd.execute({id: #climateNow_id#});"><i class="fa-lg icon fas fa-fan"></i></button>
+					<button class="btn cmd action" data-cmd_id="#stopClimateNow_id#" title="Stop Clim" onclick="jeedom.cmd.execute({id: #stopClimateNow_id#});"><i class="fa-lg icon fas fa-ban"></i></button>
+					<!--
 					<button id="charge_btn#id#" class="btn cmd action" data-cmd_id="#chargeNow_id#" title="Charger (non fonctionnel)" onclick="jeedom.cmd.execute({id: #chargeNow_id#});"><i class="fa-lg icon fas fa-charging-station"></i></button>
 					<button id="stopcharge_btn#id#" class="btn cmd action" data-cmd_id="#stopChargeNow_id#" title="Stop Charger (non fonctionnel)" onclick="jeedom.cmd.execute({id: #stopChargeNow_id#});"><i class="fa-lg icon fas fa-power-off"></i></button>
-					<button class="btn cmd action" data-cmd_id="#lightFlash_id#" title="Appel de phares (non fonctionnel)" onclick="jeedom.cmd.execute({id: #lightFlash_id#});"><i class="fa-lg icon fas fa-lightbulb"></i></button>
-					<button class="btn cmd action" data-cmd_id="#hornBlow_id#" title="Klaxonner (non fonctionnel)" onclick="jeedom.cmd.execute({id: #hornBlow_id#});"><i class="fa-lg icon fas fa-volume-up"></i></button>
+					-->
+					<button class="btn cmd action" data-cmd_id="#hazardOn_id#" title="Feux de détresse" onclick="jeedom.cmd.execute({id: #lightFlash_id#});"><i class="fa-lg icon fas fa-exclamation-triangle"></i></button>
+					<button class="btn cmd action" data-cmd_id="#hazardOff_id#" title="Stop feux de détresse" onclick="jeedom.cmd.execute({id: #lightFlash_id#});"><i class="fa-lg icon fas fa-exclamation-circle"></i></button>
+					<button class="btn cmd action" data-cmd_id="#hornBlow_id#" title="Klaxonner" onclick="jeedom.cmd.execute({id: #hornBlow_id#});"><i class="fa-lg icon fas fa-volume-up"></i></button>
+					<!--
+					<button class="btn cmd action" data-cmd_id="#stopHornBlow_id#" title="Stop klaxonner" onclick="jeedom.cmd.execute({id: #hornBlow_id#});"><i class="fa-lg icon fas fa-volume-mute"></i></button>
+					-->
 					<button class="btn cmd action" data-cmd_id="#vehicleFinder_id#" title="Recherche véhicule"><i class="fa-lg icon fas fa-map-marked"></i></button>
 					<script>
 						$('.cmd[data-cmd_id=#vehicleFinder_id#]').on('click', function () {
@@ -225,6 +231,7 @@
 					</script>
 					<button class="btn cmd action" data-cmd_id="#sendPOI_id#" title="Envoi POI (non fonctionnel)"><i class="fa-lg icon fas fa-map-marker-alt"></i></button>
 					<script>
+						/*
 						$('.cmd[data-cmd_id=#sendPOI_id#]').on('click', function () {
 							$('body').append('<div id="mod_sendPOI" style="overflow-x: hidden; overflow-y: hidden;"/>');
 							$("#mod_sendPOI").dialog({
@@ -241,6 +248,7 @@
 															
 							$('#mod_sendPOI').dialog('open');
 						});
+						*/
 					</script>
 				</div>
 				
@@ -298,52 +306,52 @@
                 </div>
                 <!-- Onglets -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="TAB_hyd"><a href="#eqlogictabhyd" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets Hybride </a></li>
-                    <li role="presentation" class="TAB_ess"><a href="#eqlogictabess" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets</a></li>
-                    <li role="presentation" class="TAB_elec"><a href="#eqlogictabelec" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets Electrique</a></li>
-                    <li role="presentation" class="TAB_phev"><a href="#eqlogictabphev" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets PHEV</a></li>
-                    <li role="presentation" class="TAB_charge"><a href="#commandtab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas jeedom-prise"></i> Charges </a></li>
+                    <li role="presentation" class="TAB_hyd" id="TAB_hyd"><a href="#eqlogictabhyd" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets Hybride </a></li>
+                    <li role="presentation" class="TAB_ess" id="TAB_ess"><a href="#eqlogictabess" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets</a></li>
+                    <li role="presentation" class="TAB_elec" id="TAB_elec"><a href="#eqlogictabelec" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets Electrique</a></li>
+                    <li role="presentation" class="TAB_phev" id="TAB_phev"><a href="#eqlogictabphev" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> Trajets PHEV</a></li>
+                    <li role="presentation" class="TAB_charge" id="TAB_charge"><a href="#eqlogictabcharge" aria-controls="home" role="tab" data-toggle="tab"><i class="fas jeedom-prise"></i> Charges </a></li>
                 </ul>
                 <div class="tab-content">
                     <!-- Onglet des trajets HYD -->
-			        <div role="tabpanel" class="tab-pane" id="eqlogictabhyd">
-							<div class="col-xs-12 FONC_trajet" id="titre_tile">Statistiques
+			        <div role="tabpanel" class="tab-pane tab-pane-hyd" id="eqlogictabhyd">
+							<div class="col-xs-12 FONC_trajet_hyd" id="titre_tile">Statistiques
 							</div>
-                            <div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
-								<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
+                            <div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet_hyd">
+								<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet_hyd">
 									<div class="myToyota_panel_flat_titre_tile " id="titre_tile">sur 7 jours glissants</div>
 									<div>
 										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Nombre trajets</div>
-											<center><span class="FONC_trajets" id="FONC_trajets">---</span></center>
+											<center><span class="FONC_hyd_trajets" id="FONC_hyd_trajets">---</span></center>
 										</div>
 										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Durée totale</div>
-											<center><span class="FONC_duree_totale" id="FONC_duree_totale">---</span></center>
+											<center><span class="FONC_hyd_duree_totale" id="FONC_hyd_duree_totale">---</span></center>
 										</div>
 										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Distance totale</div>
-											<center><span class="FONC_distance_totale" id="FONC_distance_totale">---</span> km</center>
+											<center><span class="FONC_hyd_distance_totale" id="FONC_hyd_distance_totale">---</span> km</center>
 										</div>
 										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Vitesse moyenne</div>
-											<center><span class="FONC_vitesse_moyenne" id="FONC_vitesse_moyenne">---</span> km/h</center>
+											<center><span class="FONC_hyd_vitesse_moyenne" id="FONC_hyd_vitesse_moyenne">---</span> km/h</center>
 										</div>
 										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Durée en ev</div>
-											<center><span class="FONC_duree_ev" id="FONC_duree_ev">---</span></center>
+											<center><span class="FONC_hyd_duree_ev" id="FONC_hyd_duree_ev">---</span></center>
 										</div>
 										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Distance en ev</div>
-											<center><span class="FONC_distance_ev" id="FONC_distance_ev">---</span> km</center>
+											<center><span class="FONC_hyd_distance_ev" id="FONC_hyd_distance_ev">---</span> km</center>
 										</div>
 										<div class="col-xs-2 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Conso Carburant</div>
-											<center><span class="FONC_conso_essence" id="FONC_conso_essence">---</span> l</center>
+											<center><span class="FONC_hyd_conso_essence" id="FONC_hyd_conso_essence">---</span> l</center>
 										</div>
 										<div class="col-xs-1 myToyota_panel_flat_tile " style="width:12%;">
 											<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Conso moyenne</div>
-											<center><span class="FONC_conso_moy" id="FONC_conso_moy">---</span> l/100</center>
+											<center><span class="FONC_hyd_conso_moy" id="FONC_hyd_conso_moy">---</span> l/100</center>
 										</div>
 									</div>
 								</div>
@@ -360,9 +368,9 @@
                             
                     </div>
                     <!-- Onglet des trajets essence -->
-			        <div role="tabpanel" class="tab-pane" id="eqlogictabess">
+			        <div role="tabpanel" class="tab-pane tab-pane-ess" id="eqlogictabess">
                             
-						<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
+						<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet_ess">
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets essence
 							</div>
 							<div >
@@ -373,9 +381,9 @@
 						
 					</div>
                     <!-- Onglet des trajets électrique -->
-			        <div role="tabpanel" class="tab-pane" id="eqlogictabelec">
+			        <div role="tabpanel" class="tab-pane tab-pane-elec" id="eqlogictabelec">
                             
-						<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
+						<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet_elec">
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets électrique
 							</div>
 							<div >
@@ -386,9 +394,9 @@
 						
 					</div>
                     <!-- Onglet des trajets phev-->
-			        <div role="tabpanel" class="tab-pane" id="eqlogictabphev">
+			        <div role="tabpanel" class="tab-pane tab-pane-phev" id="eqlogictabphev">
                             
-						<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
+						<div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet_phev">
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets PHEV
 							</div>
 							<div >
@@ -399,8 +407,8 @@
 						
 					</div>
 						<!-- Onglet des commandes de l'équipement -->
-                    <div role="tabpanel" class="tab-pane" id="commandtab">
-                        <div class="col-xs-12 myToyota_panel_flat_tile FONC_trajet">
+                    <div role="tabpanel" class="tab-pane tab-pane-charge" id="eqlogictabcharge">
+                        <div class="col-xs-12 myToyota_panel_flat_tile FONC_charge">
                             <div class="myToyota_panel_flat_titre_tile " id="titre_tile">Charges</div>
                             <div class="col-xs-12">
                                 <div class="col-xs-4 myToyota_panel_flat_tile " style="width:140px;">
@@ -596,17 +604,23 @@
 			$('.TAB_hyd').hide();
 			$('.TAB_ess').hide();
 			$('.TAB_phev').hide();
+			$('.TAB_elec').show();
+			$('.TAB_charge').show();
+			document.getElementById("eqlogictabelec").className += " active";
+			document.getElementById("TAB_elec").className += " active";
 		}
 		if ( '#vehicle_type#id##' == 'Hybride')  {
 			$('.electric_engine_txt#id#').hide();
 			$('.commun_engine_txt#id#').hide();
 			$('.charge_sessions#id#').hide();
 			$('.charge_chart#id#').hide();
+			$('.TAB_hyd').show();
 			$('.TAB_ess').hide();
-			$('.TAB_elec').hide();
 			$('.TAB_phev').hide();
+			$('.TAB_elec').hide();
 			$('.TAB_charge').hide();
-			//$('.TAB_hyd').show();
+			document.getElementById("eqlogictabhyd").className += " active";
+			document.getElementById("TAB_hyd").className += " active";
 		}
 		if ( '#vehicle_type#id##' == 'Thermique')  {
 			$('.electric_engine_txt#id#').hide();
@@ -614,16 +628,23 @@
 			$('.charge_chart#id#').hide();
 			$('.TAB_hyd').hide();
 			$('.TAB_elec').hide();
+			$('.TAB_ess').show();
 			$('.TAB_phev').hide();
 			$('.TAB_charge').hide();
+			document.getElementById("eqlogictabess").className += " active";
+			document.getElementById("TAB_ess").className += " active";
 		}
 		if ( '#vehicle_type#id##' == 'Hybride Rechargeable')  {
 			$('.TAB_hyd').hide();
 			$('.TAB_elec').hide();
 			$('.TAB_ess').hide();
+			$('.TAB_phev').show();
+			$('.TAB_charge').show();
+			document.getElementById("eqlogictabphev").className += " active";
+			document.getElementById("TAB_pehv").className += " active";
 		}
 		if ( '#vehicle_type#id##' != 'Electrique' && '#vehicle_type#id##' != 'Hybride Rechargeable' )  {
-			$('#charge_btn#id#').hide();
+			//$('#charge_btn#id#').hide();
 			$('#stopcharge_btn#id#').hide();
 		}
 
@@ -1381,14 +1402,14 @@
 			$(function() {
 				var x = JSON.parse(_options.display_value);
 				if (x.duree_tot!=undefined){
-					$('.FONC_trajets').empty().append('<span>'+x.nb_trajets+'</span>');
-					$('.FONC_duree_totale').empty().append('<span>'+x.duree_tot+'</span>'); //
-					$('.FONC_distance_totale').empty().append('<span>'+x.distance_tot+'</span>'); //
-					$('.FONC_vitesse_moyenne').empty().append('<span>'+x.vit_moy+'</span>'); //
-					$('.FONC_duree_ev').empty().append('<span>'+x.duree_ev+'</span>'); //
-					$('.FONC_distance_ev').empty().append('<span>'+x.distance_ev+'</span>'); //
-					$('.FONC_conso_essence').empty().append('<span>'+x.conso_essence+'</span>'); 
-					$('.FONC_conso_moy').empty().append('<span>'+x.conso_moy+'</span>'); 
+					$('.FONC_hyd_trajets').empty().append('<span>'+x.nb_trajets+'</span>');
+					$('.FONC_hyd_duree_totale').empty().append('<span>'+x.duree_tot+'</span>'); //
+					$('.FONC_hyd_distance_totale').empty().append('<span>'+x.distance_tot+'</span>'); //
+					$('.FONC_hyd_vitesse_moyenne').empty().append('<span>'+x.vit_moy+'</span>'); //
+					$('.FONC_hyd_duree_ev').empty().append('<span>'+x.duree_ev+'</span>'); //
+					$('.FONC_hyd_distance_ev').empty().append('<span>'+x.distance_ev+'</span>'); //
+					$('.FONC_hyd_conso_essence').empty().append('<span>'+x.conso_essence+'</span>'); 
+					$('.FONC_hyd_conso_moy').empty().append('<span>'+x.conso_moy+'</span>'); 
 				}
 			});
 		}
@@ -1399,7 +1420,7 @@
 				var trajets = JSON.parse(_options.display_value);
 				var table_html= "";
 				table_html += '<thead><tr class="myToyota_stat_tr">';
-				table_html += '<th class="myToyota_stat_th" style="width: 15%; height: 25px; padding-left: 12px;">Début</th>';
+				table_html += '<th class="myToyota_stat_th" style="width: 15%; height: 25px; padding-left: 12px;">Début (cliquer pour voir)</th>';
 				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Durée</th>';
 				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Distance</th>';
 				table_html += '<th class="myToyota_stat_th" style="width: 10%; height: 25px; padding-left: 12px;">Vit. moyenne</th>';
@@ -1412,7 +1433,7 @@
 				for(trajet in trajets){
 					console.log('-------- Tab cmd HYD -----' + trajet);
 					table_html += '<tr>'
-					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].debut_trajet+'</span></td>';
+					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;"><a href="index.php?v=d&plugin=myToyota&modal=AfficheTrajetMap.myToyota&eqLogic_id="'+'"#id#">'+trajets[trajet].debut_trajet+'</a></span></td>';
 					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].duree_tot+'</span></td>';
 					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].distance_tot+' km</span></td>';
 					table_html += '<td class="myToyota_stat_td"><span class="myToyota_stat_td form-control input-sm" style="background-color: transparent !important;">'+trajets[trajet].vit_moy+' km/h</span></td>';

@@ -299,8 +299,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<img id="car_img" src=""/>
 									</div>
 								</div>
-								
 							</fieldset>
+							<br><span> </span><br>
+							<div class="col-lg-8">
+								<legend><i class="fas fa-info"></i> Capacités du véhicule => seules les capacités à "true" peuvent éventuellement être utilisées (cliquer sur "Synchroniser" pour mettre à jour la liste)</legend>
+								<textarea id=get_capabilities rows="2" cols="50" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="capabilities" readonly></textarea>
+								<div id="liste_msg" class="label table_capabilities"></div>
+							</div>
+
 						</form>  
                     </div>
 
@@ -337,6 +343,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 	<script>
 			setDisplayGPS();
 			setDisplayPanel();
+			getCapabilities();
 			
 			$('#sel_option_localisation').on("change",function (){
 				setDisplayGPS();
@@ -345,7 +352,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			$('#sel_panel_icon').on("change",function (){
 				setDisplayPanel();
 			});
-			
+
+			$('#get_capabilities').on("change",function (){
+				getCapabilities();
+			});
+
 			function setDisplayGPS() {
 				if ( $('.eqLogicAttr[data-l2key=option_localisation]').value() == "jeedom" || $('.eqLogicAttr[data-l2key=option_localisation]').value() == null) {
 					$('#gps_coordinates').hide();
@@ -387,6 +398,32 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			input.attr("type", "password");
 			}
 		});
+
+
+		//----- Capabilities
+		function getCapabilities(){
+				var capabilities = json_decode($('.eqLogicAttr[data-l2key=capabilities]').value());
+				var li_html= "";
+				var capa = "";
+				console.log('-------- Tab capabilities -----' + capabilities);
+				li_html += '<ul class="list-group" style="text-align: left">';
+				nbcapabilities = count(capabilities);
+				if (nbcapabilities == 0){
+					li_html += '<li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: center;"><span class="label capabilities"> Aucune capacité trouvée </span><br/>';
+				} else {
+					li_html += '<br><li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: left; font-weight: bold;"><span class="label capabilities"><U> Capacités potentiellement utilisables dans cette liste: </U></span><br/>';
+					for (capabilitie in capabilities){
+						console.log('-------- Tab capabilities -----' + capabilitie);
+						if (capabilities[capabilitie] == true){
+							li_html += '<li class="list-group-item" style="margin-bottom: 0px; margin-left: 75px; padding: 0px 0px 5px 0px; text-align: left;"><span class="label capabilities">';
+							li_html += capabilitie + '  => OK </span></li>';
+						}
+					};
+					$('.table_capabilities').empty().append(li_html);
+				}	
+		};
+
+
 
 	</script>
 	
