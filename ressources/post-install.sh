@@ -7,61 +7,67 @@ fi
 date
 touch ${PROGRESS_FILE}
 echo 0 > ${PROGRESS_FILE}
-echo "**********************************"
-echo "*  Installation des dépendances  *"
-echo "**********************************"
-BASEDIR=/var/www/html/plugins/myToyota/ressources
+echo "*************************************************"
+echo "*  Installation des dépendances post-install.sh *"
+echo "*************************************************"
+BASEDIR=$(dirname $(readlink -f $0))
+echo "Répetoire d'installation des dépendances : $BASEDIR"
+date
 
 echo 5 > ${PROGRESS_FILE}
-sudo apt-get update
-date
-#echo 10 > ${PROGRESS_FILE}
-#sudo apt remove -y python3-serial
+if [ -d "$BASEDIR/venv" ];then
+echo "Le dossier venv existe, il sera supprimé !";
+sudo -u www-data rm -r -f $BASEDIR/venv
+fi
 
 echo 10 > ${PROGRESS_FILE}
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libxml2-dev libxslt-dev
+if [ -d "$BASEDIR/mytoyota" ];then
+echo "Le dossier python mytoyota existe, il sera supprimé !";
+sudo -u www-data rm -r -f $BASEDIR/mytoyota
+fi
 
 echo 15 > ${PROGRESS_FILE}
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3
-date
+if [ -d "$BASEDIR/.cache" ];then
+echo "Le dossier .cache existe, il sera supprimé !";
+sudo -u www-data rm -r -f $BASEDIR/.cache
+fi
 
 echo 20 > ${PROGRESS_FILE}
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-venv python3-pip python3-dev
-date
+if [ -d "$BASEDIR/JsonPath-PHPP" ];then
+echo "Le dossier JsonPath-PHPP existe, il sera supprimé !";
+sudo -u www-data rm -r -f $BASEDIR/JsonPath-PHPP
+fi
 
 echo 25 > ${PROGRESS_FILE}
-sudo -u www-data python3 -m venv $BASEDIR/venv
-date
-
-sudo -u www-data $BASEDIR/venv/bin/python3 -m pip install --upgrade pip wheel
+if [ -d "$BASEDIR/jeedom" ];then
+echo "Le dossier python jeedom existe, il sera supprimé !";
+sudo -u www-data rm -r -f $BASEDIR/jeedom
+fi
 
 echo 30 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir pyyaml
+if [ -d "$BASEDIR/prog_python" ];then
+echo "Le dossier prog_python  existe, il sera supprimé !";
+sudo -u www-data rm -r -f $BASEDIR/prog_python
+fi
+
 echo 35 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir pydantic
+if [ -d "$BASEDIR/tests" ];then
+echo "Le dossier test existe, il sera supprimé !";
+sudo -u www-data rm -r -f $BASEDIR/tests
+fi
+
 echo 40 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir langcodes
-echo 45 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir httpx
-echo 50 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir arrow
-echo 55 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir importlib-metadata
-echo 60 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir --upgrade pyjwt
-echo 65 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir lxml
-echo 70 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir hishel
-echo 75 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir requests
-echo 80 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir serial
-echo 85 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir pyudev
-echo 90 > ${PROGRESS_FILE}
-sudo -u www-data $BASEDIR/venv/bin/pip3 install --no-cache-dir importlib_metadata
-echo 95 > ${PROGRESS_FILE}
+if [ -f "$BASEDIR/data.py" ];then
+echo "Divers fichiers python existent, il seront supprimé !";
+sudo -u www-data rm -f $BASEDIR/data.py
+sudo -u www-data rm -f $BASEDIR/'Fichier a modifier.txt'
+sudo -u www-data rm -f $BASEDIR/gps_kml.py
+sudo -u www-data rm -f $BASEDIR/myToyotad.py
+sudo -u www-data rm -f $BASEDIR/README.md
+sudo -u www-data rm -f $BASEDIR/simple_client_example.py
+sudo -u www-data rm -f $BASEDIR/synchro.py
+sudo -u www-data rm -f $BASEDIR/tests.py
+fi
 
 date
 rm ${PROGRESS_FILE}

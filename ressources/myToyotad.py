@@ -4,11 +4,12 @@
 """recuperation des donnees de base"""
 import asyncio
 import urllib.request
-from datetime import date, timedelta
+from datetime import date, timedelta, timezone
 
 from mytoyota.client import MyT
 from mytoyota.models.summary import SummaryType
 import sys
+import json
 import argparse
 try:
     from jeedom.jeedom import *
@@ -17,7 +18,8 @@ except ImportError as ex:
     print(ex)
     sys.exit(1)
 
-
+def utc_to_local(utc_dt):
+    return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 async def get_information():
     pid = str(os.getpid())
@@ -39,8 +41,11 @@ async def get_information():
     vehicule["windowPassengerFront"] = 'UNKNOWN'
     vehicule["windowPassengerRear"] = 'UNKNOWN'
     vehicule["allWindowsState"] = 'UNKNOWN'
+    vehicule['trunk_state'] = 'UNKNOW'
+    vehicule['hood_state'] = 'UNKNOW'
 
     cars = await client.get_vehicles(metric=True)
+    moyennes= ''
     for car in cars:
         await car.update()
         logging.info("Vin du vehicule trouve : " + car.vin)
@@ -63,12 +68,16 @@ async def get_information():
                     type = "Hybride"
                 else:
                     if car._vehicle_info.extended_capabilities.drive_pulse:
-                        type = "Essence"
+                        type = "Thermique"
                     else:
-                        if car._vehicle_info.extended_capabilities.hydrogen_pulse:
-                            type = "Hydrogene"
-                        else:
-                            type = 'Inconnu'
+                        type = 'Inconnu'
+            
+            if type == "Hybride" or type == "Thermique":
+                if car._vehicle_info.fuel_type == 'B':
+                    vehicule['carburant'] = 'Essence'
+                else:
+                    vehicule['carburant'] = 'Diesel'
+
             vehicule["type"] = type
             vehicule["mileage"] = car.dashboard.odometer
             if car.lock_status.doors != None:
@@ -78,7 +87,6 @@ async def get_information():
                 vehicule["doorPassengerRear"] = 'OPEN'
                 vehicule["doorLockState"] = 'UNLOCKED'
                 vehicule["allDoorsState"] = 'OPEN'
-                logging.info("porte " + str(car.lock_status.doors.driver_seat.closed))
                 if car.lock_status.doors.driver_seat.closed:
                     vehicule["doorDriverFront"] = 'CLOSED'
                 elif car.lock_status.doors.driver_seat.closed==None:
@@ -95,7 +103,6 @@ async def get_information():
                     vehicule["doorLockState"] = 'LOCKED'
 
             if car.lock_status.windows != None:
-                logging.info("window " + str(car.lock_status.windows.driver_seat.closed))
                 if car.lock_status.windows.driver_seat.closed:
                     vehicule["windowDriverFront"] = 'CLOSED'
                 else:
@@ -117,8 +124,16 @@ async def get_information():
                 else:
                     vehicule["allWindowsState"] = 'OPEN'
 
-            vehicule['trunk_state'] = car.lock_status.doors.trunk.closed
-            vehicule['hood_state'] = car.lock_status.hood.closed
+            if hasattr(car.lock_status.doors,'trunk'):
+                if car.lock_status.doors.trunk.closed:
+                    vehicule['trunk_state'] = 'CLOSED'
+                else:
+                    vehicule['trunk_state'] == 'OPEN'
+            if hasattr(car.lock_status.hood, 'closed'):
+                if car.lock_status.hood.closed:
+                    vehicule['hood_state'] = 'CLOSED'
+                else:
+                    vehicule['hood_state'] = 'OPEN'
 
             vehicule['moonroof_state'] = 'UNKNOWN'
 
@@ -131,21 +146,64 @@ async def get_information():
             vehicule['tireRearRight_pressure'] = 0
             vehicule['tireRearRight_target'] = 0
 
-            vehicule['chargingStatus'] = car.dashboard.charging_status
+            if hasattr(car.dashboard,'charging_status'):
+                vehicule['chargingStatus'] = car.dashboard.charging_status
             vehicule['connectorStatus'] = False
-            vehicule['beRemainingRangeElectric'] = car.dashboard.battery_range
+            if hasattr(car.dashboard,'battery_range'):
+                vehicule['beRemainingRangeElectric'] = car.dashboard.battery_range
             vehicule['chargingLevelHv'] = 'UNKNOWN'
-            vehicule['chargingEndTime'] = car.dashboard.remaining_charge_time
+            if hasattr(car.dashboard,'range'):
+                vehicule['beRemainingRangeTotal'] = car.dashboard.range
+            if hasattr(car.dashboard,'remaining_charge_time'):
+                vehicule['chargingEndTime'] = car.dashboard.remaining_charge_time
+            
+            vehicule['beRemainingRangeFuelKm'] = '---'
+            vehicule['remaining_fuel'] = '---'
+            if car._vehicle_info.extended_capabilities.fuel_range_available:
+                vehicule['beRemainingRangeFuelKm'] = str(car.dashboard.fuel_range)
+            if car._vehicle_info.extended_capabilities.fuel_level_available:
+                vehicule['remaining_fuel'] = str(car.dashboard.fuel_level)
 
-            vehicule['beRemainingRangeFuelKm'] = car.dashboard.fuel_range
-            vehicule['remaining_fuel'] = car.dashboard.fuel_level
-
-            vehicule['vehicleMessages'] = '"' + str(car.notifications[0].message).replace(u'\xa0', u' ') + '"'
+            if hasattr(car.notifications,'message'):
+                vehicule['vehicleMessages'] = '"' + str(car.notifications[0].message).replace(u'\xa0', u' ') + '"'
             vehicule['gps_coordinates'] = ''
 
-            vehicule['lastUpdate'] = str(car.lock_status.last_updated.strftime('%d-%m-%Y à %H:%M:%S'))
+            if hasattr(car.location.timestamp , 'strftime'):
+                vehicule['lastUpdate'] = str(utc_to_local(car.location.timestamp).strftime('%d-%m-%Y à %H:%M:%S'))
+                vehicule['gps_coordinates'] = str(car.location.latitude) + ',' + str(car.location.longitude)
+
+
             vehicule['totalEnergyCharged'] = 'UNKNOW'
             vehicule['chargingSessions'] = 'UNKNOW'
+            i = 1
+            services = dict()
+            if car.service_history != None:
+                for service in car.service_history:
+                    services[str('service' + str(i))] = {'date':str((service.service_date).strftime('%d-%m-%Y')), 'enregistrement_consommateur':service.customer_created_record,
+                               'compteur': str(service.odometer) + ' ' + service._distance_unit, 'notes': service.notes,
+                               'operations': service.operations_performed, 'ro_number': service.ro_number,
+                               'categorie': service.service_category, 'garage': service.service_provider,
+                               'concessionaire': service.servicing_dealer}
+                    i += 1
+                vehicule['services'] = json.dumps(services)
+            moy_sem = dict()
+            for moyennes in await car.get_summary(date.today() - timedelta(days=7), date.today(), summary_type=SummaryType.YEARLY):
+                moy_sem = {'conso_moy':moyennes.average_fuel_consumed,'vit_moy':moyennes.average_speed,
+                    'distance_tot':moyennes.distance,'duree_tot':str(moyennes.duration),
+                    'distance_ev':moyennes.ev_distance,'duree_ev':str(moyennes.ev_duration),
+                    'conso_essence':moyennes.fuel_consumed}
+            vehicule['moy_sem'] = json.dumps(moy_sem)
+            i = 1
+            mestrajets = dict()
+            for trajets in await car.get_trips(date.today() - timedelta(days=7), date.today(), full_route=False):
+                mestrajets[str('trajet' + str(i))] = {'debut_trajet': str(utc_to_local(trajets.start_time).strftime('%d-%m-%Y %H:%M:%S')),
+                    'conso_moy':trajets.average_fuel_consumed,
+                    'distance_tot':trajets.distance,'duree_tot':str(trajets.duration),
+                    'distance_ev':trajets.ev_distance,'duree_ev':str(trajets.ev_duration),
+                    'conso_essence':trajets.fuel_consumed}
+                i += 1
+            vehicule['trajets'] = json.dumps(mestrajets)
+
 
 
 #    $this->createCmd('climateNow_status', 'Statut climatiser', 49, 'info', 'string');
@@ -211,10 +269,10 @@ logging.info('myToyota------ Apikey : ' + str(APIKEY))
 logging.info('myToyota------ Log level : ' + str(log_level))
 logging.info('myToyota------ Callback : ' + str(CALLBACK))
 logging.info('myToyota------ Nom du vehicule : ' + str(nomvehicule))
-logging.info('myToyota------ VIN du vehicule : ' + str(vin))
+logging.info('myToyota------ VIN du vehicule : ' + '*******') # + str(vin))
 logging.info("myToyota------ ID de l'equipement : " + str(idvehicule))
-logging.info("myToyota------ Nom du compte : " + str(USERNAME))
-logging.info('myToyota------ Passord du compte : *******')
+logging.info("myToyota------ Nom du compte : " + '*******') #USERNAME)
+logging.info('myToyota------ Passord du compte : ' + '*******') #PASSWORD) 
 
 if not JEEDOM_COM.test():
     logging.error('MODEM------ Network communication issues. Please fix your Jeedom network configuration.')

@@ -41,7 +41,7 @@ async def get_information():
                     type = "Hybride"
                 else:
                     if car._vehicle_info.extended_capabilities.drive_pulse:
-                        type = "Essence"
+                        type = "Thermique"
                     else:
                         type = 'Inconnu'
             print(str(car._vehicle_info.manufactured_date))
@@ -53,6 +53,10 @@ async def get_information():
             print("Date " + dateutil)
             print("Nom  " + car._vehicle_info.car_line_name)
             print("img  " + car._vehicle_info.image)
+
+            print("Capa " + str(car._vehicle_info.extended_capabilities))
+            car.type
+            
             urllib.request.urlretrieve(car._vehicle_info.image, "/var/www/html/plugins/myToyota/data/" + vin + ".png")
             sys.exit()
         else:
@@ -61,6 +65,18 @@ async def get_information():
     if trouve == 0:
         print("Erreur de VIN, aucun vehicule ne correspond, recommencez avec le bon VIN")
                 
+
+# extended_capabilities=_ExtendedCapabilitiesModel(c_scheduling=False, battery_status=False, bonnet_status=False, bump_collisions=False, buzzer_capable=False, charge_management=False, climate_capable=False, 
+# climate_temperature_control_full=False, climate_temperature_control_limited=False, dashboard_warning_lights=False, door_lock_unlock_capable=False, drive_pulse=False, ecare=False, econnect_climate_capable=False, 
+# econnect_vehicle_status_capable=False, electric_pulse=False, emergency_assist=False, enhanced_security_system_capable=False, equipped_with_alarm=False, ev_battery=False, ev_charge_stations_capable=False, 
+# fcv_stations_capable=False, front_defogger=False, front_driver_door_lock_status=False, front_driver_door_open_status=False, front_driver_door_window_status=False, front_driver_seat_heater=False, 
+# front_driver_seat_ventilation=False, front_passenger_door_lock_status=False, front_passenger_door_open_status=False, front_passenger_door_window_status=False, front_passenger_seat_heater=False, 
+# front_passenger_seat_ventilation=False, fuel_level_available=True, fuel_range_available=False, guest_driver=False, hazard_capable=False, horn_capable=False, hybrid_pulse=True, hydrogen_pulse=False, 
+# last_parked_capable=False, light_status=False, lights_capable=False, manual_rear_windows=False, mirror_heater=False, moonroof=False, next_charge=False, power_tailgate_capable=False, power_windows_capable=False, 
+# rear_defogger=False, rear_driver_door_lock_status=False, rear_driver_door_open_status=False, rear_driver_door_window_status=False, rear_driver_seat_heater=False, rear_driver_seat_ventilation=False, rear_hatch_rear_window=False, 
+# rear_passenger_door_lock_status=False, rear_passenger_door_open_status=False, rear_passenger_door_window_status=False, rear_passenger_seat_heater=False, rear_passenger_seat_ventilation=False, remote_econnect_capable=False, 
+# remote_engine_start_stop=False, smart_key_status=False, steering_heater=False, stellantis_climate_capable=False, stellantis_vehicle_status_capable=False, sunroof=False, telemetry_capable=True, trunk_lock_unlock_capable=False, 
+# try_and_play=False, vehicle_diagnostic_capable=True, vehicle_finder=False, vehicle_status=False, we_hybrid_capable=False, weekly_charge=False)
 
 
 parser = argparse.ArgumentParser(description='myToyota python for Jeedom plugin')

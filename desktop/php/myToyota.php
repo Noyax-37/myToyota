@@ -150,6 +150,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Utilisation du template}} <sup><i class="fas fa-question-circle tooltips" title="{{A cocher pour modifier l'affichage sur le dashboard}}"></i></sup></label>
+								<div class="col-lg-7 tooltips">
+									<input type="checkbox" id="util_template" class="eqLogicAttr configKey" data-l1key="configuration" data-l2key="UtilTemplate"/>
+								</div>
+							</div>
+
+							<br>
+
 							<legend><i class="fas fa-cogs"></i> {{Paramètres du compte et du véhicule}}</legend>
 
 							<div class="form-group">
@@ -168,6 +177,17 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<span class="eye fa fa-fw fa-eye toggle-pwd"></span>
 									</div>
 							</div>
+
+							<div class="form-group">		
+									<label class="col-sm-4 control-label">{{Marque}}</label>
+									<div class="col-sm-4">
+										<select id="sel_brand" class="eqLogicAttr form-control" style="margin: 1px 0px;" data-l1key="configuration" data-l2key="vehicle_brand" placeholder="Marque du véhicule">
+											<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>
+											<option value="T">Toyota</option>
+											<option value="L">Lexus</option>
+										</select>
+									</div>
+								</div>   
 
 							<div id="div_vin" class="form-group">		
 								<label class="col-sm-4 control-label">{{VIN}}</label>
@@ -209,23 +229,52 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 							</br>
 
-							<!-- Exemple de champ de saisie du cron d'auto-actualisation avec assistant -->
-							<!-- La fonction cron de la classe du plugin doit contenir le code prévu pour que ce champ soit fonctionnel -->
-							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Auto-actualisation}}
-									<sup><i class="fas fa-question-circle tooltips" title="{{Fréquence de rafraîchissement des commandes infos de l'équipement}}"></i></sup>
-								</label>
-								<div class="col-sm-2">
-									<div class="input-group">
-										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" readonly>
-										<span class="input-group-btn">
-											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
-												<i class="fas fa-question-circle"></i>
-											</a>
-										</span>
+							</br>
+								
+								<legend><i class="fas fa-location-arrow"></i> {{Paramètres de localisation}}</legend>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Domicile (présence)}}</label>
+									<div class="col-sm-4">
+										<select id="sel_option_localisation" class="eqLogicAttr form-control" style="margin-bottom: 1px;" data-l1key="configuration" data-l2key="option_localisation">
+											<?php
+											if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
+												echo '<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>';
+												echo '<option value="jeedom">{{Configuration Jeedom}}</option>';
+												echo '<option value="vehicle">{{Configuration position actuelle du véhicule}}</option>';
+												echo '<option value="manual">{{Configuration manuelle}}</option>';
+											} 
+											else {
+												echo '<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>';
+												echo '<option value="vehicle">{{Configuration position actuelle du véhicule}}</option>';
+												echo '<option value="manual">{{Configuration manuelle}}</option>';
+												//echo '<option value="jeedom">{{Configuration Jeedom indisponible}}</option>';
+											}
+											?>
+										</select>
 									</div>
 								</div>
-							</div>
+
+								<div class="form-group" id="gps_coordinates">		
+									<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
+									<div class="col-sm-2" id="div_home_lat">
+										<input id="input_home_lat" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_lat" placeholder="Lat. domicile">
+									</div>
+									<div class="col-sm-2" id="div_home_long">
+										<input id="input_home_long" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_long" placeholder="Long. domicile">
+									</div>
+									<div class="col-sm-2">
+										<a class="btn btn-primary btn-sm cmdAction" id="bt_gps" style="height:32px; width:32px; padding-top:8px" title="{{Récupérer la position actuelle du véhicule}}"><i class="fas fa-location-arrow"></i></a>
+									</div>	
+								</div>
+																							
+								<div class="form-group">	
+									<label class="col-sm-4 control-label">{{Distance max (en m)}}</label>
+									<div class="col-sm-4">
+										<input id="home_distance"type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_distance" placeholder="Distance max avec votre domicile (en m)">
+									</div>
+								</div>
+								
+								</br></br>
 						</div>
 
 						<!-- Partie droite de l'onglet "Équipement" -->
@@ -250,8 +299,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										<img id="car_img" src=""/>
 									</div>
 								</div>
-								
 							</fieldset>
+							<br><span> </span><br>
+							<div class="col-lg-8">
+								<legend><i class="fas fa-info"></i> Capacités du véhicule => seules les capacités à "true" peuvent éventuellement être utilisées (cliquer sur "Synchroniser" pour mettre à jour la liste)</legend>
+								<textarea id=get_capabilities rows="2" cols="50" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="capabilities" readonly></textarea>
+								<div id="liste_msg" class="label table_capabilities"></div>
+							</div>
+
 						</form>  
                     </div>
 
@@ -286,6 +341,53 @@ $eqLogics = eqLogic::byType($plugin->getId());
 	</div><!-- /.eqLogic -->
 
 	<script>
+			setDisplayGPS();
+			setDisplayPanel();
+			getCapabilities();
+			
+			$('#sel_option_localisation').on("change",function (){
+				setDisplayGPS();
+			});
+
+			$('#sel_panel_icon').on("change",function (){
+				setDisplayPanel();
+			});
+
+			$('#get_capabilities').on("change",function (){
+				getCapabilities();
+			});
+
+			function setDisplayGPS() {
+				if ( $('.eqLogicAttr[data-l2key=option_localisation]').value() == "jeedom" || $('.eqLogicAttr[data-l2key=option_localisation]').value() == null) {
+					$('#gps_coordinates').hide();
+					$('#home_distance').css('margin', '0px 0px');
+				}
+				if ( $('.eqLogicAttr[data-l2key=option_localisation]').value() == "manual" ) {
+					$('#gps_coordinates').show();
+					$('#bt_gps').hide();
+					$('#input_home_lat').attr('readonly', false);
+					$('#input_home_long').attr('readonly', false);
+					$('#home_distance').css('margin', '1px 0px');
+				}
+				if ( $('.eqLogicAttr[data-l2key=option_localisation]').value() == "vehicle" ) {
+					$('#gps_coordinates').show();
+					$('#bt_gps').show();
+					$('#input_home_lat').attr('readonly', true);
+					$('#input_home_long').attr('readonly', true);
+					$('#home_distance').css('margin', '1px 0px');
+				}
+			}
+
+			function setDisplayPanel() {
+				if ( $('.eqLogicAttr[data-l2key=panel_doors_windows_display]').value() == "text") {
+					$('#sel_panel_color option[value=""]').prop('selected', true);
+					$('#sel_panel_color').attr('disabled', true);
+				}
+				if ( $('.eqLogicAttr[data-l2key=panel_doors_windows_display]').value() == "icon") {
+					$('#sel_panel_color').attr('disabled', false);
+				}
+			}
+
 
 		$('body').off('click', '.toggle-pwd').on('click', '.toggle-pwd', function () {
 			$(this).toggleClass("fa-eye fa-eye-slash");
@@ -296,6 +398,32 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			input.attr("type", "password");
 			}
 		});
+
+
+		//----- Capabilities
+		function getCapabilities(){
+				var capabilities = json_decode($('.eqLogicAttr[data-l2key=capabilities]').value());
+				var li_html= "";
+				var capa = "";
+				console.log('-------- Tab capabilities -----' + capabilities);
+				li_html += '<ul class="list-group" style="text-align: left">';
+				nbcapabilities = count(capabilities);
+				if (nbcapabilities == 0){
+					li_html += '<li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: center;"><span class="label capabilities"> Aucune capacité trouvée </span><br/>';
+				} else {
+					li_html += '<br><li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: left; font-weight: bold;"><span class="label capabilities"><U> Capacités potentiellement utilisables dans cette liste: </U></span><br/>';
+					for (capabilitie in capabilities){
+						console.log('-------- Tab capabilities -----' + capabilitie);
+						if (capabilities[capabilitie] == true){
+							li_html += '<li class="list-group-item" style="margin-bottom: 0px; margin-left: 75px; padding: 0px 0px 5px 0px; text-align: left;"><span class="label capabilities">';
+							li_html += capabilitie + '  => OK </span></li>';
+						}
+					};
+					$('.table_capabilities').empty().append(li_html);
+				}	
+		};
+
+
 
 	</script>
 	

@@ -111,6 +111,7 @@ function synchronize()  {
 			vin: $('.eqLogicAttr[data-l2key=vehicle_vin]').value(),
 			username: $('.eqLogicAttr[data-l2key=username]').value(),
 			pwd: $('.eqLogicAttr[data-l2key=password]').value(),
+			brand: $('.eqLogicAttr[data-l2key=vehicle_brand]').value(),
 			},
 		dataType: 'json',
 			error: function (request, status, error) {
@@ -123,16 +124,22 @@ function synchronize()  {
 				return;
 			}
 			else  {
+				//$('#div_alert').showAlert({message: '{{test}}', level: 'danger'});
 				//$('#div_brand').append('<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_brand" placeholder="Marque du véhicule" value="'+data.result['brand']+'" readonly>'); 
-				$('#div_model').append('<input id="model" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_model" placeholder="Modèle du véhicule" value="'+data.result['attributes']['model']+'" readonly>'); 
-				$('#div_year').append('<input id="year" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_year" placeholder="Année de fabrication du véhicule" value="'+data.result['attributes']['year']+'" readonly>'); 
-				$('#div_type').append('<input id="type" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_type" placeholder="Type de véhicule" value="'+data.result['attributes']['driveTrain']+'" readonly>');
-				
-				$('#div_img').empty();
-				var img ='<img id="car_img" src="plugins/myToyota/data/' + vin + '.png" style="height:300px" />';
-				$('#div_img').append(img);
+				if (data.result['erreur'] == 'ok'){
+					$('#div_model').append('<input id="model" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_model" placeholder="Modèle du véhicule" value="'+data.result['modelName']+'" readonly>'); 
+					$('#div_year').append('<input id="year" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_year" placeholder="Année de fabrication du véhicule" value="'+data.result['modelYear']+'" readonly>'); 
+					$('#div_type').append('<input id="type" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_type" placeholder="Type de véhicule" value="'+data.result['driveTrain']+'" readonly>');
+					
+					$('#div_img').empty();
+					var img ='<img id="car_img" src="plugins/myToyota/data/' + data.result['vin'] + '.png" style="height:300px" />';
+					$('#div_img').append(img);
+					$('.btn[data-action=save]').click();
+					$('#div_alert').showAlert({message: '{{Synchronisation terminée avec succès}}', level: 'success'});
+				} else {
+					$('#div_alert').showAlert({message: '{{Synchro NOK, aucun VIN ne correspond ou erreur dans la récupération des données, vérifiez les logs}}', level: 'danger'});
+				}
 			}
-			$('#div_alert').showAlert({message: '{{Synchronisation terminée avec succès}}', level: 'success'});
 		}
 	});
 	
@@ -148,6 +155,7 @@ function all_data()  {
 			action: "all_data",
 			username: $('.eqLogicAttr[data-l2key=username]').value(),
 			pwd: $('.eqLogicAttr[data-l2key=password]').value(),
+			vin: $('.eqLogicAttr[data-l2key=vehicle_vin]').value(),
 			},
 		dataType: 'json',
 			error: function (request, status, error) {
@@ -165,6 +173,51 @@ function all_data()  {
 	
 };
 
+function getCoordinates()  {
+
+	$('#div_home_lat').empty();
+	$('#div_home_long').empty();
+	
+	//$('#div_alert').showAlert({message: '{{Récupération des informations en cours}}', level: 'warning'});	
+	$.ajax({													// fonction permettant de faire de l'ajax
+		type: "POST", 											// methode de transmission des données au fichier php
+		url: "plugins/myToyota/core/ajax/myToyota.ajax.php", 			// url du fichier php
+		data: {
+			action: "gps",
+			vin: $('.eqLogicAttr[data-l2key=vehicle_vin]').value(),
+			},
+		dataType: 'json',
+			error: function (request, status, error) {
+			handleAjaxError(request, status, error);
+			},
+		success: function (data) { 			
+
+			if (data.state != 'ok') {
+				$('#div_alert').showAlert({message: '{{Erreur lors de la récupération des informations}}', level: 'danger'});
+				return;
+			}
+			else  {
+				if ( data.result['latitude'] == "" || data.result['longitude'] == "" )  {
+					$('#div_alert').showAlert({message: '{{Aucunes coordonnées disponibles}}', level: 'danger'});
+				}
+				else  {
+				$('#div_home_lat').append('<input id="input_home_lat" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_lat" placeholder="Latitude de votre domicile" value="'+data.result['latitude']+'" readonly>');
+				$('#div_home_long').append('<input id="input_home_long" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_long" placeholder="Longitude de votre domicile" value="'+data.result['longitude']+'" readonly>');
+				}
+			}
+			//$('#div_alert').showAlert({message: '{{Récupération des informations terminée avec succès}}', level: 'success'});
+		}
+	});
+
+}
+
+$('#bt_gps').on('click',function() {
+ 
+	$('.btn[data-action=save]').click();
+	setTimeout(getCoordinates,2000);
+	
+});
+
 
 $('#bt_Synchronization').on('click',function() {
  
@@ -178,4 +231,5 @@ $('#bt_Data').on('click',function() {
 	setTimeout(all_data,1000);
 	
 });
+
 

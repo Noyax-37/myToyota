@@ -1,18 +1,43 @@
-# Plugin template
+# Plugin myToyota
 
-Ce "template de plugin" sert de base à la réalisation de plugins pour **Jeedom**.
+En cours de développement donc, il reste encore quelques finitions, l’écriture de la doc (en cours ici même) et la partie trajets affichés sur une carte (si possible). Pour certaines parties, envoi des commandes, … dépend du développement du module d’interrogation des serveurs géré par DurgNomis: [GitHub - DurgNomis-drol/mytoyota: Python client for Toyota Connected Services API 2](https://github.com/DurgNomis-drol/mytoyota)
 
-La documentation générale relative à la conception de plugin est consultable [ici](https://doc.jeedom.com/fr_FR/dev/).
+En cours de migration pour se passer du module python.
 
-Dans le détail :   
-* [Utilisation du template de plugin](https://doc.jeedom.com/fr_FR/dev/plugin_template) : Le template de plugin est une base de plugin pour Jeedom qui doit être adaptée avec l'id de votre plugin et à laquelle il suffit d'ajouter vos propres fonctions.
+Précision pour l’installation, après avoir installé puis activé le plugin, faire une installation des dépendances, une fois terminé lorsque vous allez créer votre équipement il est nécessaire de cliquer sur le bouton « synchroniser » pour initialiser certains paramètres puis sauvegarder. Si vous ne connaissez pas le VIN de votre véhicule, tapez n’importe quoi et allez dans les fichiers de logs, vous verrez apparaitre tous les VIN des véhicules associés à votre compte. Une fois tout paramétré les données sont mises à jour toutes les 30 minutes
 
-* [Fichier info.json](https://doc.jeedom.com/fr_FR/dev/structure_info_json) : Intégré depuis la version 3.0 de Jeedom, le fichier **info.json** est obligatoire pour le bon fonctionnement des plugins et leur bon déploiement sur le Market Jeedom.
+![Plugin_Objet_Connecté](plugin.PNG)
 
-* [Icône du plugin](https://doc.jeedom.com/fr_FR/dev/Icone_de_plugin) : Afin de pouvoir être publié sur le Market Jeedom, tout plugin doit disposer d’une icône. Attention à ne pas utiliser le même code couleur que les icônes des plugins Jeedom officiels.
+![equipement](equipement.PNG)
 
-* [Widget du plugin](https://doc.jeedom.com/fr_FR/dev/widget_plugin) : Présentation des différentes manières d'inclure des widgets personnalisés au plugin.
+1, 2 et 3: besoin d'expliquer?
+4: cocher cette case si vous voulez utiliser le template fourni sur le dashboard sinon les commandes seront affichées brutes
+5: compléter avec les informations qui vous permettent d'accéder à votre application myToyota (attention, ne fonctionne pas si vous êtes encore sous myT) et pour le VIN voir ci dessus
+6: cette partie se remplira toute seule lorsque vous aurez cliqué sur le bouton 7
+7: permet de synchroniser vos données pour la 1ère utilisation et compléter le point 6 ci dessus
+8: données brutes de l'ensemble de ce qui est disponible issue du serveur Toyota pour votre véhicule, à vous de voir si dedans il y aurait des choses intéressantes que je pourrai rajouter au plugin
+9: choix de la méthode pour connaitre l'emplacement de stationnement habituel de votre véhicule. Les choix de config sont "jeedom" si vous avez complété cela dans les configurations de jeedom, "position actuelle du véhicule" et "manuelle" pour saisir long et lat à la main
+10: apparaitra ici la distance entre le lieux de stationnement actuel de votre véhicule et son emplacement habituel
+11: apparaitra ici l'image de votre véhicule
 
-* [Documentation du plugin](https://doc.jeedom.com/fr_FR/dev/documentation_plugin) : Présentation de la mise en place d'une documentation car un bon plugin n'est rien sans documentation adéquate.
 
-* [Publication du plugin](https://doc.jeedom.com/fr_FR/dev/publication_plugin) : Description des pré-requis indispensables à la publication du plugin.
+- Dashboard
+
+Ci dessous à gauche un équipement avec le template à droite en brut
+
+![dashboard](dashboard.PNG)
+
+- Panel
+
+Si dans la configuration du plugin vous cochez "afficher le panneau desktop" alors vous verrez apparaitre une nouvelle option dans le menu accueil
+
+![panel1](panel1.PNG)
+
+![panel2](panel2.PNG)
+
+ce nouveau menu ammène au panel suivant:
+
+![panel3](panel3.PNG)
+
+
+Merci à @Xav-74 pour son aide précieuse et la permission de reprendre l'aspect visuel de son plugin, à @OUARZA pour ses remarques pertinentes et l'aide pour le debuggage de ce plugin

@@ -15,6 +15,24 @@ docs/.sass-cache/
 
 ressources/venv/
 
+data/JTDKBABB70A306579.png
+
 ressources/Fichier a modifier.txt
 
-ressources/post-install - Copie.sh
+data/NMTK33BX20R153664.png
+
+*.kml
+
+ressources/gps_kml.py
+
+core/template/dashboard/carte.html
+
+data/myToyota_token.json
+
+ressources/JsonPath-PHPP/
+
+data/myToyota_JTDKBABB70A306579_token.json
+
+data/myToyota_NMTK33BX20R15366_token.json
+
+data/myToyota_NMTK33BX20R153664_token.json

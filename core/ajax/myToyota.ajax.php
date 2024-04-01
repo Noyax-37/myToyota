@@ -30,7 +30,7 @@ try {
     ajax::init();
 
     if (init('action') == 'synchronize') {
-      $result = myToyota::synchronize(init('vin'),init('username'),init('pwd'));
+      $result = myToyota::synchronize(init('vin'),init('username'),init('pwd'),init('brand'));
       //$result['attributes']['model'] = init('vin');
       //$result['attributes']['year'] = init('username');
       //$result['attributes']['driveTrain'] = init('pwd');
@@ -38,11 +38,16 @@ try {
     }
     
     if (init('action') == 'all_data') {
-      $result = myToyota::all_data(init('username'),init('pwd'));
+      $result = myToyota::all_data(init('username'),init('pwd'),init('vin'));
       ajax::success($result);
     }
     
-  
+    if (init('action') == 'gps') {
+      $result = myToyota::getGPSCoordinates(init('vin'));
+      ajax::success($result);
+    }
+      
+    
 
     throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));
     /*     * *********Catch exeption*************** */

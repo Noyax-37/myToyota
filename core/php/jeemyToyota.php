@@ -16,6 +16,10 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__) . "/../../../../core/php/core.inc.php";
+if (!class_exists('myToyota')) {
+	require_once __DIR__ . '/../../core/class/myToyota.class.php';
+}
+
 set_time_limit(15);
 
 if (!jeedom::apiAccess(init('apikey'), 'myToyota')) {
@@ -44,7 +48,12 @@ if (isset($result['device'])) {
         $eqlogic = eqLogic::byId(intval($key), 'myToyota');
         //if (is_object($eqlogic)) {
             foreach ($data as $key2 => $value) {
-                log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = ' . strval($value));
+                if ($key2 == 'vin'){
+                    log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = *****');
+                    $vin = $value;
+                } else {
+                    log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = ' . strval($value));
+                }
                 if ($key2 == 'PID'){
                     //log::add('myToyota','debug',"Message du programme myToyota. PId de l'équipement : " . $value);
                     posix_kill(intval($value), 15);
@@ -52,10 +61,15 @@ if (isset($result['device'])) {
 					$cmd = $eqlogic->getCmd('info',$key2);
 					if (is_object($cmd)){
 						$cmd->event(strval($value));
+                        if ($key2 == 'gps_coordinates'){
+                            $coordinates = explode(",", $value);
+                            //log::add('myToyota','info',"Message du programme myToyota. Localisation véhicule : " . $value . ' ' . $coordinates[0] . ' ' . $coordinates[1]);
+                        }
 					}
 				}
             }
         //}
     }
+    myToyota::chercheLycos($vin, $coordinates[0], $coordinates[1]);
 }
 

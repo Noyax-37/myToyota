@@ -1,30 +1,19 @@
-# Changelog plugin template
+# Changelog plugin myToyota
 
 >**IMPORTANT**
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
-# 19/01/2022
+# 01/04/2024 V1.1 
 
-- Optimisations V4.2
+- Les commandes fonctionnent sauf l'envoi de POI
+- pas mal d'amélioration surtout dans la présentation
 
-# 20/11/2020
+Comme les autres mise à jour, il faut réinstaller les dépendances + aller dans chaque équipement (=véhicule) + synchroniser et enfin sauvegarder
 
-- Présentation officielle V4
-- Ajouts d'éléments d'informations et de paramètres pour les commandes
 
-# 16/11/2020
+# 26/03/2024 V1.0 
 
-- version minimale Jeedom: 3.3.39 (dernière MAJ critique)
-
-# 04/11/2020
-
-- Nouvelle présentation de la liste des objets
-
-# 07/08/2020
-
-- Ajout de commentaires
-
-# 17/05/2020
-
-- Mise à jour de la documentation
+- Ecriture de la doc
+- suppression de l'utilisation du module python
+- modification des interfaces (panel, dashboard)
