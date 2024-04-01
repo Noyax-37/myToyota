@@ -754,16 +754,24 @@ class myToyota extends eqLogic {
           log::add('myToyota', 'debug', '| retour trips' . $result->body);
           
           // moyennes sur 7 jours
-          $moySem = $tripsEndpoint->payload->summary[0];
+          $summarys = $tripsEndpoint->payload->summary;
           $metatData = $tripsEndpoint->payload->_metadata;
-          $dureeTot = myToyota::convertSecondes($moySem->summary->duration);
-          $dureeEv = myToyota::convertSecondes($moySem->hdc->evTime);
-          $consoMoy = myToyota::consoMoyenne($moySem->summary->fuelConsumption, $moySem->summary->length);
+          foreach ($summarys as $summary){
+            $fuelConsumption += $summary->summary->fuelConsumption;
+            $length += $summary->summary->length;
+            $evDistance += $summary->hdc->evDistance;
+            $evTime += $summary->hdc->evTime;
+            $duration += $summary->summary->duration;
+          }
+          $dureeTot = myToyota::convertSecondes($duration);
+          $dureeEv = myToyota::convertSecondes($evTime);
+          $consoMoy = myToyota::consoMoyenne($fuelConsumption, $length);
+          $averageSpeed = myToyota::averageSpeed($length, $duration);
 
-          $summarySem = '{"conso_moy":' . $consoMoy . ', "vit_moy":' . $moySem->summary->averageSpeed . 
-            ', "distance_tot":' . strval($moySem->summary->length / 1000) . ',"duree_tot": "' . $dureeTot . 
-            '", "distance_ev":' . strval($moySem->hdc->evDistance / 1000) . ',"duree_ev":"' . $dureeEv . 
-            '","conso_essence":' . strval($moySem->summary->fuelConsumption / 1000) . ',"nb_trajets":' . $metatData->pagination->totalCount . '}';
+          $summarySem = '{"conso_moy":' . $consoMoy . ', "vit_moy":' . $averageSpeed . 
+            ', "distance_tot":' . strval($length / 1000) . ',"duree_tot": "' . $dureeTot . 
+            '", "distance_ev":' . strval($evDistance / 1000) . ',"duree_ev":"' . $dureeEv . 
+            '","conso_essence":' . strval($fuelConsumption / 1000) . ',"nb_trajets":' . $metatData->pagination->totalCount . '}';
             log::add('myToyota', 'info', '| retour trips moyenne sur 7 jours: ' . $summarySem);          
             $eqLogic->checkAndUpdateCmd('moy_sem', $summarySem);
 
@@ -855,6 +863,12 @@ class myToyota extends eqLogic {
     public static function consoMoyenne($conso, $metres)
     {
       $result = round($conso / $metres * 100, 2);
+      return $result;
+    }
+
+    public static function averageSpeed($lenght, $dureeTot)
+    {
+      $result = round(($lenght/1000) / ($dureeTot / 3600), 2);
       return $result;
     }
 
