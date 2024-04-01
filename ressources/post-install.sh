@@ -10,7 +10,8 @@ echo 0 > ${PROGRESS_FILE}
 echo "*************************************************"
 echo "*  Installation des dépendances post-install.sh *"
 echo "*************************************************"
-BASEDIR=/var/www/html/plugins/myToyota/ressources
+BASEDIR=$(dirname $(readlink -f $0))
+echo "Répetoire d'installation des dépendances : $BASEDIR"
 date
 
 echo 5 > ${PROGRESS_FILE}

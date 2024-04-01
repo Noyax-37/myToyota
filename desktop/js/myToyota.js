@@ -134,6 +134,7 @@ function synchronize()  {
 					$('#div_img').empty();
 					var img ='<img id="car_img" src="plugins/myToyota/data/' + data.result['vin'] + '.png" style="height:300px" />';
 					$('#div_img').append(img);
+					$('.btn[data-action=save]').click();
 					$('#div_alert').showAlert({message: '{{Synchronisation terminée avec succès}}', level: 'success'});
 				} else {
 					$('#div_alert').showAlert({message: '{{Synchro NOK, aucun VIN ne correspond ou erreur dans la récupération des données, vérifiez les logs}}', level: 'danger'});
