@@ -236,7 +236,9 @@ class myToyota extends eqLogic {
     $this->createCmd('hornBlow_status', 'Statut klaxonner', 56, 'info', 'string');
     $this->createCmd('vehicleFinder_status', 'Statut recherche véhicule', 57, 'info', 'string');
     $this->createCmd('sendPOI_status', 'Statut envoi POI', 58, 'info', 'string');
-
+    $this->createCmd('hazardOn', 'Feux de détresse', 45, 'action', 'other');
+    $this->createCmd('hazardOff', 'Stop feux de détresse', 45, 'action', 'other');
+    
     $this->createCmd('presence', 'Présence domicile', 59, 'info', 'binary');
     $this->createCmd('distance', 'Distance domicile', 60, 'info', 'numeric');
 
@@ -456,7 +458,7 @@ class myToyota extends eqLogic {
             if (isset($vehicle->extendedCapabilities)){
               $capabilities = json_encode($vehicle->extendedCapabilities);
               $eqLogic->setConfiguration('capabilities', $capabilities);
-              $eqLogic->save();
+              $eqLogic->save(true);
               log::add('myToyota', 'info', '| Result extendedCapabilities : ' . $capabilities);
               if ($vehicle->extendedCapabilities->hybridPulse){
                 $return['driveTrain'] = 'Hybride';
@@ -1091,7 +1093,7 @@ class myToyotaCmd extends cmd {
                     myToyota::interromyToyota($eqLogic);
 					          break;
                 case 'hornBlow':
-                    myToyota::commandes($eqLogic, 'sound-horn');
+                    myToyota::commandes($eqLogic, 'buzzer-warning');
                     //$eqLogic->doHornBlow();
                     break;
                 case 'hazardOn':
