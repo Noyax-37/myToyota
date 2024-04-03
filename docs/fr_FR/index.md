@@ -1,10 +1,10 @@
 # Plugin myToyota
 
-En cours de développement donc, il reste encore quelques finitions, l’écriture de la doc (en cours ici même) et la partie trajets affichés sur une carte (si possible). Pour certaines parties, envoi des commandes, … dépend du développement du module d’interrogation des serveurs géré par DurgNomis: [GitHub - DurgNomis-drol/mytoyota: Python client for Toyota Connected Services API 2](https://github.com/DurgNomis-drol/mytoyota)
+Fonctionnel mais pourra être développé car je n'ai pas toutes les sortes de véhicules à disposition
 
-En cours de migration pour se passer du module python.
+Il reste encore quelques finitions: l’écriture de la doc (en cours ici même) et la partie trajets affichés sur une carte (si possible). 
 
-Précision pour l’installation, après avoir installé puis activé le plugin, faire une installation des dépendances, une fois terminé lorsque vous allez créer votre équipement il est nécessaire de cliquer sur le bouton « synchroniser » pour initialiser certains paramètres puis sauvegarder. Si vous ne connaissez pas le VIN de votre véhicule, tapez n’importe quoi et allez dans les fichiers de logs, vous verrez apparaitre tous les VIN des véhicules associés à votre compte. Une fois tout paramétré les données sont mises à jour toutes les 30 minutes
+Précision pour l’installation, après avoir installé puis activé le plugin, attendre la fin de l'installtion des dépendances, une fois terminés lorsque vous allez créer votre équipement il est nécessaire de cliquer sur le bouton « synchroniser » pour initialiser certains paramètres puis sauvegarder. Si vous ne connaissez pas le VIN de votre véhicule, tapez n’importe quoi et allez dans les fichiers de logs, vous verrez apparaitre tous les VIN des véhicules associés à votre compte. Une fois tout paramétré les données sont mises à jour toutes les 30 minutes
 
 ![Plugin_Objet_Connecté](plugin.PNG)
 
