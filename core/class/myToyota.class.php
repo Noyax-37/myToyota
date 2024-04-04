@@ -163,7 +163,20 @@ class myToyota extends eqLogic {
 
   // Fonction exécutée automatiquement avant la sauvegarde (création ou mise à jour) de l'équipement
   public function preSave() {
-    $this->setLogicalId($this->getConfiguration('vehicle_vin'));
+    //$this->setLogicalId($this->getConfiguration('vehicle_vin'));
+    if ($this->getLogicalId() == 'refresh') {
+      log::add('myToyota', 'debug', '| Return refresh');
+			return;
+		}
+    $capabilities = $this->getConfiguration('capabilities');
+    if (is_array($capabilities)){
+      $this->setConfiguration('capabilities',json_encode($capabilities));
+      $this->save(true);
+    }
+    log::add('myToyota', 'debug', '| Return presave config capabilities :' . $this->getConfiguration('capabilities'));
+    
+
+    return;
   }
 
   // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement
@@ -457,6 +470,7 @@ class myToyota extends eqLogic {
             //log::add('myToyota', $eqLogic->getLogLevelFromHttpStatus($result->httpCode, '200 - OK'), '└─End of synchronisation : ['.$result->httpCode.']');
             if (isset($vehicle->extendedCapabilities)){
               $capabilities = json_encode($vehicle->extendedCapabilities);
+              $return['capabilities'] = $capabilities;
               $eqLogic->setConfiguration('capabilities', $capabilities);
               $eqLogic->save(true);
               log::add('myToyota', 'info', '| Result extendedCapabilities : ' . $capabilities);
@@ -486,6 +500,7 @@ class myToyota extends eqLogic {
               file_put_contents($filename,file_get_contents($img));
             }
             $return['erreur'] = 'ok';
+            $return['vin'] = $vin;
           } else {
             log::add('myToyota', 'info', '| Result getVehicles() : pas le bon VIN');
           }

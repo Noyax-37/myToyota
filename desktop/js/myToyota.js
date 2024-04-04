@@ -101,6 +101,7 @@ function synchronize()  {
 	$('#div_model').empty();
 	$('#div_year').empty();
 	$('#div_type').empty();
+	$('#div_capabilities').empty();
 	  
 	$('#div_alert').showAlert({message: '{{Synchronisation en cours}}', level: 'warning'});	
 	$.ajax({													// fonction permettant de faire de l'ajax
@@ -130,11 +131,12 @@ function synchronize()  {
 					$('#div_model').append('<input id="model" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_model" placeholder="Modèle du véhicule" value="'+data.result['modelName']+'" readonly>'); 
 					$('#div_year').append('<input id="year" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_year" placeholder="Année de fabrication du véhicule" value="'+data.result['modelYear']+'" readonly>'); 
 					$('#div_type').append('<input id="type" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_type" placeholder="Type de véhicule" value="'+data.result['driveTrain']+'" readonly>');
-					
+					$('#div_capabilities').append('<textarea id=get_capabilities rows="2" cols="50" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="capabilities" readonly>'+data.result['capabilities']+'</textarea>');
 					$('#div_img').empty();
 					var img ='<img id="car_img" src="plugins/myToyota/data/' + data.result['vin'] + '.png" style="height:300px" />';
 					$('#div_img').append(img);
 					$('.btn[data-action=save]').click();
+					window.location.reload();
 					$('#div_alert').showAlert({message: '{{Synchronisation terminée avec succès}}', level: 'success'});
 				} else {
 					$('#div_alert').showAlert({message: '{{Synchro NOK, aucun VIN ne correspond ou erreur dans la récupération des données, vérifiez les logs}}', level: 'danger'});
