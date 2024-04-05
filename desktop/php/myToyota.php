@@ -303,7 +303,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<br><span> </span><br>
 							<div class="col-lg-8">
 								<legend><i class="fas fa-info"></i> Capacités du véhicule => seules les capacités à "true" peuvent éventuellement être utilisées (cliquer sur "Synchroniser" pour mettre à jour la liste)</legend>
-								<textarea id=get_capabilities rows="2" cols="50" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="capabilities" readonly></textarea>
+								<div id="div_capabilities">
+									<textarea id=get_capabilities rows="2" cols="50" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="capabilities" readonly></textarea>
+								</div>
 								<div id="liste_msg" class="label table_capabilities"></div>
 							</div>
 
@@ -402,7 +404,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 		//----- Capabilities
 		function getCapabilities(){
-				var capabilities = json_decode($('.eqLogicAttr[data-l2key=capabilities]').value());
+				var capabilities = json_decode($('#get_capabilities').value());
 				var li_html= "";
 				var capa = "";
 				console.log('-------- Tab capabilities -----' + capabilities);
@@ -415,7 +417,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					for (capabilitie in capabilities){
 						console.log('-------- Tab capabilities -----' + capabilitie);
 						if (capabilities[capabilitie] == true){
-							li_html += '<li class="list-group-item" style="margin-bottom: 0px; margin-left: 75px; padding: 0px 0px 5px 0px; text-align: left;"><span class="label capabilities">';
+							li_html += '<li class="list-group-item col-lg-4" style="margin-bottom: 0px; margin-left: 75px; padding: 0px 0px 5px 0px; text-align: left;"><span class="label capabilities">';
 							li_html += capabilitie + '  => OK </span></li>';
 						}
 					};

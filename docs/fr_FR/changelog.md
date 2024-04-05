@@ -4,6 +4,14 @@
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 05/04/2024 V1.3
+
+- Affichage des infos sur les capacités du véhicule en commandes à distance (merci @Mips pour avoir trouvé la solution, à @Xav-74 pour ses conseils et à tous ceux qui m'ont aidé)
+
+# 02/04/2024 V1.2
+
+- correction pour la commande de certaines fonctions
+
 # 01/04/2024 V1.1 
 
 - Les commandes fonctionnent sauf l'envoi de POI
