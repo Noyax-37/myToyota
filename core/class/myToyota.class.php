@@ -455,6 +455,15 @@ class myToyota extends eqLogic {
           log::add('myToyota', 'debug', '| Result vin() : ' . $vehicle->vin);
           if ( $vehicle->vin == $vin )
           {
+
+            $eqLogic->setConfiguration('panel_doors_windows_display', 'icon');
+            $eqLogic->save(true);
+            $eqLogic->setConfiguration('panel_color_icon_closed', 'green');
+            $eqLogic->save(true);
+        
+
+
+
             log::add('myToyota', 'info', "| Result getVehicles() : ok c'est le VIN recherché");
             //if ( isset($vehicle->attributes->brand) ) { $eqLogic->checkAndUpdateCmd('brand', $vehicle->attributes->brand); } else { $eqLogic->checkAndUpdateCmd('brand', 'not available'); }
             if ( isset($vehicle->manufacturerCode) ) { 
@@ -499,7 +508,11 @@ class myToyota extends eqLogic {
                   if ($vehicle->evVehicle){
                     $return['driveTrain'] = 'Hybride Rechargeable';
                   } else {
+<<<<<<< HEAD
                     $return['driveTrain'] = 'Hybride';
+=======
+                    $return['driveTrain'] = 'Hybride Rechargeable';
+>>>>>>> ddd7c85cfbba614aecd52078ddae9d7fded10ee9
                   }
                 } else{
                   $return['driveTrain'] = 'Hybride';
@@ -775,6 +788,7 @@ class myToyota extends eqLogic {
           } else {
             $eqLogic->checkAndUpdateCmd('beRemainingRangeTotal', '---');
             log::add('myToyota', 'info', '| Return élement: distance possible ev + essence inconnu');
+<<<<<<< HEAD
           }
           
           // paramétres hybrides
@@ -832,6 +846,51 @@ class myToyota extends eqLogic {
               } else {
                 $eqLogic->checkAndUpdateCmd('chargingStatus', 'UNKNOWN');
                 log::add('myToyota', 'info', '| Return élement: status de la charge inconnue');
+              }
+
+            }
+=======
+>>>>>>> ddd7c85cfbba614aecd52078ddae9d7fded10ee9
+          }
+
+
+          if ($vehicle_type == 'Hybride Rechargeable' || $vehicle_type == 'Electrique'){
+            $result_elec = $myConnection->remoteElectric();
+            $body_elec = json_decode($result_elec->body);
+            log::add('myToyota', 'debug', '| Retour télémétrie électrique : ' . $result_elec->body);
+    
+            if ($body_elec->status->detailedDescription == 'Request Completed Successfully'){
+              $telemetrie_elec = $body->payload;
+              if ( isset($telemetrie_elec->fuelLevel) ){
+                $eqLogic->checkAndUpdateCmd('remaining_fuel', $telemetrie_elec->fuelLevel);
+                log::add('myToyota', 'info', '| Return élement: niveau réservoir : '. $telemetrie_elec->fuelLevel . '%');
+              } else {
+                $eqLogic->checkAndUpdateCmd('remaining_fuel', '---');
+                log::add('myToyota', 'info', '| Return élement: niveau réservoir inconnu');
+              }
+
+              if ( isset($telemetrie_elec->fuelRange) ){
+                $eqLogic->checkAndUpdateCmd('beRemainingRangeFuelKm', $telemetrie_elec->fuelRange->value);
+                log::add('myToyota', 'info', '| Return élement: distance avant réservoir vide : '. $telemetrie_elec->fuelRange->value . ' km');
+              } else {
+                $eqLogic->checkAndUpdateCmd('beRemainingRangeFuelKm', '---');
+                log::add('myToyota', 'info', '| Return élement: distance avant réservoir vide inconnu');
+              }
+
+              if ( isset($telemetrie_elec->batteryLevel) ){
+                $eqLogic->checkAndUpdateCmd('chargingLevelHv', $telemetrie_elec->batteryLevel);
+                log::add('myToyota', 'info', '| Return élement: niveau batterie : '. $telemetrie_elec->batteryLevel . '%');
+              } else {
+                $eqLogic->checkAndUpdateCmd('chargingLevelHv', '---');
+                log::add('myToyota', 'info', '| Return élement: niveau batterie inconnu');
+              }
+
+              if ( isset($telemetrie_elec->evRangeWithAc) ){
+                $eqLogic->checkAndUpdateCmd('beRemainingRangeElectric', $telemetrie_elec->evRangeWithAc->value);
+                log::add('myToyota', 'info', '| Return élement: distance avant batterie vide : '. $telemetrie_elec->evRangeWithAc->value . ' km');
+              } else {
+                $eqLogic->checkAndUpdateCmd('beRemainingRangeElectric', '---');
+                log::add('myToyota', 'info', '| Return élement: distance avant batterie vide inconnu');
               }
 
             }
