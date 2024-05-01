@@ -45,9 +45,9 @@
 				</div>
 				
 				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px;">
-					<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:70px;">Km restants (thermique)</div>
-					<div class="col-xs-4 combustion_engine_txt#id#" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
-					<div class="col-xs-12 combustion_engine_txt#id#" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
+					<div class="col-xs-8 combustion_engine_autonom_txt#id#" id="titre_tile" style="height:70px;">Autonomie thermique</div>
+					<div class="col-xs-4 combustion_engine_autonom_txt#id#" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12 combustion_engine_autonom_txt#id#" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
 				</div>
 				
 				<!-- fin affichage si véhicule thermique ou PHEV -->
@@ -60,7 +60,7 @@
 				</div>
 								
 				<div class="col-xs-4 electric_engine#id#" id="tile" style="height:140px; width:140px;">
-					<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:70px;">Km restants (électrique)</div>
+					<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:70px;">Autonomie électrique</div>
 					<div class="col-xs-4 electric_engine_txt#id#" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 electric_engine_txt#id#" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeElectric_id#"></span><span id="titre_tile"> km</span></div>				
 				</div>
@@ -400,7 +400,7 @@
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets PHEV
 							</div>
 							<div >
-								<table class="fixed_header tableCmdPhev" id="table_cmd_phev">
+								<table class="fixed_header tableCmdHyd" id="table_cmd_phev">
 								</table>
 							</div>
 						</div>
@@ -599,8 +599,8 @@
 	
 		//----- Electric / Combustion / Hybrid
 		if ( '#vehicle_type#id##' == 'Electrique' )  {
-			$('.combustion_engine_txt#id#').hide();
-			$('.commun_engine_txt#id#').hide();
+			$('.combustion_engine_txt#id#').hide(); 
+			$('.combustion_engine_autonom_txt#id#').hide();
 			$('.TAB_hyd').hide();
 			$('.TAB_ess').hide();
 			$('.TAB_phev').hide();
@@ -611,7 +611,7 @@
 		}
 		if ( '#vehicle_type#id##' == 'Hybride')  {
 			$('.electric_engine_txt#id#').hide();
-			$('.commun_engine_txt#id#').hide();
+			$('.combustion_engine_autonom_txt#id#').hide();
 			$('.charge_sessions#id#').hide();
 			$('.charge_chart#id#').hide();
 			$('.TAB_hyd').show();
@@ -624,6 +624,7 @@
 		}
 		if ( '#vehicle_type#id##' == 'Thermique')  {
 			$('.electric_engine_txt#id#').hide();
+			$('.combustion_engine_autonom_txt#id#').hide();
 			$('.charge_sessions#id#').hide();
 			$('.charge_chart#id#').hide();
 			$('.TAB_hyd').hide();
@@ -641,11 +642,11 @@
 			$('.TAB_phev').show();
 			$('.TAB_charge').show();
 			document.getElementById("eqlogictabphev").className += " active";
-			document.getElementById("TAB_pehv").className += " active";
+			document.getElementById("TAB_phev").className += " active";
 		}
 		if ( '#vehicle_type#id##' != 'Electrique' && '#vehicle_type#id##' != 'Hybride Rechargeable' )  {
 			//$('#charge_btn#id#').hide();
-			$('#stopcharge_btn#id#').hide();
+			//$('#stopcharge_btn#id#').hide();
 		}
 
 
