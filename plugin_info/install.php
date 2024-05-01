@@ -25,10 +25,16 @@ function myToyota_install() {
 
 // Fonction exécutée automatiquement après la mise à jour du plugin
 function myToyota_update() {
-    $output= shell_exec('/var/www/html/plugins/myToyota/ressources/post-install.sh');
+    $output = __DIR__ . '/../../../plugins/myToyota/ressources/';
     echo $output;
-    message::add('myToyota', 'Mise à jour du plugin myToyota terminée, ATTENTION: pour cette mise à jour vous devez aller dans chaque équipement pour indiquer le constructeur, refaire une synchro et le sauvegarder');
-    log::add('myToyota', 'error', 'Mise à jour du plugin myToyota terminée, ATTENTION: pour cette mise à jour vous devez aller dans chaque équipement pour indiquer le constructeur, refaire une synchro et le sauvegarder');
+    $output2= shell_exec($output . 'post-install.sh');
+    echo $output2;
+    foreach (eqLogic::byType('myToyota') as $eqLogic) {
+        $eqLogic->save();
+        myToyota::synchro_post_update($eqLogic);
+        log::add('myToyota', 'debug', '| Mise à jour des commandes effectuée pour l\'équipement '. $eqLogic->getHumanName());
+    }
+    message::add('myToyota', '| Mise à jour du plugin myToyota terminée');
 }
 
 // Fonction exécutée automatiquement après la suppression du plugin
