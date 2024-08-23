@@ -2,7 +2,7 @@
 
 Plugin pour récupérer les informations de véhicules Toyota et Lexus qui sont enregistrés dans l'application myToyota (attention, pas myT)
 
-<img src="/plugin_info/mytoyota_icon.png" align="right" height="160" width="150">
+<img src="/plugin_info/myToyota_icon.png" align="right" height="160" width="150">
 
 ![mytoyota](/docs/fr_FR/panel3.PNG)
 
