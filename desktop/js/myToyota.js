@@ -155,8 +155,6 @@ function all_data()  {
 		url: "plugins/myToyota/core/ajax/myToyota.ajax.php", 			// url du fichier php
 		data: {
 			action: "all_data",
-			username: $('.eqLogicAttr[data-l2key=username]').value(),
-			pwd: $('.eqLogicAttr[data-l2key=password]').value(),
 			vin: $('.eqLogicAttr[data-l2key=vehicle_vin]').value(),
 			},
 		dataType: 'json',

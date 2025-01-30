@@ -19,12 +19,28 @@ require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 // Fonction exécutée automatiquement après l'installation du plugin
 function myToyota_install() {
-    // $output= shell_exec('/var/www/html/plugins/myToyota/ressources/post-install.sh');
-    // echo $output;
+    myToyota_update(false);
 }
 
 // Fonction exécutée automatiquement après la mise à jour du plugin
-function myToyota_update() {
+function myToyota_update($direct=true) {
+    if ($direct){
+        $insta = 'Mise à jour';
+    } else {
+        $insta = 'Installation';
+    }
+
+    $data = json_decode(file_get_contents(dirname(__FILE__) . '/info.json'), true);
+    if (!is_array($data)) {
+        log::add('myToyota','warning','Impossible de décoder le fichier info.json (non bloquant ici)');
+    }
+    try {
+        $core_version = $data['pluginVersion'];
+        config::save('version', $core_version, 'myToyota');
+    } catch (\Exception $e) {
+        log::add('myToyota','warning','Pas de version de plugin (non bloquant ici)');
+    }
+
     $output = __DIR__ . '/../../../plugins/myToyota/ressources/';
     echo $output;
     $output2= shell_exec($output . 'post-install.sh');
@@ -34,10 +50,31 @@ function myToyota_update() {
         myToyota::synchro_post_update($eqLogic);
         log::add('myToyota', 'debug', '| Mise à jour des commandes effectuée pour l\'équipement '. $eqLogic->getHumanName());
     }
-    message::add('myToyota', '| Mise à jour du plugin myToyota terminée');
+
+    log::add('myToyota','info','| (ré)installation des crons si nécessaire');
+    $cron = cron::byClassAndFunction('myToyota', 'recupdata');
+    if (!is_object($cron)) {
+        $cron = new cron();
+        $cron->setClass('myToyota');
+        $cron->setFunction('recupdata');
+        $cron->setEnable(1);
+        $cron->setDeamon(0);
+        $cron->setSchedule('30 * * * *');
+        $cron->save();
+    }
+    $cron->stop();
+
+    //affectation du level "info" au fichier de log myToyota_datas
+    config::save('log::level::myToyota_datas', '{"200":"1"}');
+    
+    message::add('myToyota', '| ' . $insta . ' du plugin myToyota terminée');
 }
 
 // Fonction exécutée automatiquement après la suppression du plugin
 function myToyota_remove() {
+    $cron = cron::byClassAndFunction('myToyota', 'recupdata');
+    if (is_object($cron)) {
+        $cron->remove();
+    }
     message::add('myToyota', 'Désinstallation du plugin myToyota terminée');
 }

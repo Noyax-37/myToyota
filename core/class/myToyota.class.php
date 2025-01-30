@@ -21,7 +21,16 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 if (!class_exists('myToyota_API')) {
 	require_once __DIR__ . '/../../3rdparty/myToyota_API.php';
 }
-    
+
+//définition des constantes
+const CMD_LAST_UPDATE = 'lastUpdate';
+const CMD_GPS_COORDINATES = 'gps_coordinates';
+const TYPE_INFO = 'info';
+const TYPE_ACTION = 'action';
+const SUBTYPE_STRING = 'string';
+const SUBTYPE_NUMERIC = 'numeric';
+const SUBTYPE_BINARY = 'binary';
+const SUBTYPE_OTHER = 'other';
 
 
 class myToyota extends eqLogic {
@@ -57,31 +66,26 @@ class myToyota extends eqLogic {
   public static function cron10() {}
   */
 
-  
+/*  
   // Fonction exécutée automatiquement toutes les 15 minutes par Jeedom
   public static function cron() {
-    $dt = time();
-    if (date( "i", $dt )!="00" || date( "i", $dt )!="01" || date( "i", $dt )!="30" || date( "i", $dt )!="31") {
-      system::kill('myToyotad.py');
-    }
   }
-  
+*/  
 
-  
+/*  
   // Fonction exécutée automatiquement toutes les 30 minutes par Jeedom
   public static function cron30() {    
     $debug = false;
     $idvehicule = 'Aucun';
-    system::kill('myToyotad.py');
     foreach (eqLogic::byType('myToyota', true) as $eqLogic) {
       $nameVehicule = $eqLogic->getName();
-      log::add('myToyota', 'debug', " récupération des données du véhicule : " . '  ' . $nameVehicule);
+      log::add('myToyota', 'debug', "| récupération des données du véhicule : " . '  ' . $nameVehicule);
       myToyota::interromyToyota($eqLogic);
       //$coordinates = myToyota::getGPSCoordinates($eqLogic->getConfiguration('vehicle_vin'));
       //myToyota::getDistanceLocation2($eqlogic, $coordinates['latitude'], $coordinates['longitude']);
     }
   }
-
+*/
   /*
   * Fonction exécutée automatiquement toutes les heures par Jeedom
   public static function cronHourly() {}
@@ -95,6 +99,19 @@ class myToyota extends eqLogic {
   /*     * *********************Méthodes d'instance************************* */
   // * Permet d'indiquer des éléments supplémentaires à remonter dans les informations de configuration
   // * lors de la création semi-automatique d'un post sur le forum community
+
+  public static function recupdata() {    
+    $debug = false;
+    $idvehicule = 'Aucun';
+    foreach (eqLogic::byType('myToyota', true) as $eqLogic) {
+      $nameVehicule = $eqLogic->getName();
+      log::add('myToyota', 'debug', "| récupération des données du véhicule : " . '  ' . $nameVehicule);
+      myToyota::interromyToyota($eqLogic);
+      //$coordinates = myToyota::getGPSCoordinates($eqLogic->getConfiguration('vehicle_vin'));
+      //myToyota::getDistanceLocation2($eqlogic, $coordinates['latitude'], $coordinates['longitude']);
+    }
+  }
+
   public static function getConfigForCommunity() {
     if (!file_exists('/var/www/html/plugins/myToyota/plugin_info/info.json')) {
       log::add('myToyota','warning','Pas de fichier info.json');
@@ -140,7 +157,6 @@ class myToyota extends eqLogic {
 
   // Fonction pour exclure un sous répertoire de la sauvegarde
   public static function backupExclude() {
-		return ['ressources/venv'];
 	}
 
   // Fonction exécutée automatiquement avant la création de l'équipement
@@ -195,88 +211,108 @@ class myToyota extends eqLogic {
 
   // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) de l'équipement
   public function postSave() {
-		
-    $this->createCmd('brand', 'Marque', 1, 'info', 'string'); //brand
-    $this->createCmd('model', 'Modèle', 2, 'info', 'string'); //car_line_name
-    $this->createCmd('year', 'Année', 3, 'info', 'string'); //manufactured_date
-    $this->createCmd('type', 'Type', 4, 'info', 'string'); //electrique, hybride, ...
+    // Informations générales sur le véhicule comme la marque, le modèle, l'année, etc.
+    $this->createCmd('brand', 'Marque', 1, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd('model', 'Modèle', 2, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd('year', 'Année', 3, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd('type', 'Type', 4, TYPE_INFO, SUBTYPE_STRING); // Type de véhicule (électrique, hybride, etc.)
+    $this->createCmd('carburant', 'Carburant', 5, TYPE_INFO, SUBTYPE_STRING, 1); // Type de carburant utilisé
+    $this->createCmd('mileage', 'Kilométrage', 6, TYPE_INFO, SUBTYPE_NUMERIC, 1); // Kilométrage total du véhicule
 
-    $this->createCmd('carburant', 'Carburant', 5, 'info', 'string', 1); //essence ou diesel
+    // État des portes et fenêtres du véhicule
+    $doorsAndWindows = [
+        ['doorLockState', 'Verrouillage', 7],
+        ['allDoorsState', 'Toutes les portes', 8],
+        ['allWindowsState', 'Toutes les fenêtres', 9],
+        ['doorDriverFront', 'Porte Conducteur Avant', 10],
+        ['doorDriverRear', 'Porte Conducteur Arrière', 11],
+        ['doorPassengerFront', 'Porte Passager Avant', 12],
+        ['doorPassengerRear', 'Porte Passager Arrière', 13],
+        ['windowDriverFront', 'Fenêtre Conducteur Avant', 14],
+        ['windowDriverRear', 'Fenêtre Conducteur Arrière', 15],
+        ['windowPassengerFront', 'Fenêtre Passager Avant', 16],
+        ['windowPassengerRear', 'Fenêtre Passager Arrière', 17],
+        ['trunk_state', 'Coffre', 18],
+        ['hood_state', 'Capot Moteur', 19],
+        ['moonroof_state', 'Toit ouvrant', 20],
+    ];
+    foreach ($doorsAndWindows as $cmd) {
+        $this->createCmd($cmd[0], $cmd[1], $cmd[2], TYPE_INFO, SUBTYPE_STRING);
+    }
 
-    $this->createCmd('mileage', 'Kilométrage', 6, 'info', 'numeric', 1); //odometer
+    // Pression des pneus et consignes pour chaque pneu
+    $tires = [
+        ['tireFrontLeft_pressure', 'Pression pneu avant gauche', 21],
+        ['tireFrontLeft_target', 'Consigne pneu avant gauche', 22],
+        ['tireFrontRight_pressure', 'Pression pneu avant droit', 23],
+        ['tireFrontRight_target', 'Consigne pneu avant droit', 24],
+        ['tireRearLeft_pressure', 'Pression pneu arrière gauche', 25],
+        ['tireRearLeft_target', 'Consigne pneu arrière gauche', 26],
+        ['tireRearRight_pressure', 'Pression pneu arrière droit', 27],
+        ['tireRearRight_target', 'Consigne pneu arrière droit', 28],
+    ];
+    foreach ($tires as $cmd) {
+        $this->createCmd($cmd[0], $cmd[1], $cmd[2], TYPE_INFO, SUBTYPE_NUMERIC);
+    }
 
-    $this->createCmd('doorLockState', 'Verrouillage', 6, 'info', 'string');
-    $this->createCmd('allDoorsState', 'Toutes les portes', 7, 'info', 'string');
-    $this->createCmd('allWindowsState', 'Toutes les fenêtres', 8, 'info', 'string');
-    $this->createCmd('doorDriverFront', 'Porte Conducteur Avant', 9, 'info', 'string'); //car.lock_status.doors.driver_seat.closed
-    $this->createCmd('doorDriverRear', 'Porte Conducteur Arrière', 10, 'info', 'string');
-    $this->createCmd('doorPassengerFront', 'Porte Passager Avant', 11, 'info', 'string');
-    $this->createCmd('doorPassengerRear', 'Porte Passager Arrière', 12, 'info', 'string');
-    $this->createCmd('windowDriverFront', 'Fenêtre Conducteur Avant', 13, 'info', 'string');
-    $this->createCmd('windowDriverRear', 'Fenêtre Conducteur Arrière', 14, 'info', 'string');
-    $this->createCmd('windowPassengerFront', 'Fenêtre Passager Avant', 15, 'info', 'string');
-    $this->createCmd('windowPassengerRear', 'Fenêtre Passager Arrière', 16, 'info', 'string');
-    $this->createCmd('trunk_state', 'Coffre', 17, 'info', 'string');
-    $this->createCmd('hood_state', 'Capot Moteur', 18, 'info', 'string');
-    $this->createCmd('moonroof_state', 'Toit ouvrant', 19, 'info', 'string');
+    // Informations liées à la charge électrique du véhicule
+    $charging = [
+        ['chargingStatus', 'Etat de la charge', 29, SUBTYPE_STRING],
+        ['connectorStatus', 'Etat de la prise', 30, SUBTYPE_BINARY],
+        ['beRemainingRangeElectric', 'Km restant (électrique)', 31, SUBTYPE_NUMERIC],
+        ['chargingLevelHv', 'Charge restante', 32, SUBTYPE_NUMERIC],
+        ['chargingEndTime', 'Heure de fin de charge', 33, SUBTYPE_STRING],
+    ];
+    foreach ($charging as $cmd) {
+        $this->createCmd($cmd[0], $cmd[1], $cmd[2], TYPE_INFO, $cmd[3]);
+    }
 
-    $this->createCmd('tireFrontLeft_pressure', 'Pression pneu avant gauche', 20, 'info', 'numeric');
-    $this->createCmd('tireFrontLeft_target', 'Consigne pneu avant gauche', 21, 'info', 'numeric');
-    $this->createCmd('tireFrontRight_pressure', 'Pression pneu avant droit', 22, 'info', 'numeric');
-    $this->createCmd('tireFrontRight_target', 'Consigne pneu avant droit', 23, 'info', 'numeric');		
-    $this->createCmd('tireRearLeft_pressure', 'Pression pneu arrière gauche', 24, 'info', 'numeric');
-    $this->createCmd('tireRearLeft_target', 'Consigne pneu arrière gauche', 25, 'info', 'numeric');		
-    $this->createCmd('tireRearRight_pressure', 'Pression pneu arrière droit', 26, 'info', 'numeric');
-    $this->createCmd('tireRearRight_target', 'Consigne pneu arrière droit', 27, 'info', 'numeric');		
+    // Informations sur la consommation de carburant pour les véhicules thermiques
+    $this->createCmd('beRemainingRangeFuelKm', 'Km restant (thermique)', 34, TYPE_INFO, SUBTYPE_NUMERIC);
+    $this->createCmd('remaining_fuel', 'Carburant restant', 35, TYPE_INFO, SUBTYPE_NUMERIC);
 
-    $this->createCmd('chargingStatus', 'Etat de la charge', 28, 'info', 'string');
-    $this->createCmd('connectorStatus', 'Etat de la prise', 29, 'info', 'binary');
-    $this->createCmd('beRemainingRangeElectric', 'Km restant (électrique)', 30, 'info', 'numeric');
-    $this->createCmd('chargingLevelHv', 'Charge restante', 31, 'info', 'numeric');
-    $this->createCmd('chargingEndTime', 'Heure de fin de charge', 32, 'info', 'string');
+    // Autres informations utiles comme les messages du véhicule, coordonnées GPS et dernière mise à jour
+    $this->createCmd('vehicleMessages', 'Messages', 36, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd(CMD_GPS_COORDINATES, 'Coordonnées GPS', 37, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd(CMD_LAST_UPDATE, 'Dernière mise à jour', 38, TYPE_INFO, SUBTYPE_STRING);
 
-    $this->createCmd('beRemainingRangeFuelKm', 'Km restant (thermique)', 33, 'info', 'numeric');
-    $this->createCmd('remaining_fuel', 'Carburant restant', 34, 'info', 'numeric');
+    // Actions disponibles pour interagir avec le véhicule (comme climatiser, charger, etc.)
+    $actions = [
+        ['refresh', 'Rafraichir', 39],
+        ['climateNow', 'Climatiser', 40],
+        ['stopClimateNow', 'Stop Climatiser', 41],
+        ['chargeNow', 'Charger', 42],
+        ['stopChargeNow', 'Stop Charger', 43],
+        ['doorLock', 'Verrouiller', 44],
+        ['doorUnlock', 'Déverrouiller', 45],
+        ['lightFlash', 'Appel de phares', 46],
+        ['hornBlow', 'Klaxonner', 47],
+        ['vehicleFinder', 'Recherche véhicule', 48],
+        ['sendPOI', 'Envoi POI', 49],
+        ['hazardOn', 'Feux de détresse', 50],
+        ['hazardOff', 'Stop feux de détresse', 51],
+    ];
+    foreach ($actions as $cmd) {
+        $this->createCmd($cmd[0], $cmd[1], $cmd[2], TYPE_ACTION, SUBTYPE_OTHER);
+    }
 
-    $this->createCmd('vehicleMessages', 'Messages', 35, 'info', 'string');
-    $this->createCmd('gps_coordinates', 'Coordonnées GPS', 36, 'info', 'string');
+    // Statuts des actions effectuées sur le véhicule
+    for ($i = 40; $i <= 51; $i++) {
+        $actionName = array_column($actions, 0)[$i - 40];
+        $this->createCmd($actionName . '_status', 'Statut ' . strtolower($actions[$i - 40][1]), $i + 10, TYPE_INFO, SUBTYPE_STRING);
+    }
 
-    $this->createCmd('refresh', 'Rafraichir', 37, 'action', 'other');
-    $this->createCmd('climateNow', 'Climatiser', 38, 'action', 'other');
-    $this->createCmd('stopClimateNow', 'Stop Climatiser', 39, 'action', 'other');
-    $this->createCmd('chargeNow', 'Charger', 40, 'action', 'other');
-    $this->createCmd('stopChargeNow', 'Stop Charger', 41, 'action', 'other');
-    $this->createCmd('doorLock', 'Verrouiller', 42, 'action', 'other');
-    $this->createCmd('doorUnlock', 'Déverrouiller', 43, 'action', 'other');
-    $this->createCmd('lightFlash', 'Appel de phares', 44, 'action', 'other');
-    $this->createCmd('hornBlow', 'Klaxonner', 45, 'action', 'other');
-    $this->createCmd('vehicleFinder', 'Recherche véhicule', 46, 'action', 'other');
-    $this->createCmd('sendPOI', 'Envoi POI', 47, 'action', 'other');
-    $this->createCmd('lastUpdate', 'Dernière mise à jour', 48, 'info', 'string');
-    $this->createCmd('climateNow_status', 'Statut climatiser', 49, 'info', 'string');
-    $this->createCmd('stopClimateNow_status', 'Statut stop climatiser', 50, 'info', 'string');
-    $this->createCmd('chargeNow_status', 'Statut charger', 51, 'info', 'string');
-    $this->createCmd('stopChargeNow_status', 'Statut stop charger', 52, 'info', 'string');
-    $this->createCmd('doorLock_status', 'Statut verrouiller', 53, 'info', 'string');
-    $this->createCmd('doorUnlock_status', 'Statut déverrouiller', 54, 'info', 'string');
-    $this->createCmd('lightFlash_status', 'Statut appel de phares', 55, 'info', 'string');
-    $this->createCmd('hornBlow_status', 'Statut klaxonner', 56, 'info', 'string');
-    $this->createCmd('vehicleFinder_status', 'Statut recherche véhicule', 57, 'info', 'string');
-    $this->createCmd('sendPOI_status', 'Statut envoi POI', 58, 'info', 'string');
-    $this->createCmd('hazardOn', 'Feux de détresse', 45, 'action', 'other');
-    $this->createCmd('hazardOff', 'Stop feux de détresse', 45, 'action', 'other');
-    
-    $this->createCmd('presence', 'Présence domicile', 59, 'info', 'binary');
-    $this->createCmd('distance', 'Distance domicile', 60, 'info', 'numeric');
+    // Informations supplémentaires comme la présence à domicile, la distance par rapport au domicile, etc.
+    $this->createCmd('presence', 'Présence domicile', 62, TYPE_INFO, SUBTYPE_BINARY);
+    $this->createCmd('distance', 'Distance domicile', 63, TYPE_INFO, SUBTYPE_NUMERIC);
+    $this->createCmd('totalEnergyCharged', 'Charge électrique totale', 64, TYPE_INFO, SUBTYPE_NUMERIC);
+    $this->createCmd('chargingSessions', 'Sessions de charge', 65, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd('services', 'Services', 66, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd('beRemainingRangeTotal', 'Km restant (global)', 67, TYPE_INFO, SUBTYPE_NUMERIC);
+    $this->createCmd('moy_sem', 'Moyenne semaine', 68, TYPE_INFO, SUBTYPE_STRING);
+    $this->createCmd('trajets', 'trajet 7 derniers jours', 69, TYPE_INFO, SUBTYPE_STRING);
+}
 
-    $this->createCmd('totalEnergyCharged', 'Charge électrique totale', 61, 'info', 'numeric');
-    $this->createCmd('chargingSessions', 'Sessions de charge', 62, 'info', 'string');
-    $this->createCmd('services', 'Services', 63, 'info', 'string');
-    $this->createCmd('beRemainingRangeTotal', 'Km restant (global)', 64, 'info', 'numeric');
-    $this->createCmd('moy_sem', 'Moyenne semaine', 65, 'info', 'string');
-    $this->createCmd('trajets', 'trajet 7 derniers jours', 66, 'info', 'string');
-	}
-  
   // Fonction exécutée automatiquement avant la suppression de l'équipement
   public function preRemove() {
   }
@@ -418,25 +454,22 @@ class myToyota extends eqLogic {
 
   public static function synchro_post_update($eqlogic){
       $vin = $eqlogic->getConfiguration('vehicle_vin');
-      $username = $eqlogic->getConfiguration("username");
-      $password = $eqlogic->getConfiguration("password");
-      $brand = $eqlogic->getConfiguration("vehicle_brand");
-      myToyota::synchronize($vin, $username, $password, $brand);
+      myToyota::synchronize($vin);
 }
 
-	public static function synchronize($vin, $username, $password, $brand)
+	public static function synchronize($vin)
     {
       $eqLogic = self::getToyotaEqLogic($vin);
       
       log::add('myToyota', 'info', '┌─Command execution : synchronize');
           
-      log::add('myToyota', 'info', '---------------------------------------------------------------');
-      log::add('myToyota', 'info', '-----------------Démarrage synchro des données-----------------');
+      log::add('myToyota', 'info', '| -------------------------------------------------------------');
+      log::add('myToyota', 'info', '| ---------------Démarrage synchro des données-----------------');
 
       $myConnection = $eqLogic->getConnection();
       $result = $myConnection->getDevice();
       $devices = json_decode($result->body);
-      $vin = $eqLogic->getConfiguration('vehicle_vin');
+      //$vin = $eqLogic->getConfiguration('vehicle_vin');
       log::add('myToyota', 'debug', '| Return devices body :' . $result->body);
       log::add('myToyota', 'debug', '| Return nombre de véhicules :' . count($devices->payload) );
 
@@ -542,36 +575,36 @@ class myToyota extends eqLogic {
   
 	  }
 	
-    public static function all_data($username, $password, $vin)
+    public static function all_data($vin)
     {
       
-      log::add('myToyota', 'info', '┌─Command execution : recup all datas');
+      $fichierLog = 'myToyota_datas';
+      log::add($fichierLog, 'info', '┌─Command execution : recup all datas');
           
-      log::add('myToyota', 'info', '| Démarrage recup des données');
+      log::add($fichierLog, 'info', '| Démarrage recup des données');
       $eqLogic = self::getToyotaEqLogic($vin);
       
-      $myConnection = $eqLogic->getConnection();
-      $result = $myConnection->getDevice();
+      $myConnection = $eqLogic->getConnection($fichierLog);
+      $result = $myConnection->getDevice($fichierLog);
       $devices = json_decode($result->body);
-      log::add('myToyota', 'info', '| Return nombre de véhicules :' . count($devices->payload) );
+      log::add($fichierLog, 'info', '| Return getDevices :' . $result->body );
+      log::add($fichierLog, 'info', '| Résultat => nombre de véhicules : ' . count($devices->payload) );
 
       if ( count($devices->payload) == 0 ){
-        log::add('myToyota', 'info', '| Result getVehicles() : pas de véhicule trouvé avec service myToyota activé');
+        log::add($fichierLog, 'info', '| Result getVehicles() : pas de véhicule trouvé avec service myToyota activé');
         //log::add('myToyota', $eqLogic->getLogLevelFromHttpStatus($result->httpCode, '200 - OK'), '└─fin de la synchronisation : ['.$result->httpCode.']');
       } else {
-        log::add('myToyota', 'info', '| Return getDevice :' . $result->body );
+        $result = $myConnection->getLocationEndPoint($fichierLog);
+        log::add($fichierLog, 'info', '| Retour localisation : ' . $result->body);
 
-        $result = $myConnection->getLocationEndPoint();
-        log::add('myToyota', 'info', '| Retour localisation : ' . $result->body);
+        $result = $myConnection->getRemoteStatusEndPoint($fichierLog); //status des équipements
+        log::add($fichierLog, 'info', '| Retour remote status :' . $result->body);
 
-        $result = $myConnection->getRemoteStatusEndPoint(); //status des équipements
-        log::add('myToyota', 'info', '| Retour remote status :' . $result->body);
+        $result = $myConnection->getTelemetryEndPoint($fichierLog); //dernière localisation
+        log::add($fichierLog, 'info', '| Retour télémétrie : ' . $result->body);
 
-        $result = $myConnection->getTelemetryEndPoint(); //dernière localisation
-        log::add('myToyota', 'info', '| Retour télémétrie : ' . $result->body);
-
-        $result = $myConnection->getRemoteClimateStatus(); //dernière localisation
-        log::add('myToyota', 'info', '| Retour climatisation : ' . $result->body);
+        $result = $myConnection->getRemoteClimateStatus($fichierLog); //dernière localisation
+        log::add($fichierLog, 'info', '| Retour climatisation : ' . $result->body);
 
         $to = date('Y-m-d');
         $from = date('Y-m-d', strtotime('-7 days', strtotime($to)));
@@ -580,32 +613,31 @@ class myToyota extends eqLogic {
         $limit = 1000; // 1000 max si $route = false et 50 max si $rpute = true
         $offset = 0;
   
-        $result = $myConnection->getTripsEndpoint($from, $to, $route, $summary, $limit, $offset); //pour récupérer les 7 derniers jours
-        log::add('myToyota', 'info', '| Retour trips : ' . $result->body);
+        $result = $myConnection->getTripsEndpoint($from, $to, $route, $summary, $limit, $offset, $fichierLog); //pour récupérer les 7 derniers jours
+        log::add($fichierLog, 'info', '| Retour trips : ' . $result->body);
 
-        $result = $myConnection->historiqueNotification();
-        log::add('myToyota', 'info', '| Retour historique des notifications : ' . $result->body);
+        $result = $myConnection->historiqueNotification($fichierLog);
+        log::add($fichierLog, 'info', '| Retour historique des notifications : ' . $result->body);
 
-        $result = $myConnection->remoteElectric();
-        log::add('myToyota', 'info', '| Retour remote electric : ' . $result->body);
+        $result = $myConnection->remoteElectric($fichierLog);
+        log::add($fichierLog, 'info', '| Retour remote electric : ' . $result->body);
 
-        $result = $myConnection->remoteClimateSettings();
-        log::add('myToyota', 'info', '| Retour remote climate setting : ' . $result->body);
+        $result = $myConnection->remoteClimateSettings($fichierLog);
+        log::add($fichierLog, 'info', '| Retour remote climate setting : ' . $result->body);
 
-        $result = $myConnection->remoteACReservation();
-        log::add('myToyota', 'info', '| Retour remote AC reservation : ' . $result->body);
+        $result = $myConnection->remoteACReservation($fichierLog);
+        log::add($fichierLog, 'info', '| Retour remote AC reservation : ' . $result->body);
 
       }
 
 
 
-      log::add('myToyota', 'info', '| recup terminée');
+      log::add($fichierLog, 'info', '| recup terminée');
 	  }
 	
 
     public static function interromyToyota($eqLogic)
     {
-      $myToyotaPath = realpath(dirname(__FILE__) . '/../../ressources');
       $myConnection = $eqLogic->getConnection();
       $idvehicule = $eqLogic->getId();
       $nomvehicule = $eqLogic->getName();
@@ -614,15 +646,15 @@ class myToyota extends eqLogic {
       
       if ($idvehicule!='Aucun' && $idvehicule!=''){
         log::add('myToyota', 'info', '| ----------------------------------------------------------------------------------------------');
-        log::add('myToyota', 'info', '| Démarrage Interrogation serveur myToyota pour le véhicule ' . strval($eqLogic->getName()) . ' avec ID ' . $idvehicule);
+        log::add('myToyota', 'info', '| Démarrage Interrogation serveur myToyota pour le véhicule ' . strval($nomvehicule) . ' avec ID ' . $idvehicule);
           
         //dernière localisation
         $result = $myConnection->getLocationEndPoint();
         $location = json_decode($result->body);
         log::add('myToyota', 'debug', '| Retour localisation : ' . $result->body);
         if ( isset($location->payload->vehicleLocation) ) { 
-          $eqLogic->checkAndUpdateCmd('lastUpdate',date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
-          $eqLogic->checkAndUpdateCmd('gps_coordinates', $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude);
+          $eqLogic->checkAndUpdateCmd(CMD_LAST_UPDATE,date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
+          $eqLogic->checkAndUpdateCmd(CMD_GPS_COORDINATES, $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude);
           myToyota::chercheLycos($eqLogic,$location->payload->vehicleLocation->latitude, $location->payload->vehicleLocation->longitude);
           log::add('myToyota', 'info', '| Dernière localisation connue: "' . 
                                             $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude . '" le ' . 
@@ -649,96 +681,130 @@ class myToyota extends eqLogic {
         $eqLogic->checkAndUpdateCmd('moonroof_state', 'UNKNOWN');
         $windows = 0;
         $windowOpen = 0;
+        $windowClosed = 0;
         $doors = 0;
         $doorOpen = 0;
-        $doorsToLock = 0;
+        $doorClosed = 0;
         $doorUnlocked = 0;
-        if ($remoteStatus->status->messages[0]->description == "Request Completed Successfully") {
-          foreach ($remoteStatus->payload->vehicleStatus as $vehicleStatus){
-            foreach ($vehicleStatus->sections as $sections){
-              $element = 'Other';
-              if ($vehicleStatus->category == 'carstatus_category_driver'){
-                $element = 'Driver';
-              } else if ($vehicleStatus->category == 'carstatus_category_passenger'){
-                $element = 'Passenger';
-              }
-              if ($element != 'Other'){
-                if (strstr($sections->section, 'rear')){
-                  $element .= 'Rear';
-                } else {
-                  $element .= 'Front';
-                }
-                if (strstr($sections->section, 'door')){
-                  $element = 'door' . $element;
-                  $doors++;
-                } else if (strstr($sections->section, 'window')){
-                  $element = 'window' . $element;
-                  $windows++;
-                }
-              } else {
-                if (strstr($sections->section, 'rear_hatch')){
-                  $element = 'trunk_state';
-                  $doors++;
-                } else if (strstr($sections->section, 'hood')){
-                  $element = 'hood_state';
-                  $doors++;
-                } else if (strstr($sections->section, 'moonroof')){
-                  $element = 'moonroof_state';
-                  $windows++;
-                }
-              }
-              foreach ($sections->values as $values){
-                $status = 'UNKNOWN';
-                if ($values->value == 'carstatus_closed' || $values->value == 'carstatus_open'){
-                  if ($values->status == 0 ){
-                    $status = 'CLOSED';
-                  } else {
-                    $status = 'OPEN';
-                    if (strstr($element, 'window') || strstr($element, 'moonroof')){
-                      $windowOpen++;
-                    } else {
-                      $doorOpen++;
-                    }
-                  }
-                  log::add('myToyota', 'info', '| Return élement: ' . $element . ' Status : ' . $status);
-                  $eqLogic->checkAndUpdateCmd($element, $status);
-                }
-                if ($values->value == 'carstatus_locked' || $values->value == 'carstatus_unlocked'){
-                  $doorsToLock++;
-                  if ($values->status != 0 ){
-                    $doorUnlocked++;
-                  }
-                }
-              }
+        
+        // fonction pour test de l'état des éléments portes, fenêtres, coffre, ... ouvert, fermé, verrouillé, ...
+        function checkStatus($values, &$status, &$closed, &$open, &$locked = 0, &$unlocked = 0) {
+          foreach ($values as $value) {
+            switch ($value->value){
+              case 'carstatus_closed':
+                $closed++;
+                $status = 'CLOSED';
+                break;
+              case 'carstatus_open':
+                $open++;
+                $status = 'OPEN';
+                break;
+              case 'carstatus_unlocked':
+                $unlocked++;
+                break;
+              case 'carstatus_locked':
+                $locked++;
+                break;
             }
           }
         }
+
+        //
+        if (isset($remoteStatus->payload->vehicleStatus)) {
+          foreach ($remoteStatus->payload->vehicleStatus as $category) {
+            foreach ($category->sections as $section) {
+                switch ($section->section) {
+                    case 'carstatus_item_driver_door':
+                      $element = 'doorDriverFront';
+                      $doors++;
+                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      break;
+                    case 'carstatus_item_driver_rear_door':
+                      $element = 'doorDriverRear';
+                      $doors++;
+                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      break;
+                    case 'carstatus_item_passenger_door':
+                      $element = 'doorPassengerFront';
+                      $doors++;
+                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      break;
+                    case 'carstatus_item_passenger_rear_door':
+                      $element = 'doorPassengerRear';
+                      $doors++;
+                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      break;
+                    case 'hood':
+                      $element = 'hood_state';
+                      $doors++;
+                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      break;
+                    case 'carstatus_item_rear_hatch':
+                      $element = 'trunk_state';
+                      $doors++;
+                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      break;
+                    case 'carstatus_item_driver_window':
+                      $element = 'windowDriverFront';
+                      $windows++;
+                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      break;
+                    case 'carstatus_item_driver_rear_window':
+                      $element = 'windowDriverRear';
+                      $windows++;
+                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      break;
+                    case 'carstatus_item_passenger_window':
+                      $element = 'windowPassengerFront';
+                      $windows++;
+                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      break;
+                    case 'carstatus_item_passenger_rear_window':
+                      $element = 'windowpassengerRear';
+                      $windows++;
+                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      break;
+                    case 'moonroof':
+                      $element = 'moonroof_state';
+                      $windows++;
+                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      break;
+                  }
+                  $eqLogic->checkAndUpdateCmd($element, $status);
+                  log::add('myToyota', 'info', '| Return élement: ' . $element . ' Status : ' . $status);
+                }
+          }
+        } else {
+          log::add('myToyota', 'info', '| Status du véhicules (portes, fenêtres, ...) non disponible.');
+        }          
+
         if ($doors == 0){
           $eqLogic->checkAndUpdateCmd('doorLockState', 'UNKNOWN');
           log::add('myToyota', 'info', '| Return élement: doorLockState Status : UNKNOWN');
-        } else if ($doorUnlocked == 0){
-          $eqLogic->checkAndUpdateCmd('doorLockState', 'LOCKED');
-          log::add('myToyota', 'info', '| Return élement: doorLockState Status : LOCKED ' . $doorsToLock . ' / ' . $doorsToLock);
-        } else {
-          $eqLogic->checkAndUpdateCmd('doorLockState', 'UNLOCKED');
-          log::add('myToyota', 'info', '| Return élement: doorLockState Status : UNLOCKED ' . $doorUnlocked . ' non verrouillée(s) / ' . $doorsToLock . ' portes verrouillables');
-        }
-        if ($doors == 0){
           $eqLogic->checkAndUpdateCmd('allDoorsState', 'UNKNOWN');
           log::add('myToyota', 'info', '| Return élement: allDoorsState Status : UNKNOWN ');
-        } else if ($doorOpen == 0){
+        } else if ($doorUnlocked == 0){
+          $eqLogic->checkAndUpdateCmd('doorLockState', 'LOCKED');
+          log::add('myToyota', 'info', '| Return élement: doorLockState Status : LOCKED ' . $doorLocked . ' / ' . $doors);
+        } else {
+          $eqLogic->checkAndUpdateCmd('doorLockState', 'UNLOCKED');
+          log::add('myToyota', 'info', '| Return élement: doorLockState Status : UNLOCKED ' . $doorUnlocked . ' non verrouillée(s) / ' . $doors . ' portes verrouillables');
+        }
+
+        if (($doors != 0) && ($doorOpen == 0)){
           $eqLogic->checkAndUpdateCmd('allDoorsState', 'CLOSED');
           log::add('myToyota', 'info', '| Return élement: allDoorsState Status : CLOSED ' . $doors . ' / ' . $doors);
         } else {
           $eqLogic->checkAndUpdateCmd('allDoorsState', 'OPEN');
           log::add('myToyota', 'info', '| Return élement: allDoorsState Status : OPEN ' . $doorOpen . ' / ' . $doors);
         }
+
         if ($windows == 0){
           $eqLogic->checkAndUpdateCmd('allWindowsState', 'UNKNOWN');
           log::add('myToyota', 'info', '| Return élement: allWindowsState Status : UNKNOWN ');
         } else if ($windowOpen == 0){
           $eqLogic->checkAndUpdateCmd('allWindowsState', 'CLOSED');
-          log::add('myToyota', 'info', '| Return élement: allWindowsState Status : CLOSED ' . $windows . ' / ' . $windows);
+          log::add('myToyota', 'info', '| Return élement: allWindowsState Status : CLOSED ' . $windowClosed . ' / ' . $windows);
         } else {
           $eqLogic->checkAndUpdateCmd('allWindowsState', 'OPEN');
           log::add('myToyota', 'info', '| Return élement: allWindowsState Status : OPEN ' . $windowOpen . ' / ' . $windows);
@@ -862,6 +928,11 @@ class myToyota extends eqLogic {
           log::add('myToyota', 'debug', '| retour trips' . $result->body);
           
           // moyennes sur 7 jours
+          $fuelConsumption = 0;
+          $length = 0;
+          $evDistance = 0;
+          $evTime = 0;
+          $duration = 0;
           $summarys = $tripsEndpoint->payload->summary;
           $metatData = $tripsEndpoint->payload->_metadata;
           foreach ($summarys as $summary){
@@ -935,7 +1006,7 @@ class myToyota extends eqLogic {
         
 
         //fin du traitement
-        log::add('myToyota', 'info', '| fin du traitement pour le véhicule ' . strval($eqLogic->getName()) . ' avec ID ' . $idvehicule);
+        log::add('myToyota', 'info', '| fin du traitement pour le véhicule ' . strval($nomvehicule) . ' avec ID ' . $idvehicule);
         log::add('myToyota', 'info', '| ------------------------------------------------------------------------');
 
       } else {
@@ -1060,7 +1131,7 @@ class myToyota extends eqLogic {
     public static function getGPSCoordinates($vin)
     {
       $eqLogic = self::getToyotaEqLogic($vin);
-      $cmd = $eqLogic->getCmd(null, 'gps_coordinates');
+      $cmd = $eqLogic->getCmd(null, CMD_GPS_COORDINATES);
       
       if ( is_object($cmd) )  {
         $coordinates = explode(",", $cmd->execCmd());
@@ -1083,8 +1154,8 @@ class myToyota extends eqLogic {
       log::add('myToyota', 'debug', '| Retour recherche véhicule : ' . $result->body);
       if ( isset($location->payload->vehicleLocation) ) { 
         $gps_coordinates = $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude;
-        $eqLogic->checkAndUpdateCmd('lastUpdate',date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
-        $eqLogic->checkAndUpdateCmd('gps_coordinates', $gps_coordinates);
+        $eqLogic->checkAndUpdateCmd(CMD_LAST_UPDATE,date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
+        $eqLogic->checkAndUpdateCmd(CMD_GPS_COORDINATES, $gps_coordinates);
         log::add('myToyota', 'info', '| Dernière localisation connue: "' . 
           $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude . '" le ' . 
           date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
@@ -1095,54 +1166,66 @@ class myToyota extends eqLogic {
       }
     }
   
-    public function getConnection()
+    public function getConnection($fichierLog='myToyota')
     {
         $vin = $this->getConfiguration("vehicle_vin");
         $username = $this->getConfiguration("username");
         $password = $this->getConfiguration("password");
         $brand = $this->getConfiguration("vehicle_brand");
-        if ($brand == 'T'){
-          $constructeur = 'Toyota';
-        }else if ($brand=='L'){
-          $constructeur = 'Lexus';
+        switch ($brand) {
+          case 'T':
+              $constructeur = 'Toyota';
+              break;
+          case 'L':
+              $constructeur = 'Lexus';
+              break;
+          default:
+              $constructeur = 'Inconnu';
+              log::add('myToyota', 'warning', '| Marque inconnue : ' . $brand);
+              return null;
+              break;
         }
-        log::add('myToyota', 'debug', '| Result user : '. substr($username,0,3) . '***' . substr($username,-3,3) . ' ; password : '. substr($password,0,2) . '***' . substr($password,-2,2) . ' ; vin : '. substr($vin,0,3) . '***' . substr($vin,-3,3) . ' ; constructeur : ' . $constructeur);
-        $myConnection = new MyToyota_API($username, $password, $vin, $brand);
+        log::add($fichierLog, 'debug', '| Result user : '. substr($username,0,3) . '***' . substr($username,-3,3) . ' ; password : '. substr($password,0,2) . '***' . substr($password,-2,2) . ' ; vin : '. substr($vin,0,3) . '***' . substr($vin,-3,3) . ' ; constructeur : ' . $constructeur);
+        if (empty($vin) || empty($username) || empty($password) || empty($brand)) {
+          log::add($fichierLog, 'error', '| Configuration manquante ou invalide pour la connexion.');
+          return null; // ou throw new Exception("Configuration manquante");
+        }
+        $myConnection = new MyToyota_API($username, $password, $vin, $brand, $fichierLog);
         return $myConnection;
   	}
 
-    public function commandes($eqLogic, $commande)
+    public function commandes($eqLogic, $commande, $fichierLog='myToyota')
     {
 
-      $myConnection = $eqLogic->getConnection();
-      $result = $myConnection->remoteCommande($commande); //commande envoyées vers véhicule
+      $myConnection = $eqLogic->getConnection($fichierLog);
+      $result = $myConnection->remoteCommande($commande, $fichierLog); //commande envoyées vers véhicule
       $resultCmde = json_decode($result->body);
 
-      log::add('myToyota', 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
+      log::add($fichierLog, 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
 
     }
 
-    public function commande_clim($eqLogic, $commande)
+    public function commande_clim($eqLogic, $commande, $fichierLog='myToyota')
     {
 
-      $myConnection = $eqLogic->getConnection();
-      $result = $myConnection->remoteClimate($commande); //commande envoyées vers véhicule
+      $myConnection = $eqLogic->getConnection($fichierLog);
+      $result = $myConnection->remoteClimate($commande, $fichierLog); //commande envoyées vers véhicule
       $resultCmde = json_decode($result->body);
 
-      log::add('myToyota', 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
+      log::add($fichierLog, 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
 
     }
 
 // zone de tests ********************************************************************************************
 
-    public function update_datas($eqLogic, $commande) // fonction de test pour développement
+    public function update_datas($eqLogic, $commande , $fichierLog='myToyota') // fonction de test pour développement
     {
 
-      $myConnection = $eqLogic->getConnection();
-      $result = $myConnection->testPoubelle_post($commande);
+      $myConnection = $eqLogic->getConnection($fichierLog);
+      $result = $myConnection->testPoubelle_post($commande, $fichierLog);
       $tripsEndpoint = json_decode($result->body);
 
-      log::add('myToyota', 'debug', '| retour ' . $result->body);
+      log::add($fichierLog, 'debug', '| retour ' . $result->body);
 
     }
 

@@ -38,7 +38,7 @@ try {
     }
     
     if (init('action') == 'all_data') {
-      $result = myToyota::all_data(init('username'),init('pwd'),init('vin'));
+      $result = myToyota::all_data(init('vin'));
       ajax::success($result);
     }
     
