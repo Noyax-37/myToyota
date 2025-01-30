@@ -59,7 +59,7 @@
 			</div>
 			
 			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:50px;">Km restants (thermique)</div>
+				<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:50px;">Autonomie thermique</div>
 				<div class="col-xs-4 combustion_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-map-pin"></i></div>
 				<div class="col-xs-12 combustion_engine_txt#id#" id="value_tile" style="height:50px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
 			</div>
@@ -74,7 +74,7 @@
 			</div>
 							
 			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">Km restants (électrique)</div>
+				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">Autonomie électrique</div>
 				<div class="col-xs-4 electric_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-map-pin"></i></div>
 				<div class="col-xs-12 electric_engine_txt#id#" id="value_tile" style="height:50px;"><span class="Cmd#beRemainingRangeElectric_id#"></span><span id="titre_tile"> km</span></div>				
 			</div>
@@ -272,24 +272,40 @@
 			
 		//----- Combustion engine
 		jeedom.cmd.update['#beRemainingRangeFuelKm_id#'] = function(_options) {
-			$('.Cmd#beRemainingRangeFuelKm_id#').empty().append('<span>'+_options.display_value+'</span>');
+			if (_options.display_value!=0){
+				$('.Cmd#beRemainingRangeFuelKm_id#').empty().append('<span>'+_options.display_value+'</span>');
+			} else {
+				$('.Cmd#beRemainingRangeFuelKm_id#').empty().append('<span>---</span>');
+			}
 		}
 		jeedom.cmd.update['#beRemainingRangeFuelKm_id#']({display_value:'#beRemainingRangeFuelKm#'});
 		
 		jeedom.cmd.update['#remaining_fuel_id#'] = function(_options) {
-			$('.Cmd#remaining_fuel_id#').empty().append('<span>'+_options.display_value+'</span>');
+			if (_options.display_value!=0){
+				$('.Cmd#remaining_fuel_id#').empty().append('<span>'+_options.display_value+'</span>');
+			} else {
+				$('.Cmd#remaining_fuel_id#').empty().append('<span>---</span>');
+			}
 		}
 		jeedom.cmd.update['#remaining_fuel_id#']({display_value:'#remaining_fuel#'});	
 			
 		
 		//----- Electric engine
 		jeedom.cmd.update['#beRemainingRangeElectric_id#'] = function(_options) {
-			$('.Cmd#beRemainingRangeElectric_id#').empty().append('<span>'+_options.display_value+'</span>');
+			if (_options.display_value!=0){
+				$('.Cmd#beRemainingRangeElectric_id#').empty().append('<span>'+_options.display_value+'</span>');
+			} else {
+				$('.Cmd#beRemainingRangeElectric_id#').empty().append('<span>---</span>');
+			}
 		}
 		jeedom.cmd.update['#beRemainingRangeElectric_id#']({display_value:'#beRemainingRangeElectric#'});
 			
 		jeedom.cmd.update['#chargingLevelHv_id#'] = function(_options) {
-			$('.Cmd#chargingLevelHv_id#').empty().append('<span>'+_options.display_value+'</span>');
+			if (_options.display_value!=0){
+				$('.Cmd#chargingLevelHv_id#').empty().append('<span>'+_options.display_value+'</span>');
+			} else {
+				$('.Cmd#chargingLevelHv_id#').empty().append('<span>---</span>');
+			}
 		}
 		jeedom.cmd.update['#chargingLevelHv_id#']({display_value:'#chargingLevelHv#'});
 			

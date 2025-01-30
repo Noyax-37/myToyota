@@ -45,9 +45,9 @@
 				</div>
 				
 				<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:140px; width:140px;">
-					<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:70px;">Km restants (thermique)</div>
-					<div class="col-xs-4 combustion_engine_txt#id#" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
-					<div class="col-xs-12 combustion_engine_txt#id#" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
+					<div class="col-xs-8 combustion_engine_autonom_txt#id#" id="titre_tile" style="height:70px;">Autonomie thermique</div>
+					<div class="col-xs-4 combustion_engine_autonom_txt#id#" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
+					<div class="col-xs-12 combustion_engine_autonom_txt#id#" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
 				</div>
 				
 				<!-- fin affichage si véhicule thermique ou PHEV -->
@@ -60,7 +60,7 @@
 				</div>
 								
 				<div class="col-xs-4 electric_engine#id#" id="tile" style="height:140px; width:140px;">
-					<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:70px;">Km restants (électrique)</div>
+					<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:70px;">Autonomie électrique</div>
 					<div class="col-xs-4 electric_engine_txt#id#" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 electric_engine_txt#id#" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeElectric_id#"></span><span id="titre_tile"> km</span></div>				
 				</div>
@@ -80,7 +80,7 @@
 				<!-- fin affichage si véhicule électrique ou PHEV-->
 
 				<div class="col-xs-4 commun_engine#id#" id="tile" style="height:140px; width:140px;">
-					<div class="col-xs-8 commun_engine_txt#id#" id="titre_tile" style="height:70px;">Km restants (total)</div>
+					<div class="col-xs-8 commun_engine_txt#id#" id="titre_tile" style="height:70px;">Atonomie totale</div>
 					<div class="col-xs-4 commun_engine_txt#id#" id="icon_tile" style="height:70px;"><i class="fas fa-lg fa-map-pin"></i></div>
 					<div class="col-xs-12 commun_engine_txt#id#" id="value_tile" style="height:70px;"><span class="Cmd#beRemainingRangeTotal_id#"></span><span id="titre_tile"> km</span></div>				
 				</div>
@@ -400,7 +400,7 @@
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">Trajets PHEV
 							</div>
 							<div >
-								<table class="fixed_header tableCmdPhev" id="table_cmd_phev">
+								<table class="fixed_header tableCmdHyd" id="table_cmd_phev">
 								</table>
 							</div>
 						</div>
@@ -599,8 +599,8 @@
 	
 		//----- Electric / Combustion / Hybrid
 		if ( '#vehicle_type#id##' == 'Electrique' )  {
-			$('.combustion_engine_txt#id#').hide();
-			$('.commun_engine_txt#id#').hide();
+			$('.combustion_engine_txt#id#').hide(); 
+			$('.combustion_engine_autonom_txt#id#').hide();
 			$('.TAB_hyd').hide();
 			$('.TAB_ess').hide();
 			$('.TAB_phev').hide();
@@ -624,6 +624,7 @@
 		}
 		if ( '#vehicle_type#id##' == 'Thermique')  {
 			$('.electric_engine_txt#id#').hide();
+			$('.commun_engine_txt#id#').hide();
 			$('.charge_sessions#id#').hide();
 			$('.charge_chart#id#').hide();
 			$('.TAB_hyd').hide();
@@ -641,11 +642,11 @@
 			$('.TAB_phev').show();
 			$('.TAB_charge').show();
 			document.getElementById("eqlogictabphev").className += " active";
-			document.getElementById("TAB_pehv").className += " active";
+			document.getElementById("TAB_phev").className += " active";
 		}
 		if ( '#vehicle_type#id##' != 'Electrique' && '#vehicle_type#id##' != 'Hybride Rechargeable' )  {
 			//$('#charge_btn#id#').hide();
-			$('#stopcharge_btn#id#').hide();
+			//$('#stopcharge_btn#id#').hide();
 		}
 
 
@@ -711,14 +712,22 @@
 
 	//----- Commun aux véhicules
 	jeedom.cmd.update['#beRemainingRangeTotal_id#'] = function(_options) {
-       	$('.Cmd#beRemainingRangeTotal_id#').empty().append('<span>'+_options.display_value+'</span>');
+		if (_options.display_value!=0){
+			$('.Cmd#beRemainingRangeTotal_id#').empty().append('<span>'+_options.display_value+'</span>');
+		} else {
+			$('.Cmd#beRemainingRangeTotal_id#').empty().append('<span>---</span>');
+		}
     }
 	jeedom.cmd.update['#beRemainingRangeTotal_id#']({display_value:'#beRemainingRangeTotal#'});
 		
 	
 	//----- Combustion engine
 	jeedom.cmd.update['#beRemainingRangeFuelKm_id#'] = function(_options) {
-       	$('.Cmd#beRemainingRangeFuelKm_id#').empty().append('<span>'+_options.display_value+'</span>');
+		if (_options.display_value!=0){
+			$('.Cmd#beRemainingRangeFuelKm_id#').empty().append('<span>'+_options.display_value+'</span>');
+		} else {
+			$('.Cmd#beRemainingRangeFuelKm_id#').empty().append('<span>---</span>');
+		}
     }
 	jeedom.cmd.update['#beRemainingRangeFuelKm_id#']({display_value:'#beRemainingRangeFuelKm#'});
 	
@@ -730,12 +739,20 @@
 	
 	//----- Electric engine
 	jeedom.cmd.update['#beRemainingRangeElectric_id#'] = function(_options) {
-       	$('.Cmd#beRemainingRangeElectric_id#').empty().append('<span>'+_options.display_value+'</span>');
+		if (_options.display_value!=0){
+			$('.Cmd#beRemainingRangeElectric_id#').empty().append('<span>'+_options.display_value+'</span>');
+		} else {
+			$('.Cmd#beRemainingRangeElectric_id#').empty().append('<span>---</span>');
+		}
     }
 	jeedom.cmd.update['#beRemainingRangeElectric_id#']({display_value:'#beRemainingRangeElectric#'});
 		
 	jeedom.cmd.update['#chargingLevelHv_id#'] = function(_options) {
-       	$('.Cmd#chargingLevelHv_id#').empty().append('<span>'+_options.display_value+'</span>');
+		if (_options.display_value!=0){
+			$('.Cmd#chargingLevelHv_id#').empty().append('<span>'+_options.display_value+'</span>');
+		} else {
+			$('.Cmd#chargingLevelHv_id#').empty().append('<span>---</span>');
+		}
     }
 	jeedom.cmd.update['#chargingLevelHv_id#']({display_value:'#chargingLevelHv#'});
 		
@@ -810,7 +827,7 @@
            	$('.Cmd#doorDriverFront_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_red.png" height="20px"></span>');
 		}
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#doorDriverFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#doorDriverFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#doorDriverFront_id#').empty().append('<span> - </span>');
@@ -823,7 +840,7 @@
            	$('.Cmd#doorDriverRear_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_red.png" height="20px"></span>');
 		}
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#doorDriverRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#doorDriverRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#doorDriverRear_id#').empty().append('<span> - </span>');
@@ -836,7 +853,7 @@
            	$('.Cmd#doorPassengerFront_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_red.png" height="20px"></span>');
         }
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#doorPassengerFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#doorPassengerFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#doorPassengerFront_id#').empty().append('<span> - </span>');
@@ -849,7 +866,7 @@
            	$('.Cmd#doorPassengerRear_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_red.png" height="20px"></span>');
         }
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#doorPassengerRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#doorPassengerRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/doors_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#doorPassengerRear_id#').empty().append('<span> - </span>');
@@ -903,7 +920,7 @@
            	$('.Cmd#windowDriverFront_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_red.png" height="20px"></span>');
         }
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#windowDriverFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#windowDriverFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#windowDriverFront_id#').empty().append('<span> - </span>');
@@ -916,7 +933,7 @@
            	$('.Cmd#windowDriverRear_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_red.png" height="20px"></span>');
         }
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#windowDriverRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#windowDriverRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#windowDriverRear_id#').empty().append('<span> - </span>');
@@ -929,7 +946,7 @@
            	$('.Cmd#windowPassengerFront_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_red.png" height="20px"></span>');
         }
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#windowPassengerFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#windowPassengerFront_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#windowPassengerFront_id#').empty().append('<span> - </span>');
@@ -942,7 +959,7 @@
            	$('.Cmd#windowPassengerRear_id#').empty().append('<span class="doors_text#id#" style="color:rgb(185,58,62) !important; font-weight:bold !important">Ouvert</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_red.png" height="20px"></span>');
         }
        	if ( _options.display_value == "CLOSED" )  {
-           	$('.Cmd#windowPassengerRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">Fermé</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
+           	$('.Cmd#windowPassengerRear_id#').empty().append('<span class="doors_text#id#" style="color:'+color_icon_closed_rgb+' !important;">fermée</span><span class="doors_icon#id#"><img src="plugins/myToyota/core/img/windows_'+color_icon_closed+'.png" height="20px"></span>');
         }
 		if ( _options.display_value == "UNKNOWN" || _options.display_value == "INVALID" || _options.display_value == "not available" )  {
            	$('.Cmd#windowPassengerRear_id#').empty().append('<span> - </span>');

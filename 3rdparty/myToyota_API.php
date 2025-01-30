@@ -61,6 +61,7 @@ class myToyota_API
     private $password;
     private $vin;
     private $brand;
+    private $fichierLog;
     private $access_token;
     private $token_expiration;
     private $refresh_token;
@@ -126,9 +127,9 @@ class myToyota_API
     //fin zone de tests ************************************************************************
 
 
-    public function  __construct($username, $password, $vin, $brand)
+    public function  __construct($username, $password, $vin, $brand, $fichierLog)
     {
-        if (!$username || !$password  || !$vin || !$brand) {
+        if (!$username || !$password  || !$vin || !$brand || !$fichierLog) {
             throw new \Exception('Config parameters missing');
         }
 
@@ -136,6 +137,7 @@ class myToyota_API
 		$this->password = $password;
         $this->vin = $vin;
         $this->brand = $brand;
+        $this->fichierLog = $fichierLog;
         $this->timeout = 60;
 
         if (file_exists(dirname(__FILE__).'/../data/myToyota_' . $this->vin . '_token.json')) {
@@ -258,25 +260,25 @@ class myToyota_API
 	}
 
 
-    private function _checkAuth()
+    private function _checkAuth($fichierLog = 'myToyota')
     {
         if (!$this->access_token)
 		{
-			log::add('myToyota', 'debug', '| 1ère demande de Token');
-            return $this->getToken();
+			log::add($fichierLog, 'debug', '| 1ère demande de Token');
+            return $this->getToken($fichierLog);
 		}
 
 		if ($this->access_token && time() >= ($this->token_expiration))
 		{
-            log::add('myToyota', 'debug', '| Token expiré => renouvellement');
-            return $this->refreshToken();
+            log::add($fichierLog, 'debug', '| Token expiré => renouvellement');
+            return $this->refreshToken($fichierLog);
         } else {
-            log::add('myToyota', 'debug', '| Token encore en cours');
+            log::add($fichierLog, 'debug', '| Token encore en cours');
         }
 	}
 
 
-    private function getToken()
+    private function getToken($fichierLog = 'myToyota')
     {
         //Stage 1 - Callbacks
         $url = $this::AUTHENTICATE_URL;
@@ -289,7 +291,7 @@ class myToyota_API
                       
         $result1 = $this->_request($url, $method, null, $headers);
         $data1 = $result1->body;
-        log::add('myToyota', 'debug', '| Result getToken() myToyota - Stage 1 - body : ' . $data1);
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 1 - body : ' . $data1);
         
         
         //Stage 2 - set Username
@@ -302,7 +304,7 @@ class myToyota_API
         ];
                       
         $result2 = $this->_request($url, $method, $data1, $headers);
-        log::add('myToyota', 'debug', '| Result getToken() myToyota - Stage 2 - body : ' . $result2->body);
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 2 - body : ' . $result2->body);
         $data2 = $result2->body;
         $data2 = json_decode($data2, true);
         $data2['callbacks'][0]['input'][0]['value'] = $this->username;
@@ -319,7 +321,7 @@ class myToyota_API
         ];
                        
         $result3 = $this->_request($url, $method, $data2, $headers);
-        log::add('myToyota', 'debug', '| Result getToken() myToyota - Stage 3 - body : ' . $result3->body);
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 3 - body : ' . $result3->body);
         $data3 = $result3->body;
         $data3 = json_decode($data3, true);
         $data3['callbacks'][0]['input'][0]['value'] = $this->password;
@@ -338,7 +340,7 @@ class myToyota_API
         $result4 = $this->_request($url, $method, $data3, $headers);
         $data4 = json_decode($result4->body, true);
         $tokenId = $data4['tokenId'];
-        log::add('myToyota', 'debug', '| Result getToken() myToyota - Stage 4 - tokenId : ' . $tokenId);
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 4 - tokenId : ' . $tokenId);
 
 
         //Stage 5 - get authorizationCode
@@ -356,7 +358,7 @@ class myToyota_API
         {
             $authorizationCode = $matches[1];
         }
-        log::add('myToyota', 'debug', '| Result getToken() myToyota - Stage 5 - authorizationCode : ' . $authorizationCode);
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 5 - authorizationCode : ' . $authorizationCode);
 
 
         //Stage 6 - exchangeToken
@@ -378,7 +380,7 @@ class myToyota_API
         $data = http_build_query($data);
                 
         $result6 = $this->_request($url, $method, $data, $headers);
-        log::add('myToyota', 'debug', '| Result getToken() myToyota - Stage 6 - body : ' . $result6->body);
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 6 - body : ' . $result6->body);
         $data6 = json_decode($result6->body, true);
         
         //$this->uuid = '';
@@ -386,18 +388,18 @@ class myToyota_API
       
       	
         $uuid = json_decode(base64_decode(strtr($expToken[1], '-_', '+/,'), true));
-      	log::add('myToyota', 'debug', '| uuid: ' . $uuid->{'uuid'});
+      	log::add($fichierLog, 'debug', '| uuid: ' . $uuid->{'uuid'});
         $this->uuid = $uuid->{'uuid'};
         $this->access_token = $data6['access_token'];
         $this->refresh_token = $data6['refresh_token'];
         $this->token_expiration = time() + $data6['expires_in'];
         $this->saveToken();
-        log::add('myToyota', 'debug', '| Result getToken() myToyota : Token sauvegardé');
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota : Token sauvegardé');
 
     }
 
 
-    private function refreshToken()
+    private function refreshToken($fichierLog = 'myToyota')
     {
             $url = $this::ACCESS_TOKEN_URL;
             $method = 'POST';
@@ -418,14 +420,14 @@ class myToyota_API
             $data = http_build_query($data);
                     
             $result1 = $this->_request($url, $method, $data, $headers);
-            log::add('myToyota', 'debug', '| Result refreshToken() myToyota : ' . $result1->body);
+            log::add($fichierLog, 'debug', '| Result refreshToken() myToyota : ' . $result1->body);
             $data1 = json_decode($result1->body, true);
 
             $expToken = explode('.', $data1['access_token']);
       
       	
             $uuid = json_decode(base64_decode(strtr($expToken[1], '-_', '+/,'), true));
-              log::add('myToyota', 'debug', '| uuid: ' . $uuid->{'uuid'});
+            log::add($fichierLog, 'debug', '| uuid: ' . $uuid->{'uuid'});
     
 
             $this->uuid = $uuid->{'uuid'};
@@ -433,7 +435,7 @@ class myToyota_API
             $this->refresh_token = $data1['refresh_token'];
             $this->token_expiration = time() + $data1['expires_in'];
             $this->saveToken();
-            log::add('myToyota', 'debug', '| Result refreshToken() myToyota : Token sauvegardé');
+            log::add($fichierLog, 'debug', '| Result refreshToken() myToyota : Token sauvegardé');
     }
 
 	private function _setHeadersUpdate()   {				//Define headers update data
@@ -451,52 +453,52 @@ class myToyota_API
         return $headers;
 	}
     
-    public function getDevice()
+    public function getDevice($fichierLog='myToyota')
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_GUID_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
 
-    public function getLocationEndPoint()
+    public function getLocationEndPoint($fichierLog='myToyota')
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_LOCATION_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
     
-    public function getRemoteStatusEndPoint() // update device 
+    public function getRemoteStatusEndPoint($fichierLog='myToyota') // update device 
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_STATUS_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
 
-    public function getTelemetryEndPoint() // update device 
+    public function getTelemetryEndPoint($fichierLog='myToyota') // update device 
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_TELEMETRY_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
 
-    public function getRemoteClimateStatus()  // update device 
+    public function getRemoteClimateStatus($fichierLog='myToyota')  // update device 
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_STATUS;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
@@ -511,9 +513,9 @@ class myToyota_API
 		return $return;
     }
 
-    public function getTripsEndpoint($from = "xxx", $to = "xxx", $route = false, $summary = true, $limit = 0, $offset = 0)
+    public function getTripsEndpoint($from = "xxx", $to = "xxx", $route = false, $summary = true, $limit = 0, $offset = 0, $fichierLog='myToyota')
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
         if ($to== 'xxx'){
             $to = date('Y-m-d');
         }
@@ -523,37 +525,37 @@ class myToyota_API
         //$to = date('Y-m-d', now());
 		$url = $this::API_BASE_URL . sprintf($this::VEHICLE_TRIPS_ENDPOINT, $from, $to, $route, $summary, $limit, $offset)  ;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
 
 
-    public function remoteCommande($commande)  // telecommande de quoi? Portes + ... = {door-lock, door-unlock, engine-start, engine-stop, hazard-on, hazard-off, power-window-on, power-window-off, 
+    public function remoteCommande($commande, $fichierLog='myToyota')  // telecommande de quoi? Portes + ... = {door-lock, door-unlock, engine-start, engine-stop, hazard-on, hazard-off, power-window-on, power-window-off, 
                                                         //ac-settings-on, sound-horn, buzzer-warning, find-vehicle, ventilation-on, trunk-lock, trunk-unlock}
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_COMMAND;
         $headers = $this->_setHeadersUpdate();
       	$headers[] = [ 'x-correlationid: D7F048C1-F0A1-4920-AA37-264C8A1FB4A3' ];
         
         $data = json_encode(array('command' => $commande));
         //$data = http_build_query($data);
-        log::add('myToyota', 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
+        log::add($fichierLog, 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
 		$return = $this->_request($url, 'POST', $data, $headers);
 		return $return;
     }
 
-    public function remoteClimate($commande)  // telecommande de quoi? Clim
+    public function remoteClimate($commande, $fichierLog='myToyota')  // telecommande de quoi? Clim
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_CONTROL;
         $headers = $this->_setHeadersUpdate();
         $headers[] = [ 'x-correlationid: D7F048C1-F0A1-4920-AA37-264C8A1FB4A3' ];
         
         $data = json_encode(array('command' => $commande));
         //$data = http_build_query($data);
-        log::add('myToyota', 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
+        log::add($fichierLog, 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
 		$return = $this->_request($url, 'POST', $data, $headers);
 		return $return;
     }
@@ -568,22 +570,22 @@ class myToyota_API
 		return $return;
     }
 
-    public function historiqueNotification()
+    public function historiqueNotification($fichierLog='myToyota')
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_NOTIFICATION_HISTORY_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
 
-    public function remoteElectric() // à voir avec un véhicule électrique
+    public function remoteElectric($fichierLog='myToyota') // à voir avec un véhicule électrique
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
@@ -598,22 +600,22 @@ class myToyota_API
 		return $return;
     }
 
-    public function remoteClimateSettings() // A tester sur véhicule capable
+    public function remoteClimateSettings($fichierLog='myToyota') // A tester sur véhicule capable
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_SETTING;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
 
-    public function remoteACReservation() // A tester sur véhicule capable
+    public function remoteACReservation($fichierLog='myToyota') // A tester sur véhicule capable
     {
-        $this->_checkAuth();
+        $this->_checkAuth($fichierLog);
 		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_AC_RESERVATION;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }

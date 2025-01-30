@@ -26,28 +26,27 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						<br>
 						<span>{{Configuration}}</span>
 					</div>
+					<?php
+						// à conserver
+						// sera afficher uniquement si l'utilisateur est en version 4.4 ou supérieur
+						$jeedomVersion  = jeedom::version() ?? '0';
+						$displayInfoValue = version_compare($jeedomVersion, '4.4.0', '>=');
+						if ($displayInfoValue) {
+					?>
+						<div class="col-sm-2">
+							<div class="eqLogicThumbnailContainer">
+								<div class="cursor eqLogicAction logoSecondary warning" data-action="createCommunityPost">
+									<i class="fas fa-ambulance"></i>
+									<br>
+									<span class="warning">{{Créer un post Community}}</span>
+								</div>
+							</div>
+						</div>
+					<?php
+					}
+					?>
 				</div>
 			</div>
-			<?php
-			// à conserver
-			// sera afficher uniquement si l'utilisateur est en version 4.4 ou supérieur
-			$jeedomVersion  = jeedom::version() ?? '0';
-			$displayInfoValue = version_compare($jeedomVersion, '4.4.0', '>=');
-			if ($displayInfoValue) {
-			?>
-				<div class="col-sm-2">
-					<legend><i class=" fas fa-comments"></i> {{Community}}</legend>
-					<div class="eqLogicThumbnailContainer">
-						<div class="cursor eqLogicAction logoSecondary" data-action="createCommunityPost">
-							<i class="fas fa-ambulance"></i>
-							<br>
-							<span style="color:var(--txt-color)">{{Créer un post Community}}</span>
-						</div>
-					</div>
-				</div>
-			<?php
-			}
-			?>
 		</div>
 		<legend><i class="fas fa-table"></i> {{Mes équipements}}</legend>
 		<?php
@@ -229,52 +228,74 @@ $eqLogics = eqLogic::byType($plugin->getId());
 
 							</br>
 
+							<legend><i class="fas fa-palette"></i> {{Paramètres d'affichage du panel}}</legend>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Affichage état portes / fenêtres}}</label>
+								<div class="col-sm-4">
+									<select id="sel_panel_icon" class="eqLogicAttr form-control" style="margin-bottom: 3px;" data-l1key="configuration" data-l2key="panel_doors_windows_display">
+										<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>	
+										<option value="text">Texte</option>
+										<option value="icon">Icône</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label help" data-help="{{Si l'option précédente est réglée sur Icône, vous pouvez choisir la couleur souhaitée}}">{{Couleur des icônes portes / fenêtres}}</label>
+								<div class="col-sm-4">
+									<select id="sel_panel_color" class="eqLogicAttr form-control" style="margin-bottom: 3px;" data-l1key="configuration" data-l2key="panel_color_icon_closed">
+										<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>
+										<option value="default">Noir & blanc</option>
+										<option value="green">Vert</option>
+									</select>
+								</div>
+							</div>
+							
 							</br>
-								
-								<legend><i class="fas fa-location-arrow"></i> {{Paramètres de localisation}}</legend>
-								<div class="form-group">
-									<label class="col-sm-4 control-label">{{Domicile (présence)}}</label>
-									<div class="col-sm-4">
-										<select id="sel_option_localisation" class="eqLogicAttr form-control" style="margin-bottom: 1px;" data-l1key="configuration" data-l2key="option_localisation">
-											<?php
-											if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
-												echo '<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>';
-												echo '<option value="jeedom">{{Configuration Jeedom}}</option>';
-												echo '<option value="vehicle">{{Configuration position actuelle du véhicule}}</option>';
-												echo '<option value="manual">{{Configuration manuelle}}</option>';
-											} 
-											else {
-												echo '<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>';
-												echo '<option value="vehicle">{{Configuration position actuelle du véhicule}}</option>';
-												echo '<option value="manual">{{Configuration manuelle}}</option>';
-												//echo '<option value="jeedom">{{Configuration Jeedom indisponible}}</option>';
-											}
-											?>
-										</select>
-									</div>
+							
+							<legend><i class="fas fa-location-arrow"></i> {{Paramètres de localisation}}</legend>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Domicile (présence)}}</label>
+								<div class="col-sm-4">
+									<select id="sel_option_localisation" class="eqLogicAttr form-control" style="margin-bottom: 1px;" data-l1key="configuration" data-l2key="option_localisation">
+										<?php
+										if ( (config::byKey('info::latitude','core','0') != '0') && (config::byKey('info::longitude','core','0') != '0') ) {
+											echo '<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>';
+											echo '<option value="jeedom">{{Configuration Jeedom}}</option>';
+											echo '<option value="vehicle">{{Configuration position actuelle du véhicule}}</option>';
+											echo '<option value="manual">{{Configuration manuelle}}</option>';
+										} 
+										else {
+											echo '<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>';
+											echo '<option value="vehicle">{{Configuration position actuelle du véhicule}}</option>';
+											echo '<option value="manual">{{Configuration manuelle}}</option>';
+											//echo '<option value="jeedom">{{Configuration Jeedom indisponible}}</option>';
+										}
+										?>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group" id="gps_coordinates">		
-									<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
-									<div class="col-sm-2" id="div_home_lat">
-										<input id="input_home_lat" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_lat" placeholder="Lat. domicile">
-									</div>
-									<div class="col-sm-2" id="div_home_long">
-										<input id="input_home_long" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_long" placeholder="Long. domicile">
-									</div>
-									<div class="col-sm-2">
-										<a class="btn btn-primary btn-sm cmdAction" id="bt_gps" style="height:32px; width:32px; padding-top:8px" title="{{Récupérer la position actuelle du véhicule}}"><i class="fas fa-location-arrow"></i></a>
-									</div>	
+							<div class="form-group" id="gps_coordinates">		
+								<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
+								<div class="col-sm-2" id="div_home_lat">
+									<input id="input_home_lat" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_lat" placeholder="Lat. domicile">
 								</div>
-																							
-								<div class="form-group">	
-									<label class="col-sm-4 control-label">{{Distance max (en m)}}</label>
-									<div class="col-sm-4">
-										<input id="home_distance"type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_distance" placeholder="Distance max avec votre domicile (en m)">
-									</div>
+								<div class="col-sm-2" id="div_home_long">
+									<input id="input_home_long" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_long" placeholder="Long. domicile">
 								</div>
-								
-								</br></br>
+								<div class="col-sm-2">
+									<a class="btn btn-primary btn-sm cmdAction" id="bt_gps" style="height:32px; width:32px; padding-top:8px" title="{{Récupérer la position actuelle du véhicule}}"><i class="fas fa-location-arrow"></i></a>
+								</div>	
+							</div>
+																						
+							<div class="form-group">	
+								<label class="col-sm-4 control-label">{{Distance max (en m)}}</label>
+								<div class="col-sm-4">
+									<input id="home_distance"type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_distance" placeholder="Distance max avec votre domicile (en m)">
+								</div>
+							</div>
+							
+							</br></br>
 						</div>
 
 						<!-- Partie droite de l'onglet "Équipement" -->

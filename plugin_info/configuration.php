@@ -21,36 +21,33 @@ if (!isConnect()) {
   include_file('desktop', '404', 'php');
   die();
 }
+
+sendVarToJS('version', config::byKey('version', 'myToyota', 'unknown', true));
+include_file('desktop', 'myToyota.config', 'js', 'myToyota');
+
+$core_version = '1.1.1';
+
+
+if (!file_exists(dirname(__FILE__) . '/info.json')) {
+    log::add('myToyota','warning','Pas de fichier info.json');
+}
+$data = json_decode(file_get_contents(dirname(__FILE__) . '/info.json'), true);
+if (!is_array($data)) {
+    log::add('myToyota','warning','Impossible de décoder le fichier info.json');
+}
+try {
+    $core_version = $data['pluginVersion'];
+} catch (\Exception $e) {
+    log::add('myToyota','warning','Impossible de récupérer la version.');
+}
 ?>
+
 <form class="form-horizontal">
-  <fieldset>
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Global param 1}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre 1 du plugin}}"></i></sup>
-      </label>
-      <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="param1"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Global param 2}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez le paramètre 2 du plugin}}"></i></sup>
-      </label>
-      <div class="col-md-4">
-        <input class="configKey form-control" data-l1key="param2"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Global param 3}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Sélectionnez du paramètre 3 du plugin}}"></i></sup>
-      </label>
-      <div class="col-md-4">
-        <select class="configKey form-control" data-l1key="param3">
-          <option value=""></option>
-          <option value="value1">value1</option>
-          <option value="value2">value2</option>
-        </select>
-      </div>
-    </div>
-  </fieldset>
+<fieldset>
+    <legend><i class="icon loisir-pacman1"></i> {{Version}}</legend>
+        <div class="form-group">
+            <label class="col-lg-4 control-label">Core myToyota <sup><i class="fas fa-question-circle tooltips" title="{{C'est la version du programme}}" style="font-size : 1em;color:grey;"></i></sup></label>
+            <span style="top:6px;" class="col-lg-4"><?php echo $core_version; ?></span>
+        </div>
+    </fieldset>
 </form>
