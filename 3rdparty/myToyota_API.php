@@ -560,12 +560,12 @@ class myToyota_API
 		return $return;
     }
 
-    public function statusHealth() // santé du véhicule (huile + warning ...)
+    public function statusHealth($fichierLog='myToyota') // santé du véhicule (huile + warning ...)
     {
         $this->_checkAuth();
 		$url = $this::API_BASE_URL . $this::VEHICLE_HEALTH_STATUS_ENDPOINT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
@@ -590,12 +590,12 @@ class myToyota_API
 		return $return;
     }
 
-    public function historiqueService()
+    public function historiqueService($fichierLog='myToyota')
     {
         $this->_checkAuth();
 		$url = $this::API_BASE_URL . $this::VEHICLE_SERVICE_HISTORY_ENDPONT;
         $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }

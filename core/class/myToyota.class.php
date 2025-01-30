@@ -628,6 +628,12 @@ class myToyota extends eqLogic {
         $result = $myConnection->remoteACReservation($fichierLog);
         log::add($fichierLog, 'info', '| Retour remote AC reservation : ' . $result->body);
 
+        $result = $myConnection->statusHealth($fichierLog); //dernière localisation
+        log::add($fichierLog, 'info', '| Retour santé véhicule : ' . $result->body);
+
+        $result = $myConnection->historiqueService($fichierLog);
+        log::add($fichierLog, 'info', '| Retour historique services : ' . $result->body);
+
       }
 
 
