@@ -794,9 +794,11 @@ class myToyota extends eqLogic {
         if (($doors != 0) && ($doorOpen == 0)){
           $eqLogic->checkAndUpdateCmd('allDoorsState', 'CLOSED');
           log::add('myToyota', 'info', '| Return élement: allDoorsState Status : CLOSED ' . $doors . ' / ' . $doors);
-        } else {
+        } else if ($doors !=0) {
           $eqLogic->checkAndUpdateCmd('allDoorsState', 'OPEN');
           log::add('myToyota', 'info', '| Return élement: allDoorsState Status : OPEN ' . $doorOpen . ' / ' . $doors);
+        } else {
+          log::add('myToyota', 'info', '| Return élement: allDoorsState Status : UNKNOW');
         }
 
         if ($windows == 0){
