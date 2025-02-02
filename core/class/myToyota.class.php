@@ -641,6 +641,28 @@ class myToyota extends eqLogic {
       log::add($fichierLog, 'info', '| recup terminée');
 	  }
 	
+    // fonction pour test de l'état des éléments portes, fenêtres, coffre, ... ouvert, fermé, verrouillé, ...
+    public static function checkStatus($values, &$status, &$closed, &$open, &$locked = 0, &$unlocked = 0) {
+      foreach ($values as $value) {
+        switch ($value->value){
+          case 'carstatus_closed':
+            $closed++;
+            $status = 'CLOSED';
+            break;
+          case 'carstatus_open':
+            $open++;
+            $status = 'OPEN';
+            break;
+          case 'carstatus_unlocked':
+            $unlocked++;
+            break;
+          case 'carstatus_locked':
+            $locked++;
+            break;
+        }
+      }
+    }
+
 
     public static function interromyToyota($eqLogic)
     {
@@ -693,28 +715,6 @@ class myToyota extends eqLogic {
         $doorClosed = 0;
         $doorUnlocked = 0;
         
-        // fonction pour test de l'état des éléments portes, fenêtres, coffre, ... ouvert, fermé, verrouillé, ...
-        function checkStatus($values, &$status, &$closed, &$open, &$locked = 0, &$unlocked = 0) {
-          foreach ($values as $value) {
-            switch ($value->value){
-              case 'carstatus_closed':
-                $closed++;
-                $status = 'CLOSED';
-                break;
-              case 'carstatus_open':
-                $open++;
-                $status = 'OPEN';
-                break;
-              case 'carstatus_unlocked':
-                $unlocked++;
-                break;
-              case 'carstatus_locked':
-                $locked++;
-                break;
-            }
-          }
-        }
-
         //
         if (isset($remoteStatus->payload->vehicleStatus)) {
           foreach ($remoteStatus->payload->vehicleStatus as $category) {
@@ -723,57 +723,57 @@ class myToyota extends eqLogic {
                     case 'carstatus_item_driver_door':
                       $element = 'doorDriverFront';
                       $doors++;
-                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
                       break;
                     case 'carstatus_item_driver_rear_door':
                       $element = 'doorDriverRear';
                       $doors++;
-                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
                       break;
                     case 'carstatus_item_passenger_door':
                       $element = 'doorPassengerFront';
                       $doors++;
-                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
                       break;
                     case 'carstatus_item_passenger_rear_door':
                       $element = 'doorPassengerRear';
                       $doors++;
-                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
                       break;
                     case 'hood':
                       $element = 'hood_state';
                       $doors++;
-                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
                       break;
                     case 'carstatus_item_rear_hatch':
                       $element = 'trunk_state';
                       $doors++;
-                      checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
                       break;
                     case 'carstatus_item_driver_window':
                       $element = 'windowDriverFront';
                       $windows++;
-                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      myToyota::checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
                       break;
                     case 'carstatus_item_driver_rear_window':
                       $element = 'windowDriverRear';
                       $windows++;
-                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      myToyota::checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
                       break;
                     case 'carstatus_item_passenger_window':
                       $element = 'windowPassengerFront';
                       $windows++;
-                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      myToyota::checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
                       break;
                     case 'carstatus_item_passenger_rear_window':
                       $element = 'windowpassengerRear';
                       $windows++;
-                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      myToyota::checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
                       break;
                     case 'moonroof':
                       $element = 'moonroof_state';
                       $windows++;
-                      checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
+                      myToyota::checkStatus($section->values, $status, $windowClosed, $windowOpen); // Assuming windows can't be locked
                       break;
                   }
                   $eqLogic->checkAndUpdateCmd($element, $status);

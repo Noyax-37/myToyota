@@ -427,10 +427,10 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		function getCapabilities(){
 				var capabilities = json_decode($('#get_capabilities').value());
 				var li_html= "";
-				var capa = "";
+				var nbcapabilities = 0;
 				console.log('-------- Tab capabilities -----' + capabilities);
 				li_html += '<ul class="list-group" style="text-align: left">';
-				nbcapabilities = count(capabilities);
+				nbcapabilities = Object.keys($('#get_capabilities').value()).length;
 				if (nbcapabilities == 0){
 					li_html += '<li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: center;"><span class="label capabilities"> Aucune capacité trouvée </span><br/>';
 				} else {
