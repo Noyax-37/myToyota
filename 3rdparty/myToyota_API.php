@@ -188,7 +188,7 @@ class myToyota_API
         $response = curl_exec($ch);
 
         if (!$response) {
-            throw new \Exception('Unable to retrieve data');
+            throw new \Exception(__('Impossible de récupérer les données', __FILE__));
         }
 
         // Get response
