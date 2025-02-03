@@ -2,7 +2,12 @@
 	"id" : "myToyota",
 	"name" : "myToyota",
 	"description" : {
-		"fr_FR": "Plugin permettant l'interrogation des services myToyota (attention: ne fonctionne pas pour les véhicules encore sous myT) pour Jeedom"
+		"fr_FR": "Plugin permettant l'interrogation des services myToyota (attention: ne fonctionne pas pour les véhicules encore sous myT) pour Jeedom",
+		"en_US": ,
+		"es_ES": ,
+		"de_DE": ,
+		"it_IT": ,
+		"pt_PT": 
 	},
 	"licence" : "AGPL",
 	"author" : "Noyax37",
