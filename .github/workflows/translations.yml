@@ -14,5 +14,5 @@ jobs:
         with:
           deepl_api_key: ${{ secrets.DEEPL_API_KEY }}
           include_empty_translation: false
-          target_languages: "en_US,es_ES,de_DE,it_IT,pt_PT"
+          target_languages: "en_US"
           debug: true
