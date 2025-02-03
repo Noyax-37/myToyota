@@ -62,7 +62,7 @@ if (!$eqLogics) {
     //----- Theme colors
 	
 	$('body').on('changeThemeEvent', function (event,theme) {
-		console.log("Changement de theme");
+		console.log("{{Changement de theme}}");
 		timedSetTheme(0);
 	});
 	

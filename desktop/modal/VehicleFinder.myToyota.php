@@ -24,7 +24,7 @@ if (!isConnect()) {
 
 $eqLogic = eqLogic::byId(init('eqLogic_id'));
 
-log::add('myToyota', 'debug', '┌─Command execution : vehicleFinder - eqLogicId ' . init('eqLogic_id'));
+log::add('myToyota', 'debug', __('┌─Command execution : vehicleFinder - eqLogicId ', __FILE__) . init('eqLogic_id'));
 $gps_coordinates = $eqLogic->vehicleFinder($eqLogic->getConfiguration('vehicle_vin'));
 
 ?>	
