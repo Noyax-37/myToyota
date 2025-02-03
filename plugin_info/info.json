@@ -21,12 +21,7 @@
 		"forum":"https://community.jeedom.com/tag/plugin-mytoyota"
 	},
 	"language": [
-		"de_DE",
-		"en_US",
-		"es_ES",
-		"fr_FR",
-		"it_IT",
-		"pt_PT"
+		"en_US"
 	],
 	"compatibility": [
 		"miniplus",
