@@ -1,4 +1,8 @@
 {
+    "plugins\/myToyota\/core\/ajax\/myToyota.ajax.php": {
+        "401 - Accès non autorisé": "401 - Unauthorized access",
+        "Aucune méthode correspondante à": "Keine passende Methode zu"
+    },
     "plugins\/myToyota\/core\/php\/jeemyToyota.php": {
         "Clef API non valide, vous n\\'êtes pas autorisé à effectuer cette action (myToyota)": "Ungültiger API-Schlüssel, Sie sind nicht berechtigt, diese Aktion auszuführen (myToyota)"
     },
