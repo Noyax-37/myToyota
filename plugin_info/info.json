@@ -4,7 +4,10 @@
 	"description": {
 		"fr_FR": "Plugin permettant l'interrogation des services myToyota (attention: ne fonctionne pas pour les véhicules encore sous myT) pour Jeedom",
 		"en_US": "Plugin for querying myToyota services (warning: does not work for vehicles still running myT) for Jeedom",
-		"de_DE": "Plugin zur Abfrage der myToyota-Dienste (Achtung: funktioniert nicht für Fahrzeuge, die noch unter myT laufen) für Jeedom"
+		"de_DE": "Plugin zur Abfrage der myToyota-Dienste (Achtung: funktioniert nicht für Fahrzeuge, die noch unter myT laufen) für Jeedom",
+		"it_IT": "",
+		"pt_PT": "",
+		"es_ES": ""
 	},
 	"licence": "AGPL",
 	"author": "Noyax37",
@@ -24,7 +27,10 @@
 	"language": [
 		"de_DE",
 		"en_US",
-		"fr_FR"
+		"fr_FR",
+		"it_IT",
+		"pt_PT",
+		"es_ES"
 	],
 	"compatibility": [
 		"miniplus",
