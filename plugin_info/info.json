@@ -3,7 +3,8 @@
 	"name" : "myToyota",
 	"description" : {
 		"fr_FR": "Plugin permettant l'interrogation des services myToyota (attention: ne fonctionne pas pour les véhicules encore sous myT) pour Jeedom",
-		"en_US": ""
+		"en_US": "",
+		"de_DE": ""
 	},
 	"licence" : "AGPL",
 	"author" : "Noyax37",
@@ -21,7 +22,8 @@
 		"forum":"https://community.jeedom.com/tag/plugin-mytoyota"
 	},
 	"language": [
-		"en_US"
+		"en_US",
+		"de_DE"
 	],
 	"compatibility": [
 		"miniplus",
