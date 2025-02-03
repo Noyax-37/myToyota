@@ -1,29 +1,30 @@
 {
-	"id" : "myToyota",
-	"name" : "myToyota",
-	"description" : {
+	"id": "myToyota",
+	"name": "myToyota",
+	"description": {
 		"fr_FR": "Plugin permettant l'interrogation des services myToyota (attention: ne fonctionne pas pour les véhicules encore sous myT) pour Jeedom",
-		"en_US": "",
-		"de_DE": ""
+		"en_US": "Plugin for querying myToyota services (warning: does not work for vehicles still running myT) for Jeedom",
+		"de_DE": "Plugin zur Abfrage der myToyota-Dienste (Achtung: funktioniert nicht für Fahrzeuge, die noch unter myT laufen) für Jeedom"
 	},
-	"licence" : "AGPL",
-	"author" : "Noyax37",
-	"require" : "4.2.0",
+	"licence": "AGPL",
+	"author": "Noyax37",
+	"require": "4.2.0",
 	"display": "panel",
-	"category" : "devicecommunication",
-	"hasDependency" : true,
-	"hasOwnDeamon" : false,
-	"maxDependancyInstallTime" : 120,
-	"changelog" : "https://github.com/Noyax-37/myToyota/blob/master/docs/fr_FR/changelog.md",
-	"documentation" : "https://github.com/Noyax-37/myToyota/blob/master/docs/fr_FR/index.md",
-	"changelog_beta" : "https://github.com/Noyax-37/myToyota/blob/develop/docs/fr_FR/changelog.md",
-	"documentation_beta" : "https://github.com/Noyax-37/myToyota/blob/develop/docs/fr_FR/index.md",
-	"link" : {
-		"forum":"https://community.jeedom.com/tag/plugin-mytoyota"
+	"category": "devicecommunication",
+	"hasDependency": true,
+	"hasOwnDeamon": false,
+	"maxDependancyInstallTime": 120,
+	"changelog": "https://github.com/Noyax-37/myToyota/blob/master/docs/fr_FR/changelog.md",
+	"documentation": "https://github.com/Noyax-37/myToyota/blob/master/docs/fr_FR/index.md",
+	"changelog_beta": "https://github.com/Noyax-37/myToyota/blob/develop/docs/fr_FR/changelog.md",
+	"documentation_beta": "https://github.com/Noyax-37/myToyota/blob/develop/docs/fr_FR/index.md",
+	"link": {
+		"forum": "https://community.jeedom.com/tag/plugin-mytoyota"
 	},
 	"language": [
+		"de_DE",
 		"en_US",
-		"de_DE"
+		"fr_FR"
 	],
 	"compatibility": [
 		"miniplus",
