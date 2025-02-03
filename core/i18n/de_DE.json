@@ -1,5 +1,5 @@
 {
-    "": {
-        "": ""
-    }
-}
+    "plugins\/myToyota\/core\/ajax\/myToyota.ajax.php": {
+        "401 - Accès non autorisé": "401 - Unauthorized access",
+        "Aucune méthode correspondante à": "No corresponding method for"
+    }}
