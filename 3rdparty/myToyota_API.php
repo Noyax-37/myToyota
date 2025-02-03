@@ -264,16 +264,16 @@ class myToyota_API
     {
         if (!$this->access_token)
 		{
-			log::add($fichierLog, 'debug', '| 1ère demande de Token');
+			log::add($fichierLog, 'debug', __('| 1ère demande de Token', __FILE__));
             return $this->getToken($fichierLog);
 		}
 
 		if ($this->access_token && time() >= ($this->token_expiration))
 		{
-            log::add($fichierLog, 'debug', '| Token expiré => renouvellement');
+            log::add($fichierLog, 'debug', __('| Token expiré => renouvellement', __FILE__));
             return $this->refreshToken($fichierLog);
         } else {
-            log::add($fichierLog, 'debug', '| Token encore en cours');
+            log::add($fichierLog, 'debug', __('| Token encore en cours', __FILE__));
         }
 	}
 
@@ -394,7 +394,7 @@ class myToyota_API
         $this->refresh_token = $data6['refresh_token'];
         $this->token_expiration = time() + $data6['expires_in'];
         $this->saveToken();
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota : Token sauvegardé');
+        log::add($fichierLog, 'debug', '| Result getToken() myToyota : ' . __('Token sauvegardé', __FILE__));
 
     }
 
@@ -435,7 +435,7 @@ class myToyota_API
             $this->refresh_token = $data1['refresh_token'];
             $this->token_expiration = time() + $data1['expires_in'];
             $this->saveToken();
-            log::add($fichierLog, 'debug', '| Result refreshToken() myToyota : Token sauvegardé');
+            log::add($fichierLog, 'debug', '| Result refreshToken() myToyota : ' . __('Token sauvegardé', __FILE__));
     }
 
 	private function _setHeadersUpdate()   {				//Define headers update data
@@ -541,7 +541,7 @@ class myToyota_API
         
         $data = json_encode(array('command' => $commande));
         //$data = http_build_query($data);
-        log::add($fichierLog, 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
+        log::add($fichierLog, 'debug', '| Url : '. $url . __(' avec la commande : ', __FILE__) . $commande);      
 		$return = $this->_request($url, 'POST', $data, $headers);
 		return $return;
     }
@@ -555,7 +555,7 @@ class myToyota_API
         
         $data = json_encode(array('command' => $commande));
         //$data = http_build_query($data);
-        log::add($fichierLog, 'debug', '| Url : '. $url . ' avec la commande : ' . $commande);      
+        log::add($fichierLog, 'debug', '| Url : '. $url . __(' avec la commande : ', __FILE__) . $commande);      
 		$return = $this->_request($url, 'POST', $data, $headers);
 		return $return;
     }

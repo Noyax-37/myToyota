@@ -105,7 +105,7 @@ class myToyota extends eqLogic {
     $idvehicule = 'Aucun';
     foreach (eqLogic::byType('myToyota', true) as $eqLogic) {
       $nameVehicule = $eqLogic->getName();
-      log::add('myToyota', 'debug', "| récupération des données du véhicule : " . '  ' . $nameVehicule);
+      log::add('myToyota', 'debug', __("| récupération des données du véhicule : ", __FILE__) . $nameVehicule);
       myToyota::interromyToyota($eqLogic);
       //$coordinates = myToyota::getGPSCoordinates($eqLogic->getConfiguration('vehicle_vin'));
       //myToyota::getDistanceLocation2($eqlogic, $coordinates['latitude'], $coordinates['longitude']);
@@ -114,16 +114,16 @@ class myToyota extends eqLogic {
 
   public static function getConfigForCommunity() {
     if (!file_exists('/var/www/html/plugins/myToyota/plugin_info/info.json')) {
-      log::add('myToyota','warning','Pas de fichier info.json');
+      log::add('myToyota','warning',__('Pas de fichier info.json', __FILE__));
     }
     $data = json_decode(file_get_contents('/var/www/html/plugins/myToyota/plugin_info/info.json'), true);
     if (!is_array($data)) {
-        log::add('myToyota','warning','Impossible de décoder le fichier info.json');
+        log::add('myToyota','warning',__('Impossible de décoder le fichier info.json', __FILE__));
     }
     try {
         $core_version = $data['pluginVersion'];
     } catch (\Exception $e) {
-        log::add('myToyota','warning','Impossible de récupérer la version.');
+        log::add('myToyota','warning',__('Impossible de récupérer la version.', __FILE__));
     }
 
 
@@ -173,16 +173,16 @@ class myToyota extends eqLogic {
     * dans la base de données pour une mise à jour d'une entrée */
     
     if (empty($this->getConfiguration('username'))) {
-			throw new Exception('L\'identifiant ne peut pas être vide');
+			throw new Exception(__('L\'identifiant ne peut pas être vide', __FILE__));
 		}
 		if (empty($this->getConfiguration('password'))) {
-			throw new Exception('Le mot de passe ne peut etre vide');
+			throw new Exception(__('Le mot de passe ne peut etre vide', __FILE__));
 		}
 		if (empty($this->getConfiguration('vehicle_vin'))) {
-			throw new Exception('Le d\'identification du véhicule ne peut pas être vide');
+			throw new Exception(__('Le numéro d\'identification du véhicule ne peut pas être vide', __FILE__));
 		}
 		if (empty($this->getConfiguration('vehicle_brand'))) {
-			throw new Exception('La marque du véhicule ne peut pas être vide');
+			throw new Exception(__('La marque du véhicule ne peut pas être vide', __FILE__));
 		}
 
   }
@@ -448,7 +448,7 @@ class myToyota extends eqLogic {
 			if (!empty($template)) { $cmd->setTemplate($template[0], $template[1]); }
 			$cmd->save();
       if ($historized==0) {$hist = 'non';}else{$hist='oui';}
-			log::add('myToyota', 'debug', 'Add command '.$cmd->getName().' (LogicalId : '.$cmd->getLogicalId().'), historisé : ' . $hist);
+			log::add('myToyota', 'debug', __('Ajout de la commande ', __FILE__) . $cmd->getName() . ' (LogicalId : '.$cmd->getLogicalId().'), ' . __('historisé : ', __FILE__) . $hist);
         }
   }
 
@@ -461,23 +461,23 @@ class myToyota extends eqLogic {
     {
       $eqLogic = self::getToyotaEqLogic($vin);
       
-      log::add('myToyota', 'info', '┌─Command execution : synchronize');
+      log::add('myToyota', 'info', __('┌─Command execution : synchronize', __FILE__));
           
       log::add('myToyota', 'info', '| -------------------------------------------------------------');
-      log::add('myToyota', 'info', '| ---------------Démarrage synchro des données-----------------');
+      log::add('myToyota', 'info', __('| ---------------Démarrage synchro des données-----------------', __FILE__));
 
       $myConnection = $eqLogic->getConnection();
       $result = $myConnection->getDevice();
       $devices = json_decode($result->body);
       //$vin = $eqLogic->getConfiguration('vehicle_vin');
       log::add('myToyota', 'debug', '| Return devices body :' . $result->body);
-      log::add('myToyota', 'debug', '| Return nombre de véhicules :' . count($devices->payload) );
+      log::add('myToyota', 'debug', __('| Retour nombre de véhicules :', __FILE__) . count($devices->payload) );
 
       $return['erreur'] = 'erreur';
 
       if ( count($devices->payload) == 0 )
       {
-        log::add('myToyota', 'debug', '| Result getVehicles() : pas de véhicule trouvé avec service myToyota activé');
+        log::add('myToyota', 'debug', '| Result getVehicles() : ' . __('pas de véhicule trouvé avec service myToyota activé', __FILE__));
         //log::add('myToyota', $eqLogic->getLogLevelFromHttpStatus($result->httpCode, '200 - OK'), '└─fin de la synchronisation : ['.$result->httpCode.']');
       }
       else
@@ -488,23 +488,23 @@ class myToyota extends eqLogic {
           log::add('myToyota', 'debug', '| Result vin() : ' . $vehicle->vin);
           if ( $vehicle->vin == $vin )
           {
-            log::add('myToyota', 'info', "| Result getVehicles() : ok c'est le VIN recherché");
+            log::add('myToyota', 'info', "| Result getVehicles() : " . __("ok c'est le VIN recherché", __FILE__));
             //if ( isset($vehicle->attributes->brand) ) { $eqLogic->checkAndUpdateCmd('brand', $vehicle->attributes->brand); } else { $eqLogic->checkAndUpdateCmd('brand', 'not available'); }
             if ( isset($vehicle->manufacturerCode) ) { 
               $eqLogic->checkAndUpdateCmd('brand', $vehicle->manufacturerCode);
-              log::add('myToyota', 'info', '| Result fabricant : ' . $vehicle->manufacturerCode);
+              log::add('myToyota', 'info', '| Result ' . __('fabricant : ', __FILE__) . $vehicle->manufacturerCode);
             } else { 
               $eqLogic->checkAndUpdateCmd('brand', 'not available'); 
-              log::add('myToyota', 'info', '| Result fabricant : Inconnu');
+              log::add('myToyota', 'info', '| Result ' . __('fabricant : Inconnu', __FILE__));
             }
             $return['modelName'] = 'inconnu'; 
             if ( isset($vehicle->modelName) ) { 
               $eqLogic->checkAndUpdateCmd('model', $vehicle->modelName);
               $return['modelName'] = $vehicle->modelName;
-              log::add('myToyota', 'info', '| Result modèle : ' . $return['modelName']);
+              log::add('myToyota', 'info', __('| Résultat modèle : ', __FILE__) . $return['modelName']);
             } else { 
               $eqLogic->checkAndUpdateCmd('model', 'not available');
-              log::add('myToyota', 'info', '| Result modèle : inconnu');
+              log::add('myToyota', 'info', __('| Résultat modèle : inconnu', __FILE__));
             }
             $eqLogic->setConfiguration('vehicle_model', $return['modelName']);
             $eqLogic->save(true);
@@ -513,10 +513,10 @@ class myToyota extends eqLogic {
               $eqLogic->setConfiguration('vehicle_year', $return['modelYear']);
               $eqLogic->checkAndUpdateCmd('year', $return['modelYear']);
               $eqLogic->save(true);
-              log::add('myToyota', 'info', '| Result fabrication : ' . $return['modelYear']);
+              log::add('myToyota', 'info', __('| Résultat fabrication : ', __FILE__) . $return['modelYear']);
             } else { 
               $eqLogic->checkAndUpdateCmd('year', 'not available'); 
-              log::add('myToyota', 'info', '| Result fabrication : Inconnu');
+              log::add('myToyota', 'info', __('| Résultat fabrication : Inconnu', __FILE__));
             }
             //if ( isset($vehicle->attributes->driveTrain) ) { $eqLogic->checkAndUpdateCmd('type', $vehicle->attributes->driveTrain); } else { $eqLogic->checkAndUpdateCmd('type', 'not available'); }
             log::add('myToyota', 'debug', '| Result getDevice() : '.str_replace('\n','',json_encode($vehicle)));
@@ -547,29 +547,29 @@ class myToyota extends eqLogic {
               $eqLogic->setConfiguration('vehicle_type', $return['driveTrain']);
               $eqLogic->save(true);
             }
-            log::add('myToyota', 'info', '| Result type de motorisation : ' . $return['driveTrain']);
+            log::add('myToyota', 'info', __('| Résultat type de motorisation : ', __FILE__) . $return['driveTrain']);
             if (isset($vehicle->fuelType)){
               if ($vehicle->fuelType == 'B'){
                 $eqLogic->checkAndUpdateCmd('carburant', 'Essence');
               } else {
                 $eqLogic->checkAndUpdateCmd('carburant', 'Diesel');
               }
-              log::add('myToyota', 'info', '| Result carburant type : ' . $vehicle->fuelType);
+              log::add('myToyota', 'info', __('| Résultat carburant type : ', __FILE__) . $vehicle->fuelType);
             }
             if ( isset($vehicle->stockPicReference)) {
               $filename = dirname(__FILE__).'/../../data/'.$vin.'.png';
               $img = $vehicle->stockPicReference;
-              log::add('myToyota', 'debug', '| Result image : '. $img);
+              log::add('myToyota', 'debug', __('| Résultat image : ', __FILE__) . $img);
               file_put_contents($filename,file_get_contents($img));
             }
             $return['erreur'] = 'ok';
             $return['vin'] = $vin;
           } else {
-            log::add('myToyota', 'info', '| Result getVehicles() : pas le bon VIN');
+            log::add('myToyota', 'info', __('| Résultat getVehicles() : pas le bon VIN', __FILE__));
           }
         }
       }
-      log::add('myToyota', 'info', "| Fin de la synchronisation");
+      log::add('myToyota', 'info', __("| Fin de la synchronisation", __FILE__));
 
       return $return;
   
@@ -579,32 +579,32 @@ class myToyota extends eqLogic {
     {
       
       $fichierLog = 'myToyota_datas';
-      log::add($fichierLog, 'info', '┌─Command execution : recup all datas');
+      log::add($fichierLog, 'info', __('┌─Commande exécution : récupération de toutes les données', __FILE__));
           
-      log::add($fichierLog, 'info', '| Démarrage recup des données');
+      log::add($fichierLog, 'info', __('| Démarrage récupération des données', __FILE__));
       $eqLogic = self::getToyotaEqLogic($vin);
       
       $myConnection = $eqLogic->getConnection($fichierLog);
       $result = $myConnection->getDevice($fichierLog);
       $devices = json_decode($result->body);
       log::add($fichierLog, 'info', '| Return getDevices :' . $result->body );
-      log::add($fichierLog, 'info', '| Résultat => nombre de véhicules : ' . count($devices->payload) );
+      log::add($fichierLog, 'info', __('| Résultat => nombre de véhicules : ', __FILE__) . count($devices->payload) );
 
       if ( count($devices->payload) == 0 ){
-        log::add($fichierLog, 'info', '| Result getVehicles() : pas de véhicule trouvé avec service myToyota activé');
+        log::add($fichierLog, 'info', '| Result getVehicles() : ' . __('pas de véhicule trouvé avec service myToyota activé', __FILE__));
         //log::add('myToyota', $eqLogic->getLogLevelFromHttpStatus($result->httpCode, '200 - OK'), '└─fin de la synchronisation : ['.$result->httpCode.']');
       } else {
         $result = $myConnection->getLocationEndPoint($fichierLog);
-        log::add($fichierLog, 'info', '| Retour localisation : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour localisation : ', __FILE__) . $result->body);
 
         $result = $myConnection->getRemoteStatusEndPoint($fichierLog); //status des équipements
-        log::add($fichierLog, 'info', '| Retour remote status :' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour', __FILE__) . 'remote status :' . $result->body);
 
         $result = $myConnection->getTelemetryEndPoint($fichierLog); //dernière localisation
-        log::add($fichierLog, 'info', '| Retour télémétrie : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour télémétrie : ', __FILE__) . $result->body);
 
         $result = $myConnection->getRemoteClimateStatus($fichierLog); //dernière localisation
-        log::add($fichierLog, 'info', '| Retour climatisation : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour climatisation : ', __FILE__) . $result->body);
 
         $to = date('Y-m-d');
         $from = date('Y-m-d', strtotime('-7 days', strtotime($to)));
@@ -614,13 +614,13 @@ class myToyota extends eqLogic {
         $offset = 0;
   
         $result = $myConnection->getTripsEndpoint($from, $to, $route, $summary, $limit, $offset, $fichierLog); //pour récupérer les 7 derniers jours
-        log::add($fichierLog, 'info', '| Retour trips : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour circuits : ', __FILE__) . $result->body);
 
         $result = $myConnection->historiqueNotification($fichierLog);
-        log::add($fichierLog, 'info', '| Retour historique des notifications : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour historique des notifications : ', __FILE__) . $result->body);
 
         $result = $myConnection->remoteElectric($fichierLog);
-        log::add($fichierLog, 'info', '| Retour remote electric : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour remote electric : ', __FILE__) . $result->body);
 
         $result = $myConnection->remoteClimateSettings($fichierLog);
         log::add($fichierLog, 'info', '| Retour remote climate setting : ' . $result->body);
@@ -629,16 +629,16 @@ class myToyota extends eqLogic {
         log::add($fichierLog, 'info', '| Retour remote AC reservation : ' . $result->body);
 
         $result = $myConnection->statusHealth($fichierLog); //dernière localisation
-        log::add($fichierLog, 'info', '| Retour santé véhicule : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour santé véhicule : ', __FILE__) . $result->body);
 
         $result = $myConnection->historiqueService($fichierLog);
-        log::add($fichierLog, 'info', '| Retour historique services : ' . $result->body);
+        log::add($fichierLog, 'info', __('| Retour historique services : ', __FILE__) . $result->body);
 
       }
 
 
 
-      log::add($fichierLog, 'info', '| recup terminée');
+      log::add($fichierLog, 'info', __('| recup terminée', __FILE__));
 	  }
 	
     // fonction pour test de l'état des éléments portes, fenêtres, coffre, ... ouvert, fermé, verrouillé, ...
@@ -674,17 +674,17 @@ class myToyota extends eqLogic {
       
       if ($idvehicule!='Aucun' && $idvehicule!=''){
         log::add('myToyota', 'info', '| ----------------------------------------------------------------------------------------------');
-        log::add('myToyota', 'info', '| Démarrage Interrogation serveur myToyota pour le véhicule ' . strval($nomvehicule) . ' avec ID ' . $idvehicule);
+        log::add('myToyota', 'info', __('| Démarrage Interrogation serveur myToyota pour le véhicule ', __FILE__) . strval($nomvehicule) . __(' avec ID ', __FILE__) . $idvehicule);
           
         //dernière localisation
         $result = $myConnection->getLocationEndPoint();
         $location = json_decode($result->body);
-        log::add('myToyota', 'debug', '| Retour localisation : ' . $result->body);
+        log::add('myToyota', 'debug', __('| Retour localisation : ', __FILE__) . $result->body);
         if ( isset($location->payload->vehicleLocation) ) { 
           $eqLogic->checkAndUpdateCmd(CMD_LAST_UPDATE,date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
           $eqLogic->checkAndUpdateCmd(CMD_GPS_COORDINATES, $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude);
           myToyota::chercheLycos($eqLogic,$location->payload->vehicleLocation->latitude, $location->payload->vehicleLocation->longitude);
-          log::add('myToyota', 'info', '| Dernière localisation connue: "' . 
+          log::add('myToyota', 'info', __('| Dernière localisation connue: ', __FILE__) . '"' . 
                                             $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude . '" le ' . 
                                             date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
         }
@@ -781,7 +781,7 @@ class myToyota extends eqLogic {
                 }
           }
         } else {
-          log::add('myToyota', 'info', '| Status du véhicules (portes, fenêtres, ...) non disponible.');
+          log::add('myToyota', 'info', __('| Status du véhicules (portes, fenêtres, ...) non disponible.', __FILE__));
         }          
 
         if ($doors == 0){
@@ -821,43 +821,43 @@ class myToyota extends eqLogic {
         // télémétrie
         $result = $myConnection->getTelemetryEndPoint(); //dernière localisation
         $body = json_decode($result->body);
-        log::add('myToyota', 'debug', '| Retour télémétrie : ' . $result->body);
+        log::add('myToyota', 'debug', __('| Retour télémétrie : ', __FILE__) . $result->body);
 
         if ($body->status == 'SUCCESS'){
           $telemetrie = $body->payload;
           // km totaux
           if ( isset($telemetrie->odometer) ){
             $eqLogic->checkAndUpdateCmd('mileage', $telemetrie->odometer->value);
-            log::add('myToyota', 'info', '| Return élement: km totaux : '. $telemetrie->odometer->value . ' km');
+            log::add('myToyota', 'info', __('| Retour élement: km totaux : ', __FILE__) . $telemetrie->odometer->value . ' km');
           } else {
             $eqLogic->checkAndUpdateCmd('mileage', '---');
-            log::add('myToyota', 'info', '| Return élement: km totaux inconnu');
+            log::add('myToyota', 'info', __('| Retour élement: km totaux inconnu', __FILE__));
           }
 
           //paramètres communs
           if ( isset($telemetrie->fuelLevel) ){
             $eqLogic->checkAndUpdateCmd('remaining_fuel', $telemetrie->fuelLevel);
-            log::add('myToyota', 'info', '| Return élement: niveau réservoir : '. $telemetrie->fuelLevel . '%');
+            log::add('myToyota', 'info', __('| Retour élement: niveau réservoir : ', __FILE__). $telemetrie->fuelLevel . '%');
           } else {
             $eqLogic->checkAndUpdateCmd('remaining_fuel', '---');
-            log::add('myToyota', 'info', '| Return élement: niveau réservoir inconnu');
+            log::add('myToyota', 'info', __('| Retour élement: niveau réservoir inconnu', __FILE__));
           }
 
           if ( isset($telemetrie->distanceToEmpty) ){
             $eqLogic->checkAndUpdateCmd('beRemainingRangeTotal', $telemetrie->distanceToEmpty->value);
-            log::add('myToyota', 'info', '| Return élement: distance possible (ev + essence) : '. $telemetrie->distanceToEmpty->value . ' km');
+            log::add('myToyota', 'info', __('| Retour élement: distance possible (ev + essence) : ', __FILE__) . $telemetrie->distanceToEmpty->value . ' km');
           } else {
             $eqLogic->checkAndUpdateCmd('beRemainingRangeTotal', '---');
-            log::add('myToyota', 'info', '| Return élement: distance possible ev + essence inconnu');
+            log::add('myToyota', 'info', __('| Retour élement: distance possible ev + essence inconnu', __FILE__));
           }
           
           // paramétres hybrides
           if ($vehicle_type == 'Hybride' || $vehicle_type == 'Thermique'){
             $eqLogic->checkAndUpdateCmd('beRemainingRangeFuelKm', $telemetrie->distanceToEmpty->value);
-            log::add('myToyota', 'info', '| Return élement: distance possible thermique : '. $telemetrie->distanceToEmpty->value . ' km');
+            log::add('myToyota', 'info', __('| Retour élement: distance possible thermique : ', __FILE__). $telemetrie->distanceToEmpty->value . ' km');
          } else {
             $eqLogic->checkAndUpdateCmd('beRemainingRangeFuelKm', '---');
-            log::add('myToyota', 'info', '| Return élement: distance possible essence inconnue');
+            log::add('myToyota', 'info', __('| Retour élement: distance possible essence inconnue', __FILE__));
           }
  
           // paramètres électriques et PEHV
@@ -870,42 +870,42 @@ class myToyota extends eqLogic {
               $telemetrie_elec = $body->payload;
               if ( isset($telemetrie_elec->fuelLevel) ){
                 $eqLogic->checkAndUpdateCmd('remaining_fuel', $telemetrie_elec->fuelLevel);
-                log::add('myToyota', 'info', '| Return élement: niveau réservoir : '. $telemetrie_elec->fuelLevel . '%');
+                log::add('myToyota', 'info', __('| Retour élement: niveau réservoir : ', __FILE__) . $telemetrie_elec->fuelLevel . '%');
               } else {
                 $eqLogic->checkAndUpdateCmd('remaining_fuel', '---');
-                log::add('myToyota', 'info', '| Return élement: niveau réservoir inconnu');
+                log::add('myToyota', 'info', __('| Retour élement: niveau réservoir inconnu', __FILE__));
               }
 
               if ( isset($telemetrie_elec->fuelRange) ){
                 $eqLogic->checkAndUpdateCmd('beRemainingRangeFuelKm', $telemetrie_elec->fuelRange->value);
-                log::add('myToyota', 'info', '| Return élement: distance avant réservoir vide : '. $telemetrie_elec->fuelRange->value . ' km');
+                log::add('myToyota', 'info', __('| Retour élement: distance avant réservoir vide : ', __FILE__) . $telemetrie_elec->fuelRange->value . ' km');
               } else {
                 $eqLogic->checkAndUpdateCmd('beRemainingRangeFuelKm', '---');
-                log::add('myToyota', 'info', '| Return élement: distance avant réservoir vide inconnu');
+                log::add('myToyota', 'info', __('| Retour élement: distance avant réservoir vide inconnu', __FILE__));
               }
 
               if ( isset($telemetrie_elec->batteryLevel) ){
                 $eqLogic->checkAndUpdateCmd('chargingLevelHv', $telemetrie_elec->batteryLevel);
-                log::add('myToyota', 'info', '| Return élement: niveau batterie : '. $telemetrie_elec->batteryLevel . '%');
+                log::add('myToyota', 'info', __('| Retour élement: niveau batterie : ', __FILE__) . $telemetrie_elec->batteryLevel . '%');
               } else {
                 $eqLogic->checkAndUpdateCmd('chargingLevelHv', '---');
-                log::add('myToyota', 'info', '| Return élement: niveau batterie inconnu');
+                log::add('myToyota', 'info', __('| Retour élement: niveau batterie inconnu', __FILE__));
               }
 
               if ( isset($telemetrie_elec->evRangeWithAc) ){
                 $eqLogic->checkAndUpdateCmd('beRemainingRangeElectric', $telemetrie_elec->evRangeWithAc->value);
-                log::add('myToyota', 'info', '| Return élement: distance avant batterie vide : '. $telemetrie_elec->evRangeWithAc->value . ' km');
+                log::add('myToyota', 'info', __('| Retour élement: distance avant batterie vide : ', __FILE__) . $telemetrie_elec->evRangeWithAc->value . ' km');
               } else {
                 $eqLogic->checkAndUpdateCmd('beRemainingRangeElectric', '---');
-                log::add('myToyota', 'info', '| Return élement: distance avant batterie vide inconnu');
+                log::add('myToyota', 'info', __('| Retour élement: distance avant batterie vide inconnu', __FILE__));
               }
 
               if ( isset($telemetrie_elec->chargingStatus)){
                 $eqLogic->checkAndUpdateCmd('chargingStatus', $telemetrie_elec->chargingStatus);
-                log::add('myToyota', 'info', '| Return élement: status de la charge' . $telemetrie_elec->chargingStatus);
+                log::add('myToyota', 'info', __('| Retour élement: status de la charge', __FILE__) . $telemetrie_elec->chargingStatus);
               } else {
                 $eqLogic->checkAndUpdateCmd('chargingStatus', 'UNKNOWN');
-                log::add('myToyota', 'info', '| Return élement: status de la charge inconnue');
+                log::add('myToyota', 'info', __('| Retour élement: status de la charge inconnue', __FILE__));
               }
 
             }
@@ -916,7 +916,7 @@ class myToyota extends eqLogic {
           $result = $myConnection->getRemoteClimateStatus(); //dernière localisation
           $climateStatus = json_decode($result->body);
     
-          log::add('myToyota', 'debug', '| Retour climatisation : ' . $result->body);
+          log::add('myToyota', 'debug', __('| Retour climatisation : ', __FILE__) . $result->body);
 
           // trips
           $to = date('Y-m-d');
@@ -933,7 +933,7 @@ class myToyota extends eqLogic {
           $result = $myConnection->getTripsEndpoint($from, $to, $route, $summary, $limit, $offset); //pour récupérer les 7 derniers jours
           $tripsEndpoint = json_decode($result->body);
     
-          log::add('myToyota', 'debug', '| retour trips' . $result->body);
+          log::add('myToyota', 'debug', __('| retour circuits', __FILE__) . $result->body);
           
           // moyennes sur 7 jours
           $fuelConsumption = 0;
@@ -959,7 +959,7 @@ class myToyota extends eqLogic {
             ', "distance_tot":' . strval($length / 1000) . ',"duree_tot": "' . $dureeTot . 
             '", "distance_ev":' . strval($evDistance / 1000) . ',"duree_ev":"' . $dureeEv . 
             '","conso_essence":' . strval($fuelConsumption / 1000) . ',"nb_trajets":' . $metatData->pagination->totalCount . '}';
-            log::add('myToyota', 'info', '| retour trips moyenne sur 7 jours: ' . $summarySem);          
+            log::add('myToyota', 'info', __('| retour trips moyenne sur 7 jours: ', __FILE__) . $summarySem);          
             $eqLogic->checkAndUpdateCmd('moy_sem', $summarySem);
 
           // les trajets des 7 derniers jours
@@ -971,7 +971,7 @@ class myToyota extends eqLogic {
               'distance_tot' => strval($trip->summary->length / 1000) , 'duree_tot' => myToyota::convertSecondes($trip->summary->duration) ,
               'distance_ev' => strval($trip->hdc->evDistance / 1000) , 'duree_ev' => myToyota::convertSecondes($trip->hdc->evTime) ,
               'conso_essence' => strval($trip->summary->fuelConsumption / 1000));
-              log::add('myToyota', 'info', '| retour résumé trajet n° ' . strval($i) . ' : ' . json_encode($trajet['trajet' . strval($i++)]));
+              log::add('myToyota', 'info', __('| retour résumé trajet n° ', __FILE__) . strval($i) . ' : ' . json_encode($trajet['trajet' . strval($i++)]));
           }
           $tripsJson = json_encode($trajet);
           $eqLogic->checkAndUpdateCmd('trajets', $tripsJson);
@@ -981,21 +981,21 @@ class myToyota extends eqLogic {
         // Santé du véhicule
         $result = $myConnection->statusHealth(); //dernière localisation
         $body = json_decode($result->body);
-        log::add('myToyota', 'debug', '| Retour santé véhicule : ' . $result->body);
+        log::add('myToyota', 'debug', __('| Retour santé véhicule : ', __FILE__) . $result->body);
         if ($body->status == 'SUCCESS'){
           $sante = $body->payload;
           if ($sante->quantityOfEngOilIcon[0] == ''){
           $table_messages['checkControlMessages'] = array( "type" => "ENGINE_OIL ", "date" => '', "mileage" => '', "state" => '', "title" => "Huile moteur", "description" => "", "severity" => 'OK' );
   
           $eqLogic->checkAndUpdateCmd('vehicleMessages', json_encode($table_messages));
-          log::add('myToyota', 'info', '| retour message santé  : ' . json_encode($table_messages['checkControlMessages']));
+          log::add('myToyota', 'info', __('| retour message santé  : ', __FILE__) . json_encode($table_messages['checkControlMessages']));
           }
         }
 
         // services et entretien
         $result = $myConnection->historiqueService();
         $body = json_decode($result->body);
-        log::add('myToyota', 'debug', '| Retour services et entretien : ' . $result->body);
+        log::add('myToyota', 'debug', __('| Retour services et entretien : ', __FILE__) . $result->body);
         if ($body->status->messages[0]->description == 'Request Processed successfully'){
           $histoservice = $body->payload->serviceHistories;
           $i=1;
@@ -1005,7 +1005,7 @@ class myToyota extends eqLogic {
               'operations'=> $service->operationsPerformed, 'ro_number' => $service->roNumber,
               'categorie' => $service->serviceCategory, 'garage' => $service->serviceProvider,
               'concessionaire' => $service->servicingDealer);
-              log::add('myToyota', 'info', '| retour résumé services n° ' . strval($i) . ' : ' . json_encode($services['service' . strval($i++)]));
+              log::add('myToyota', 'info', __('| retour résumé services n° ', __FILE__) . strval($i) . ' : ' . json_encode($services['service' . strval($i++)]));
           }
           $servicesJson = json_encode($services);
           $eqLogic->checkAndUpdateCmd('services', $servicesJson);
@@ -1014,12 +1014,12 @@ class myToyota extends eqLogic {
         
 
         //fin du traitement
-        log::add('myToyota', 'info', '| fin du traitement pour le véhicule ' . strval($nomvehicule) . ' avec ID ' . $idvehicule);
+        log::add('myToyota', 'info', __('| fin du traitement pour le véhicule ', __FILE__) . strval($nomvehicule) . ' avec ID ' . $idvehicule);
         log::add('myToyota', 'info', '| ------------------------------------------------------------------------');
 
       } else {
       log::add('myToyota', 'info', '| ------------------------------------------------------------------------');
-      log::add('myToyota', 'info', '| Démarrage Interrogation serveur myToyota impossible, ID inconnu ou nul');
+      log::add('myToyota', 'info', __('| Démarrage Interrogation serveur myToyota impossible, ID inconnu ou nul', __FILE__));
       }
 
     }
@@ -1112,7 +1112,7 @@ class myToyota extends eqLogic {
         $lng2 = 0;
       }
       $nomvehicule = $eqLogic->getName();
-      log::add('myToyota', 'info', '| dernière position de ' . $nomvehicule . ': Lat et long ' . $lat2 . ' ' . $lng2);
+      log::add('myToyota', 'info', __('| dernière position de ', __FILE__) . $nomvehicule . ': Lat et long ' . $lat2 . ' ' . $lng2);
       
       $earth_radius = 6371; // Terre = sphère de 6371km de rayon
       $rla1 = deg2rad( floatval($lat1) );
@@ -1130,7 +1130,7 @@ class myToyota extends eqLogic {
       //$eqLogic = myToyota::getToyotaEqLogic($vin);
       $nomvehicule = $eqLogic->getName();
       $distance = myToyota::getDistanceLocation2($eqLogic, $latitude, $longitude); //en metres
-      log::add('myToyota', 'info', '| ' . $nomvehicule . ': distance avec le domicile ' . $distance . ' mètre(s)');
+      log::add('myToyota', 'info', '| ' . $nomvehicule . __(': distance avec le domicile ', __FILE__) . $distance . __(' mètre(s)', __FILE__));
 			$eqLogic->checkAndUpdateCmd('distance', $distance);
 			if ( $distance <= $eqLogic->getConfiguration("home_distance") ) { $eqLogic->checkAndUpdateCmd('presence', 1); }
 			else { $eqLogic->checkAndUpdateCmd('presence', 0); }
@@ -1159,17 +1159,17 @@ class myToyota extends eqLogic {
       $myConnection = $eqLogic->getConnection();
       $result = $myConnection->getLocationEndPoint();
       $location = json_decode($result->body);
-      log::add('myToyota', 'debug', '| Retour recherche véhicule : ' . $result->body);
+      log::add('myToyota', 'debug', __('| Retour recherche véhicule : ', __FILE__) . $result->body);
       if ( isset($location->payload->vehicleLocation) ) { 
         $gps_coordinates = $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude;
         $eqLogic->checkAndUpdateCmd(CMD_LAST_UPDATE,date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
         $eqLogic->checkAndUpdateCmd(CMD_GPS_COORDINATES, $gps_coordinates);
-        log::add('myToyota', 'info', '| Dernière localisation connue: "' . 
+        log::add('myToyota', 'info', __('| Dernière localisation connue: "', __FILE__) . 
           $location->payload->vehicleLocation->latitude . ',' . $location->payload->vehicleLocation->longitude . '" le ' . 
           date("d-m-Y à G:i:s", strtotime($location->payload->vehicleLocation->locationAcquisitionDatetime)));
           return $gps_coordinates;
       } else {
-        log::add('myToyota', 'error', 'le serveur ne répond pas');
+        log::add('myToyota', 'error', __('le serveur ne répond pas', __FILE__));
         return false;
       }
     }
@@ -1189,13 +1189,13 @@ class myToyota extends eqLogic {
               break;
           default:
               $constructeur = 'Inconnu';
-              log::add('myToyota', 'warning', '| Marque inconnue : ' . $brand);
+              log::add('myToyota', 'warning', __('| Marque inconnue : ', __FILE__) . $brand);
               return null;
               break;
         }
         log::add($fichierLog, 'debug', '| Result user : '. substr($username,0,3) . '***' . substr($username,-3,3) . ' ; password : '. substr($password,0,2) . '***' . substr($password,-2,2) . ' ; vin : '. substr($vin,0,3) . '***' . substr($vin,-3,3) . ' ; constructeur : ' . $constructeur);
         if (empty($vin) || empty($username) || empty($password) || empty($brand)) {
-          log::add($fichierLog, 'error', '| Configuration manquante ou invalide pour la connexion.');
+          log::add($fichierLog, 'error', __('| Configuration manquante ou invalide pour la connexion.', __FILE__));
           return null; // ou throw new Exception("Configuration manquante");
         }
         $myConnection = new MyToyota_API($username, $password, $vin, $brand, $fichierLog);
@@ -1209,7 +1209,7 @@ class myToyota extends eqLogic {
       $result = $myConnection->remoteCommande($commande, $fichierLog); //commande envoyées vers véhicule
       $resultCmde = json_decode($result->body);
 
-      log::add($fichierLog, 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
+      log::add($fichierLog, 'debug', '| retour ' . $result->body . __(' à la commande : ', __FILE__) . $commande);
 
     }
 
@@ -1220,7 +1220,7 @@ class myToyota extends eqLogic {
       $result = $myConnection->remoteClimate($commande, $fichierLog); //commande envoyées vers véhicule
       $resultCmde = json_decode($result->body);
 
-      log::add($fichierLog, 'debug', '| retour ' . $result->body . ' à la commande : '. $commande);
+      log::add($fichierLog, 'debug', '| retour ' . $result->body . __(' à la commande : ', __FILE__). $commande);
 
     }
 
@@ -1335,7 +1335,7 @@ class myToyotaCmd extends cmd {
             }
         } catch (Exception $e) {
             echo 'Exception : ',  $e->getMessage(), "\n";
-            log::add('myToyota', 'debug', '└─Command execution error : '.$logical.' - '.$e->getMessage());
+            log::add('myToyota', 'debug', __('└─Commande exécution erreur : ', __FILE__) .$logical.' - '.$e->getMessage());
         }
 		
 		$eqLogic->refreshWidget();

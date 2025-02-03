@@ -13,25 +13,25 @@
 		<div>
 			
 			<div class="col-xs-6" id="tile" style="height:100px; width: 185px;">
-				<div class="col-xs-8" id="titre_tile" style="height:50px;">Verrouillage</div>
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">{{ Verrouillage }}</div>
 				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-unlock-alt"></i></div>
 				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#doorLockState_id#"></span></div>
 			</div>
 			
 			<div class="col-xs-6" id="tile" style="height:100px; width:185px;">
-				<div class="col-xs-8" id="titre_tile" style="height:50px;">Sécurité</div>
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">{{ Sécurité }}</div>
 				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-shield-alt"></i></div>
 				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="securisedMode#id#"></span></div>
 			</div>
 			
 			<div class="col-xs-6 all_info_display#id#" id="tile" style="height:100px; width:185px;">
-				<div class="col-xs-8" id="titre_tile" style="height:50px;">Toutes les portes</div>
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">{{ Toutes les portes }}</div>
 				<div class="col-xs-4" id="icon_tile" style="height:50px;"><img src="plugins/myToyota/core/img/doors_blue.png" style="height:24px"></div>
 				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#allDoorsState_id#"></span></div>
 			</div>
 			
 			<div class="col-xs-6 all_info_display#id#" id="tile" style="height:100px; width:185px;">
-				<div class="col-xs-8" id="titre_tile" style="height:50px;">Toutes les fenêtres</div>
+				<div class="col-xs-8" id="titre_tile" style="height:50px;">{{ Toutes les fenêtres }}</div>
 				<div class="col-xs-4" id="icon_tile" style="height:50px;"><img src="plugins/myToyota/core/img/windows_blue.png" style="height:24px"></div>
 				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="Cmd#allWindowsState_id#"></span></div>
 			</div>
@@ -53,13 +53,13 @@
 
 			<!-- affichage si véhicule thermique ou PHEV -->
 			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:50px;">Niveau carburant</div>
+				<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:50px;">{{ Niveau carburant }}</div>
 				<div class="col-xs-4 combustion_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-gas-pump"></i></div>
 				<div class="col-xs-12 combustion_engine_txt#id#" id="value_tile" style="height:50px;"><span class="Cmd#remaining_fuel_id#"></span><span id="titre_tile"> %</span></div>
 			</div>
 			
 			<div class="col-xs-4 combustion_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:50px;">Autonomie thermique</div>
+				<div class="col-xs-8 combustion_engine_txt#id#" id="titre_tile" style="height:50px;">{{ Autonomie thermique }}</div>
 				<div class="col-xs-4 combustion_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-map-pin"></i></div>
 				<div class="col-xs-12 combustion_engine_txt#id#" id="value_tile" style="height:50px;"><span class="Cmd#beRemainingRangeFuelKm_id#"></span><span id="titre_tile"> km</span></div>
 			</div>
@@ -68,25 +68,25 @@
 							
 			<!-- affichage si véhicule électrique ou PHEV -->
 			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">Batterie</div>
+				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">{{ Batterie }}</div>
 				<div class="col-xs-4 electric_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-car-battery"></i></div>
 				<div class="col-xs-12 electric_engine_txt#id# #chargingLevelHv_history#" id="value_tile" style="height:50px;" data-cmd_id="#chargingLevelHv_id#"><span class="Cmd#chargingLevelHv_id#"></span><span id="titre_tile"> %</span></div>				
 			</div>
 							
 			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">Autonomie électrique</div>
+				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">{{ Autonomie électrique }}</div>
 				<div class="col-xs-4 electric_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-map-pin"></i></div>
 				<div class="col-xs-12 electric_engine_txt#id#" id="value_tile" style="height:50px;"><span class="Cmd#beRemainingRangeElectric_id#"></span><span id="titre_tile"> km</span></div>				
 			</div>
 			
 			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">Prise</div>
+				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">{{ Prise }}</div>
 				<div class="col-xs-4 electric_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-plug"></i></div>
 				<div class="col-xs-12 electric_engine_txt#id#" id="value_tile" style="height:50px;"><span class="Cmd#connectorStatus_id#"></span></div>				
 			</div>
 			
 			<div class="col-xs-4 electric_engine#id#" id="tile" style="height:100px; width:120px;">
-				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">Recharge</div>
+				<div class="col-xs-8 electric_engine_txt#id#" id="titre_tile" style="height:50px;">{{ Recharge }}</div>
 				<div class="col-xs-4 electric_engine_txt#id#" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-charging-station"></i></div>
 				<div class="col-xs-12 electric_engine_txt#id#" id="value_tile" style="height:30px;"><span class="Cmd#chargingStatus_id#"></span></div>
 				<div class="col-xs-12 electric_engine_txt#id#" id="value_tile_2" style="height:20px;"><span class="Cmd#chargingEndTime_id#"></span></div>					
@@ -144,7 +144,7 @@
 			</div>
 
 			<div class="col-xs-12" id="column" style="height:25px; width:385px;">
-				<div id="last_update">Dernière connexion avec le véhicule : <span class="Cmd#lastUpdate_id# state"></span></div>
+				<div id="last_update">{{ Dernière connexion avec le véhicule : }} <span class="Cmd#lastUpdate_id# state"></span></div>
 			</div>
 			
 		</div>

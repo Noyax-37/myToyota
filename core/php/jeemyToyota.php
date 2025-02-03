@@ -44,15 +44,15 @@ $var_to_log = '';
 if (isset($result['device'])) {
 	
     foreach ($result['device'] as $key => $data) {
-        log::add('myToyota','debug',"Message du programme myToyota. Id de l'équipement : " . $key);
+        log::add('myToyota','debug',__("Message du programme myToyota. Id de l'équipement : ", __FILE__) . $key);
         $eqlogic = eqLogic::byId(intval($key), 'myToyota');
         //if (is_object($eqlogic)) {
             foreach ($data as $key2 => $value) {
                 if ($key2 == 'vin'){
-                    log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = *****');
+                    log::add('myToyota','debug',__('Info récupérée : ', __FILE__) . $key2 . __(' valeur = *****', __FILE__));
                     $vin = $value;
                 } else {
-                    log::add('myToyota','debug','Info récupérée : ' . $key2 . ' valeur = ' . strval($value));
+                    log::add('myToyota','debug',__('Info récupérée : ', __FILE__) . $key2 . __(' valeur = ', __FILE__) . strval($value));
                 }
                 if ($key2 == 'PID'){
                     //log::add('myToyota','debug',"Message du programme myToyota. PId de l'équipement : " . $value);
