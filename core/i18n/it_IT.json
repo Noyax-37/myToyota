@@ -1,0 +1,97 @@
+{
+    "plugins\/myToyota\/core\/ajax\/myToyota.ajax.php": {
+        "401 - Accès non autorisé": "401 - Accesso non autorizzato"
+    },
+    "plugins\/myToyota\/core\/class\/myToyota.class.php": {
+        "Le mot de passe ne peut etre vide": "Le mot de passe ne peut etre vide"
+    },
+    "plugins\/myToyota\/core\/template\/dashboard\/myToyota_dashboard_flatdesign.html": {
+        "Aucune": "Aucune",
+        "Batterie": "Batterie",
+        "En cours": "In corso",
+        "Erreur": "Errore",
+        "Non": "No",
+        "Prise": "Prise",
+        "Rafraichir": "Aggiorna",
+        "Sécurité": "Sicurezza",
+        "Verrouiller": "Blocco",
+        "inconnue": "sconosciuto"
+    },
+    "plugins\/myToyota\/core\/template\/dashboard\/myToyota_panel_flatdesign.html": {
+        "Actions": "Stock",
+        "Aucune": "Aucune",
+        "Batterie": "Batterie",
+        "Charge": "Carico",
+        "Date": "Data",
+        "Distance": "Distance",
+        "Durée": "Durée",
+        "Erreur": "Errore",
+        "Fenêtre": "Fenêtre",
+        "Fermé": "Chiuso",
+        "Informations": "Informazioni",
+        "Ouvert": "Aperto",
+        "Porte": "Porte",
+        "Pression": "Pressione",
+        "Prise": "Prise",
+        "Rafraichir": "Aggiorna",
+        "Sécurité": "Sicurezza",
+        "Verrouiller": "Blocco",
+        "inconnue": "sconosciuto"
+    },
+    "plugins\/myToyota\/desktop\/js\/myToyota.js": {
+        "Afficher": "Mostra",
+        "Historiser": "Storicizza",
+        "Inverser": "Inverti",
+        "Tester": "Prova",
+        "Unité": "Unità",
+        "Valeur": "Valore"
+    },
+    "plugins\/myToyota\/desktop\/modal\/VehicleFinder.myToyota.php": {
+        "401 - Accès non autorisé": "401 - Accesso non autorizzato"
+    },
+    "plugins\/myToyota\/desktop\/modal\/myToyota.template.php": {
+        "401 - Accès non autorisé": "401 - Accesso non autorizzato"
+    },
+    "plugins\/myToyota\/desktop\/php\/myToyota.php": {
+        "401 - Accès non autorisé": "401 - Accesso non autorizzato",
+        "Action": "Azione",
+        "Actions": "Stock",
+        "Activer": "Attivare",
+        "Ajouter": "Ajouter",
+        "Aucun": "Nessuno",
+        "Catégorie": "Categoria",
+        "Commandes": "Comandi",
+        "Configuration": "Configurazione",
+        "Configuration avancée": "Configurazione avanzata",
+        "Description": "Descrizione",
+        "Dupliquer": "Duplicato",
+        "Equipement": "Dispositivo",
+        "Gestion": "Gestione",
+        "ID": "ID",
+        "Icône": "Icona",
+        "Informations": "Informazioni",
+        "Logical ID": "ID logico",
+        "Mot de passe": "Password",
+        "Nom": "Nome",
+        "Objet parent": "Oggetto padre",
+        "Options": "Opzioni",
+        "Rechercher": "Ricercare",
+        "Sauvegarder": "Sauvegarder",
+        "Supprimer": "Supprimer",
+        "Texte": "Texte",
+        "Type": "Tipo",
+        "Valeur": "Valore",
+        "Visible": "Visibile"
+    },
+    "plugins\/myToyota\/desktop\/php\/panel.php": {
+        "401 - Accès non autorisé": "401 - Accesso non autorizzato",
+        "Rechercher": "Ricercare"
+    },
+    "plugins\/myToyota\/plugin_info\/configuration.php": {
+        "Version": "Versione"
+    },
+    "plugins\/myToyota\/plugin_info\/install.php": {
+        "Installation": "Installazione",
+        "Mise à jour": "Mise à jour"
+    }
+}
