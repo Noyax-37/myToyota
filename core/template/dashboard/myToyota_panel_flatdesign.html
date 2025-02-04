@@ -983,7 +983,7 @@
 	
 	//----- Tires
 	jeedom.cmd.update['#tireFrontLeft_target_id#'] = function(_options) {
-        $('.Cmd#tireFrontLeft_target_id#').empty().append('<span title="{{Consigne gonflage : }}'+_options.display_value+' bar"><span class="Cmd#tireFrontLeft_pressure_id#"></span></span>');
+        $('.Cmd#tireFrontLeft_target_id#').empty().append('<span title="{{Consigne gonflage :}} '+_options.display_value+' bar"><span class="Cmd#tireFrontLeft_pressure_id#"></span></span>');
     }
 	jeedom.cmd.update['#tireFrontLeft_target_id#']({display_value:'#tireFrontLeft_target#'});
 	
@@ -998,7 +998,7 @@
 	jeedom.cmd.update['#tireFrontLeft_pressure_id#']({display_value:'#tireFrontLeft_pressure#'});
 	
 	jeedom.cmd.update['#tireFrontRight_target_id#'] = function(_options) {
-        $('.Cmd#tireFrontRight_target_id#').empty().append('<span title="{{Consigne gonflage : }}'+_options.display_value+' bar"><span class="Cmd#tireFrontRight_pressure_id#"></span></span>');
+        $('.Cmd#tireFrontRight_target_id#').empty().append('<span title="{{Consigne gonflage :}} '+_options.display_value+' bar"><span class="Cmd#tireFrontRight_pressure_id#"></span></span>');
     }
 	jeedom.cmd.update['#tireFrontRight_target_id#']({display_value:'#tireFrontRight_target#'});
 	
@@ -1008,7 +1008,7 @@
 	jeedom.cmd.update['#tireFrontRight_pressure_id#']({display_value:'#tireFrontRight_pressure#'});
 	
 	jeedom.cmd.update['#tireRearLeft_target_id#'] = function(_options) {
-        $('.Cmd#tireRearLeft_target_id#').empty().append('<span title="{{Consigne gonflage : }}'+_options.display_value+' bar"><span class="Cmd#tireRearLeft_pressure_id#"></span></span>');
+        $('.Cmd#tireRearLeft_target_id#').empty().append('<span title="{{Consigne gonflage :}} '+_options.display_value+' bar"><span class="Cmd#tireRearLeft_pressure_id#"></span></span>');
     }
 	jeedom.cmd.update['#tireRearLeft_target_id#']({display_value:'#tireRearLeft_target#'});
 	
@@ -1080,16 +1080,15 @@
 	};
 	jeedom.cmd.update['#vehicleMessages_id#']({display_value:'#services#'});
 	
-	//----- Messages // sera à compléter avec les infos qui me seront fournies // voir myBMW_panel
+	//----- Messages // sera à compléter avec les infos qui me seront fournies // voir mytoyota_panel
 	jeedom.cmd.update['#vehicleMessages_id#'] = function(_options) {
        	var messages = json_decode(_options.display_value);
 		for (message in messages){
 			//var trajets = JSON.parse(_options.display_value);
 			console.log('-------- icones -----' + message);
 			if ( message.type == "ENGINE_OIL" ) {
-				//if ( message.severity == "OK" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_grey.png" height="50" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-				if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_orange.png" height="50" title="{{Huile moteur - Criticité : }}'+message.severity+'<br/>'+message.description+'">'); }
-				if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_red.png" height="50" title="{{Huile moteur - Criticité : }}'+message.severity+'<br/>'+message.description+'">'); }
+				if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_orange.png" height="50" title="{{Huile moteur - Criticité :}} '+message.severity+'<br/>'+message.description+'">'); }
+				if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_red.png" height="50" title="{{Huile moteur - Criticité :}} '+message.severity+'<br/>'+message.description+'">'); }
 			}
 			$('.icon_brake#id#').empty();
 			$('.icon_tire#id#').empty();
@@ -1383,7 +1382,7 @@
 
 	//----- Statistics
 	jeedom.cmd.update['#totalEnergyCharged_id#'] = function(_options) {
-		$('.Cmd#totalEnergyCharged_id#').empty().append('<span>{{Charge totale : ~ }}'+_options.display_value+' kWh</span>');
+		$('.Cmd#totalEnergyCharged_id#').empty().append('<span>{{Charge totale : ~}} '+_options.display_value+' kWh</span>');
 	}
 	jeedom.cmd.update['#totalEnergyCharged_id#']({display_value:'#totalEnergyCharged#'});
 

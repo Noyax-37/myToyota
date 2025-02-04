@@ -48,7 +48,7 @@ function myToyota_update($direct=true) {
     foreach (eqLogic::byType('myToyota') as $eqLogic) {
         $eqLogic->save();
         myToyota::synchro_post_update($eqLogic);
-        log::add('myToyota', 'debug', __('| Mise à jour des commandes effectuée pour l\'équipement ', __FILE__). $eqLogic->getHumanName());
+        log::add('myToyota', 'debug', __('| Mise à jour des commandes effectuée pour l\'équipement', __FILE__). ' ' . $eqLogic->getHumanName());
     }
 
     log::add('myToyota','info',__('| (ré)installation des crons si nécessaire', __FILE__));

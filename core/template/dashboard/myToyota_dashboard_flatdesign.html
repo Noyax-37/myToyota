@@ -403,16 +403,15 @@
 
 
 		//----- Messages
-	//----- Messages // sera à compléter avec les infos qui me seront fournies // voir myBMW_panel
+	//----- Messages // sera à compléter avec les infos qui me seront fournies // voir myToyota_panel
 	jeedom.cmd.update['#vehicleMessages_id#'] = function(_options) {
        	var messages = json_decode(_options.display_value);
 		for (message in messages){
 			//var trajets = JSON.parse(_options.display_value);
 			console.log('-------- icones -----' + message);
 			if ( message.type == "ENGINE_OIL" ) {
-				//if ( message.severity == "OK" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_grey.png" height="50" title="Huile moteur - Criticité : '+message.severity+'<br/>'+message.description+'">'); }
-				if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_orange.png" height="50" title="{{Huile moteur - Criticité :}} '+message.severity+'<br/>'+message.description+'">'); }
-				if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myBMW/core/img/oil_red.png" height="50" title="{{Huile moteur - Criticité :}} '+message.severity+'<br/>'+message.description+'">'); }
+				if ( (message.severity == "LOW" && message.description != '') || message.severity == "MEDIUM" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_orange.png" height="50" title="{{Huile moteur - Criticité :}} '+message.severity+'<br/>'+message.description+'">'); }
+				if ( message.severity == "HIGH" || message.severity == "CRITICAL" ) { $('.icon_oil#id#').empty().append('<img src="plugins/myToyota/core/img/oil_red.png" height="50" title="{{Huile moteur - Criticité :}} '+message.severity+'<br/>'+message.description+'">'); }
 			}
 			$('.icon_brake#id#').empty();
 			$('.icon_tire#id#').empty();
