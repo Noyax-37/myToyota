@@ -19,7 +19,7 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 if (!class_exists('myToyota_API')) {
-	require_once __DIR__ . '/../../3rdparty/myToyota_API.php';
+	require_once __DIR__ . '/../php/myToyota_API.php';
 }
 
 //définition des constantes
@@ -410,7 +410,10 @@ class myToyota extends eqLogic {
 		}
 		$replace['#template#'] = $template;
 
-		return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, $template, 'myToyota')));
+    $filepath = 'plugins/'.__CLASS__.'/core/template/'.$version.'/'.$template.'.html';
+    $content = getTemplate('core', $version, $template, 'myToyota');
+    $content = translate::exec($content, $filepath);
+    return $this->postToHtml($_version, template_replace($replace, $content));
 	}
     
 

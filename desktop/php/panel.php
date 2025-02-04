@@ -16,7 +16,7 @@ if (!$eqLogics) {
 <div class="row row-overflow" id="bckgd">
 
 	<div class="col-lg-2 col-md-3 col-sm-4" id="div_display_eqLogicList">
-		<span id="title" style="font-size: 14px; line-height: 2.32"><i class="fas fa-car"></i>{{ Mes véhicules}}</span>
+		<span id="title" style="font-size: 14px; line-height: 2.32"><i class="fas fa-car"></i> {{Mes véhicules}}</span>
 		<div class="bs-sidebar">
 			<ul id="ul_object" class="nav nav-list bs-sidenav">
 				<!-- <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/></li> -->
