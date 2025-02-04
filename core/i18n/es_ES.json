@@ -244,8 +244,7 @@
     "plugins\/myToyota\/desktop\/js\/myToyota.js": {
         "Afficher": "Mostrar",
         "Année de fabrication du véhicule": "Año de fabricación del vehículo",
-        "Aucunes coordonnées disponibles": "No se dispone de datos de contacto",
-        "Erreur lors de la récupération des données": "Error de recuperación de datos",
+        "Aucunes coordonnées disponibles": "No hay datos de contacto disponibles", ah        "Erreur lors de la récupération des données": "Error de recuperación de datos",
         "Erreur lors de la récupération des informations": "Error al recuperar información",
         "Erreur lors de la synchronisation": "Error de sincronización",
         "Historiser": "Guardar historial",
