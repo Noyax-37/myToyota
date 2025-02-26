@@ -172,7 +172,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div id="div_pwd" class="form-group">		
 									<label class="col-sm-4 control-label">{{Mot de passe}}</label>
 									<div class="col-sm-4 pass_show">
-										<input type="password" id="pwd" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="password" placeholder="Mot de passe utilisé pour vous connecter à votre compte My BMW" style="margin-bottom:0px !important">
+										<input type="password" id="pwd" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="password" placeholder="{{Mot de passe utilisé pour vous connecter à votre compte myToyota}}" style="margin-bottom:0px !important">
 										<span class="eye fa fa-fw fa-eye toggle-pwd"></span>
 									</div>
 							</div>
@@ -180,7 +180,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div class="form-group">		
 									<label class="col-sm-4 control-label">{{Marque}}</label>
 									<div class="col-sm-4">
-										<select id="sel_brand" class="eqLogicAttr form-control" style="margin: 1px 0px;" data-l1key="configuration" data-l2key="vehicle_brand" placeholder="Marque du véhicule">
+										<select id="sel_brand" class="eqLogicAttr form-control" style="margin: 1px 0px;" data-l1key="configuration" data-l2key="vehicle_brand" placeholder="{{Marque du véhicule}}">
 											<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>
 											<option value="T">Toyota</option>
 											<option value="L">Lexus</option>
@@ -191,28 +191,28 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div id="div_vin" class="form-group">		
 								<label class="col-sm-4 control-label">{{VIN}}</label>
 								<div class="col-sm-4">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_vin" placeholder="Numéro d'identification de votre véhicule disponible sur la carte grise (E)">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_vin" placeholder="{{Numéro d'identification de votre véhicule disponible sur la carte grise (E)}}">
 								</div>
 							</div>
 
 							<div class="form-group">		
 								<label class="col-sm-4 control-label">{{Modèle}}</label>
 								<div id="div_model" class="col-sm-4">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_model" placeholder="Modèle du véhicule" readonly>
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_model" placeholder="{{Modèle du véhicule}}" readonly>
 								</div>
 							</div>
 							
 							<div class="form-group">		
 								<label class="col-sm-4 control-label">{{Date fabrication}}</label>
 								<div id="div_year" class="col-sm-4">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_year" placeholder="Date de fabrication du véhicule" readonly>
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="vehicle_year" placeholder="{{Date de fabrication du véhicule}}" readonly>
 								</div>
 							</div>
 							
 							<div class="form-group">		
 								<label class="col-sm-4 control-label">{{Type}}</label>
 								<div id="div_type" class="col-sm-4">
-									<input type="text" class="eqLogicAttr form-control" style="margin: 1px 0px;" data-l1key="configuration" data-l2key="vehicle_type" placeholder="Type de véhicule" readonly>
+									<input type="text" class="eqLogicAttr form-control" style="margin: 1px 0px;" data-l1key="configuration" data-l2key="vehicle_type" placeholder="{{Type de véhicule}}" readonly>
 								</div>
 							</div>
 
@@ -234,8 +234,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="col-sm-4">
 									<select id="sel_panel_icon" class="eqLogicAttr form-control" style="margin-bottom: 3px;" data-l1key="configuration" data-l2key="panel_doors_windows_display">
 										<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>	
-										<option value="text">Texte</option>
-										<option value="icon">Icône</option>
+										<option value="text">{{Texte}}</option>
+										<option value="icon">{{Icône}}</option>
 									</select>
 								</div>
 							</div>
@@ -244,8 +244,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="col-sm-4">
 									<select id="sel_panel_color" class="eqLogicAttr form-control" style="margin-bottom: 3px;" data-l1key="configuration" data-l2key="panel_color_icon_closed">
 										<option value="" disabled selected hidden>{{Choisir dans la liste}}</option>
-										<option value="default">Noir & blanc</option>
-										<option value="green">Vert</option>
+										<option value="default">{{Noir & blanc}}</option>
+										<option value="green">{{Vert}}</option>
 									</select>
 								</div>
 							</div>
@@ -278,10 +278,10 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div class="form-group" id="gps_coordinates">		
 								<label class="col-sm-4 control-label help" data-help="{{Coordonnées GPS au format xx.xxxxxx  et pas xx°xx'xx.x''N}}">{{Coordonnées GPS}}</label>
 								<div class="col-sm-2" id="div_home_lat">
-									<input id="input_home_lat" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_lat" placeholder="Lat. domicile">
+									<input id="input_home_lat" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_lat" placeholder="{{Lat. domicile}}">
 								</div>
 								<div class="col-sm-2" id="div_home_long">
-									<input id="input_home_long" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_long" placeholder="Long. domicile">
+									<input id="input_home_long" type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_long" placeholder="{{Long. domicile"}}>
 								</div>
 								<div class="col-sm-2">
 									<a class="btn btn-primary btn-sm cmdAction" id="bt_gps" style="height:32px; width:32px; padding-top:8px" title="{{Récupérer la position actuelle du véhicule}}"><i class="fas fa-location-arrow"></i></a>
@@ -291,7 +291,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div class="form-group">	
 								<label class="col-sm-4 control-label">{{Distance max (en m)}}</label>
 								<div class="col-sm-4">
-									<input id="home_distance"type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_distance" placeholder="Distance max avec votre domicile (en m)">
+									<input id="home_distance"type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="home_distance" placeholder="{{Distance max avec votre domicile (en m)}}">
 								</div>
 							</div>
 							
@@ -323,7 +323,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</fieldset>
 							<br><span> </span><br>
 							<div class="col-lg-8">
-								<legend><i class="fas fa-info"></i> Capacités du véhicule => seules les capacités à "true" peuvent éventuellement être utilisées (cliquer sur "Synchroniser" pour mettre à jour la liste)</legend>
+								<legend><i class="fas fa-info"></i> {{Capacités du véhicule => seules les capacités à "true" peuvent éventuellement être utilisées (cliquer sur "Synchroniser" pour mettre à jour la liste)}}</legend>
 								<div id="div_capabilities">
 									<textarea id=get_capabilities rows="2" cols="50" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="capabilities" readonly></textarea>
 								</div>
@@ -432,9 +432,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				li_html += '<ul class="list-group" style="text-align: left">';
 				nbcapabilities = Object.keys($('#get_capabilities').value()).length;
 				if (nbcapabilities == 0){
-					li_html += '<li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: center;"><span class="label capabilities"> Aucune capacité trouvée </span><br/>';
+					li_html += '<li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: center;"><span class="label capabilities"> {{Aucune capacité trouvée}} </span><br/>';
 				} else {
-					li_html += '<br><li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: left; font-weight: bold;"><span class="label capabilities"><U> Capacités potentiellement utilisables dans cette liste: </U></span><br/>';
+					li_html += '<br><li class="list-group-item" style="margin-bottom: 5px; padding: 0px 0px 5px 0px; text-align: left; font-weight: bold;"><span class="label capabilities"><U> {{Capacités potentiellement utilisables dans cette liste:}} </U></span><br/>';
 					for (capabilitie in capabilities){
 						console.log('-------- Tab capabilities -----' + capabilitie);
 						if (capabilities[capabilitie] == true){

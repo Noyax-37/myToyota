@@ -33,12 +33,12 @@ if (!file_exists(dirname(__FILE__) . '/info.json')) {
 }
 $data = json_decode(file_get_contents(dirname(__FILE__) . '/info.json'), true);
 if (!is_array($data)) {
-    log::add('myToyota','warning','Impossible de décoder le fichier info.json');
+    log::add('myToyota','warning',__('Impossible de décoder le fichier info.json', __FILE__));
 }
 try {
     $core_version = $data['pluginVersion'];
 } catch (\Exception $e) {
-    log::add('myToyota','warning','Impossible de récupérer la version.');
+    log::add('myToyota','warning',__('Impossible de récupérer la version.', __FILE__));
 }
 ?>
 
