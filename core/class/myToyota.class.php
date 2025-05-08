@@ -625,8 +625,20 @@ class myToyota extends eqLogic {
         $result = $myConnection->remoteElectric($fichierLog);
         log::add($fichierLog, 'info', __('| Retour remote electric :', __FILE__) . ' ' . $result->body);
 
+        $result = $myConnection->remoteChargingSchedule($fichierLog);
+        log::add($fichierLog, 'info', __('| Retour remote charging schedule :', __FILE__) . ' ' . $result->body);
+
+        $result = $myConnection->remoteElectricCommand($fichierLog);
+        log::add($fichierLog, 'info', __('| Retour remote electric command:', __FILE__) . ' ' . $result->body);
+
         $result = $myConnection->remoteClimateSettings($fichierLog);
         log::add($fichierLog, 'info', '| Retour remote climate setting :' . ' ' . $result->body);
+
+        $result = $myConnection->remoteRefreshClimateStatus($fichierLog);
+        log::add($fichierLog, 'info', '| Retour remote refresh climate status :' . ' ' . $result->body);
+
+        $result = $myConnection->remoteRefreshStatus($fichierLog);
+        log::add($fichierLog, 'info', '| Retour remote refresh status :' . ' ' . $result->body);
 
         $result = $myConnection->remoteACReservation($fichierLog);
         log::add($fichierLog, 'info', '| Retour remote AC reservation :' . ' ' . $result->body);
@@ -634,12 +646,24 @@ class myToyota extends eqLogic {
         $result = $myConnection->statusHealth($fichierLog); //dernière localisation
         log::add($fichierLog, 'info', __('| Retour santé véhicule :', __FILE__) . ' ' . $result->body);
 
+        $result = $myConnection->remoteRealtimeStatus($fichierLog); //dernière localisation
+        log::add($fichierLog, 'info', __('| Retour realtime status :', __FILE__) . ' ' . $result->body);
+
         $result = $myConnection->historiqueService($fichierLog);
         log::add($fichierLog, 'info', __('| Retour historique services :', __FILE__) . ' ' . $result->body);
 
+        $result = $myConnection->remoteServiceHistory($vin, $fichierLog);
+        log::add($fichierLog, 'info', __('| Retour service history :', __FILE__) . ' ' . $result->body);
+
+        $result = $myConnection->remoteProfileSetting($fichierLog);
+        log::add($fichierLog, 'info', __('| Retour remote profile setting :', __FILE__) . ' ' . $result->body);
+
+        $result = $myConnection->remoteLegacyProfileSettings($fichierLog);
+        log::add($fichierLog, 'info', __('| Retour remote legacy profile setting :', __FILE__) . ' ' . $result->body);
+
       }
 
-
+      
 
       log::add($fichierLog, 'info', __('| recup terminée', __FILE__));
 	  }
