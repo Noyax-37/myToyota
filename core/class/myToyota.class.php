@@ -894,7 +894,7 @@ class myToyota extends eqLogic {
             log::add('myToyota', 'debug', '| Retour télémétrie électrique : ' . $result_elec->body);
     
             if ($body_elec->status->detailedDescription == 'Request Completed Successfully'){
-              $telemetrie_elec = $body->payload;
+              $telemetrie_elec = $body_elec->payload;
               if ( isset($telemetrie_elec->fuelLevel) ){
                 $eqLogic->checkAndUpdateCmd('remaining_fuel', $telemetrie_elec->fuelLevel);
                 log::add('myToyota', 'info', __('| Retour élement: niveau réservoir :', __FILE__) . ' ' . $telemetrie_elec->fuelLevel . '%');
