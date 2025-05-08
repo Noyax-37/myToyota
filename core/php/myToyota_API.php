@@ -7,6 +7,7 @@ class myToyota_API
     const ACCESS_TOKEN_URL = 'https://b2c-login.toyota-europe.com/oauth2/realms/root/realms/tme/access_token';
     const AUTHENTICATE_URL = 'https://b2c-login.toyota-europe.com/json/realms/root/realms/tme/authenticate?authIndexType=service&authIndexValue=oneapp';
     const AUTHORIZE_URL = 'https://b2c-login.toyota-europe.com/oauth2/realms/root/realms/tme/authorize?client_id=oneapp&scope=openid+profile+write&response_type=code&redirect_uri=com.toyota.oneapp:/oauth2Callback&code_challenge=plain&code_challenge_method=plain';
+
     
     const VEHICLE_ASSOCIATION_ENDPOINT = '/v1/vehicle-association/vehicle';
     const VEHICLE_GUID_ENDPOINT = '/v2/vehicle/guid';
@@ -16,6 +17,7 @@ class myToyota_API
     const VEHICLE_GLOBAL_REMOTE_ELECTRIC_STATUS_ENDPOINT = '/v1/global/remote/electric/status';
     const VEHICLE_TELEMETRY_ENDPOINT = '/v3/telemetry'; // update device 
     const VEHICLE_NOTIFICATION_HISTORY_ENDPOINT = '/v2/notification/history';
+    const VEHICLE_SERVICE_HISTORY_ENDPOINT = '/v1/vehicle/%s/service/history';
     const VEHICLE_TRIPS_ENDPOINT = '/v1/trips?from=%s&to=%s&route=%s&summary=%s&limit=%s&offset=%s';
     const VEHICLE_SERVICE_HISTORY_ENDPONT = '/v1/servicehistory/vehicle/summary';
     const VEHICLE_REMOTE_CLIMATE_STATUS = '/v1/global/remote/climate-status'; // update device 
@@ -579,6 +581,8 @@ class myToyota_API
 		return $return;
     }
 
+    // ajout à partir d'ici
+
     public function remoteClimateSettings($fichierLog='myToyota') // A tester sur véhicule capable
     {
         $this->_checkAuth($fichierLog);
@@ -599,8 +603,87 @@ class myToyota_API
 		return $return;
     }
 
+    public function remoteElectricCommand($fichierLog='myToyota') // A tester sur véhicule capable
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_ELECTRIC_COMMAND;
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
 
+    public function remoteChargingSchedule($fichierLog='myToyota') // A tester sur véhicule capable
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CHARGING_SCHEDULE;
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
 
+    public function remoteProfileSetting($fichierLog='myToyota') // A tester, utile?
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_PROFILE_SETTING;
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function remoteRealtimeStatus($fichierLog='myToyota') // A tester sur véhicule capable
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_REALTIME_STATUS;
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function remoteLegacyProfileSettings($fichierLog='myToyota') // A tester sur véhicule capable
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_LEGACY_PROFILE_SETTING;
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function remoteRefreshClimateStatus($fichierLog='myToyota') // A tester sur véhicule capable
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_REFRESH_CLIMATE_STATUS;
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function remoteRefreshStatus($fichierLog='myToyota') // A tester sur véhicule capable
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_REFRESH_STATUS;
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+    public function remoteServiceHistory($vin, $fichierLog='myToyota') // A tester sur véhicule capable
+    {
+        $this->_checkAuth($fichierLog);
+		$url = $this::API_BASE_URL . sprintf($this::VEHICLE_SERVICE_HISTORY_ENDPOINT, $vin);
+        $headers = $this->_setHeadersUpdate();
+        log::add($fichierLog, 'debug', '| Url : '. $url);      
+		$return = $this->_request($url, 'GET', null, $headers);
+		return $return;
+    }
+
+            
     //    const VEHICLE_TRIPS_ENDPOINT = '/v1/trips?from=%s&to=%s&route=%s&summary=%s&limit=%s&offset=%s';
 
     /* test 
