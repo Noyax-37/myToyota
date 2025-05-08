@@ -721,10 +721,8 @@ class myToyota extends eqLogic {
         //
         if (isset($remoteStatus->payload->vehicleStatus)) {
           foreach ($remoteStatus->payload->vehicleStatus as $category) {
-            log::add('myToyota', 'info', '| Catégorie : ' . $category->category);
             foreach ($category->sections as $section) {
-              log::add('myToyota', 'info', '| Section : ' . $section->section);
-              switch ($section->section) {
+                switch ($section->section) {
                     case 'carstatus_item_driver_door':
                       $element = 'doorDriverFront';
                       $doors++;
@@ -748,7 +746,7 @@ class myToyota extends eqLogic {
                     case 'carstatus_item_hood':
                       $element = 'hood_state';
                       $doors++;
-                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen); // Assuming hood can't be locked
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen); // Assuming windows can't be locked
                       break;
                     case 'carstatus_item_rear_hatch':
                       $element = 'trunk_state';

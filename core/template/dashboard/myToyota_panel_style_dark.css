@@ -4,28 +4,22 @@
 }
 
 .myToyota_panel_flat #column {
-    margin : 0px 0px 0px 0px !important;
+	margin : 0px 0px 0px 0px !important;
 	padding : 0px 0px 0px 0px !important;
 }
-
 
 .myToyota_panel_flat #titre {
 	font-size : 14px;
 	text-align:center;
-    color : #FFFFFF !important;
+	color : #FFFFFF !important;
 }
 
 .myToyota_panel_flat #refresh {
-    color : #FFFFFF !important;
+	color : #FFFFFF !important;
 }
 
 .myToyota_panel_flat #logo {
 	height: 1.5em;
-}
-
-.myToyota_panel_flat #column {
-    margin : 0px 0px 0px 0px !important;
-	padding : 0px 0px 0px 0px !important;
 }
 
 .myToyota_panel_flat #tile {
@@ -147,7 +141,7 @@
 .myToyota_panel_flat #last_update {
 	font-size : 12px;
 	text-align:center;
-    color : #FFFFFF !important;
+	color : #FFFFFF !important;
 	margin : 10px 0px 5px 0px !important;
 }
 

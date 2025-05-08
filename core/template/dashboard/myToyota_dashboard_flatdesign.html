@@ -1,4 +1,4 @@
-<div id="myToyota_widget_flat_ID" class="eqLogic-widget eqLogic noResize myToyota_widget_flat myToyota_widget_flat_#id# myToyota" style="min-width:400px !important; max-width:400px !important; min-height:670px; max-height:670px; text-align:center; border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="dashboard">
+<div id="myToyota_widget_flat_ID" class="eqLogic-widget eqLogic noResize myToyota_widget_flat myToyota_widget_flat_#id# myToyota" style="min-width:400px !important; max-width:400px !important; min-height:690px; max-height:690px; text-align:center; border:#border#; border-radius:#border-radius#; background-color:#background-color#; color:#color#; #style#;" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="dashboard">
 
 	<div class="text-center widget-name" style="max-height:24px !important">
 		<span class="reportModeVisible">#name_display# <span class="object_name">#object_name#</span></span>
@@ -19,7 +19,7 @@
 			</div>
 			
 			<div class="col-xs-6" id="tile" style="height:100px; width:185px;">
-				<div class="col-xs-8" id="titre_tile" style="height:50px;"> {{Sécurité}} </div>
+				<div class="col-xs-8" id="titre_tile" style="height:50px;"> {{Sécurité (+alarme)}} </div>
 				<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-shield-alt"></i></div>
 				<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="securisedMode#id#"></span></div>
 			</div>
@@ -145,6 +145,9 @@
 
 			<div class="col-xs-12" id="column" style="height:25px; width:385px;">
 				<div id="last_update"> {{Dernière connexion avec le véhicule :}}  <span class="Cmd#lastUpdate_id# state"></span></div>
+			</div>
+			<div class="col-xs-12" id="column" style="height:25px; width:385px;">
+				<div id="last_update"> {{Dernière com avec serveur (max 30 min) :}}  <span class="Cmd#lastCommunication_id# state"></span></div>
 			</div>
 			
 		</div>
@@ -400,6 +403,30 @@
 			}
 		}
 		jeedom.cmd.update['#lastUpdate_id#']({display_value:'#lastUpdate#'});	
+
+		//----- Last communication
+		jeedom.cmd.update['#lastCommunication_id#'] = function(_options) {
+			if ( _options.display_value == "not available")  { 
+				$('.Cmd#lastCommunication_id#').empty().append('<span>'+"{{inconnue}}"+'</span>');
+			} else { 
+				var now = new Date().getTime();
+				var comm = new Date(_options.display_value).getTime();
+				const options = {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit'
+				};
+				if (comm < now - 2100000) { // 35 minutes en millisecondes
+					$('.Cmd#lastCommunication_id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">'+new Date(comm).toLocaleString('fr-FR', options)+'</span>');
+				} else {
+					$('.Cmd#lastCommunication_id#').empty().append('<span>'+new Date(comm).toLocaleString('fr-FR', options)+'</span>'); 
+				}
+			}
+		}
+		jeedom.cmd.update['#lastCommunication_id#']({display_value:'#lastCommunication#'});	
 
 
 		//----- Messages

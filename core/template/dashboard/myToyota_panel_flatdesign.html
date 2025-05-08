@@ -98,7 +98,7 @@
 				</div>
 				
 				<div class="col-xs-6" id="tile" style="height:100px; width:215px;">
-					<div class="col-xs-8" id="titre_tile" style="height:50px;">{{Sécurité}}</div>
+					<div class="col-xs-8" id="titre_tile" style="height:50px;">{{Sécurité (+alarme)}}</div>
 					<div class="col-xs-4" id="icon_tile" style="height:50px;"><i class="fas fa-lg fa-shield-alt"></i></div>
 					<div class="col-xs-12" id="value_tile" style="height:50px;"><span class="securisedMode#id#"></span></div>
 				</div>
@@ -400,7 +400,7 @@
 							<div class="myToyota_panel_flat_titre_tile " id="titre_tile">{{Trajets PHEV}}
 							</div>
 							<div >
-								<table class="fixed_header tableCmdHyd" id="table_cmd_phev">
+								<table class="fixed_header tableCmdPhev" id="table_cmd_phev">
 								</table>
 							</div>
 						</div>
@@ -460,6 +460,9 @@
 			<!-- Last row -->
 			<div class="col-xs-12" id="column">
 				<div id="last_update">{{Dernière connexion avec le véhicule :}} <span class="Cmd#lastUpdate_id# state"></span></div>
+			</div>
+			<div class="col-xs-12" id="column">
+				<div id="last_update">{{Dernière interrogation du serveur myToyota (max 30 minutes) :}} <span class="Cmd#lastCommunication_id# state"></span></div>
 			</div>
 
 		</div>
@@ -1434,6 +1437,7 @@
 		jeedom.cmd.update['#trajets_id#'] = function(_options) {
 			$(function() {
 				var trajets = JSON.parse(_options.display_value);
+
 				var table_html= "";
 				table_html += '<thead><tr class="myToyota_stat_tr">';
 				table_html += '<th class="myToyota_stat_th" style="width: 15%; height: 25px; padding-left: 12px;">{{Début (cliquer pour voir)}}</th>';
@@ -1476,8 +1480,32 @@
 		}
 		jeedom.cmd.update['#lastUpdate_id#']({display_value:'#lastUpdate#'});	
 
+	//----- Last communication
+	jeedom.cmd.update['#lastCommunication_id#'] = function(_options) {
+			if ( _options.display_value == "not available")  { 
+				$('.Cmd#lastCommunication_id#').empty().append('<span>'+"{{inconnue}}"+'</span>');
+			} else { 
+				var now = new Date().getTime();
+				var comm = new Date(_options.display_value).getTime();
+				const options = {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit'
+				};
+				if (comm < now - 2100000) { // 35 minutes en millisecondes
+					$('.Cmd#lastCommunication_id#').empty().append('<span style="color:rgb(185,58,62) !important; font-weight:bold !important">'+new Date(comm).toLocaleString('fr-FR', options)+'</span>');
+				} else {
+					$('.Cmd#lastCommunication_id#').empty().append('<span>'+new Date(comm).toLocaleString('fr-FR', options)+'</span>'); 
+				}
+			}
+		}
+		jeedom.cmd.update['#lastCommunication_id#']({display_value:'#lastCommunication#'});	
 
-	//----- Optional parameters
+
+	//--'ional parameters
 	setDoorsWindowsDisplay#id#();
 	
 
