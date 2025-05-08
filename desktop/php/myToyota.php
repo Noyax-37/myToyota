@@ -327,7 +327,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div id="div_capabilities">
 									<textarea id=get_capabilities rows="2" cols="50" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="capabilities" readonly></textarea>
 								</div>
-								<div id="liste_msg" class="label table_capabilities"></div>
+								<div id="liste_capa" class="label table_capabilities"></div>
 							</div>
 
 						</form>  

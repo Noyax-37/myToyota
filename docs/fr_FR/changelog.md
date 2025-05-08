@@ -4,6 +4,12 @@
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+
+# V1.5
+
+- modification suite à changement des conditions d'accès à l'API de Toyota
+- qq corrections de code par ci par là
+
 # V1.4
 
 - ajout d'un fichier log destiné entièrement à la récupération des données suite à action sur bouton "données brutes" de l'équipement. C'est dans ce fichier que vous retrouverez les données utiles à m'envoyer si vous souhaitez rajouter des fonctionnalités au plugin

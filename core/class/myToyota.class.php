@@ -743,10 +743,10 @@ class myToyota extends eqLogic {
                       $doors++;
                       myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
                       break;
-                    case 'hood':
+                    case 'carstatus_item_hood':
                       $element = 'hood_state';
                       $doors++;
-                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen, $doorLocked, $doorUnlocked);
+                      myToyota::checkStatus($section->values, $status, $doorClosed, $doorOpen); // Assuming windows can't be locked
                       break;
                     case 'carstatus_item_rear_hatch':
                       $element = 'trunk_state';

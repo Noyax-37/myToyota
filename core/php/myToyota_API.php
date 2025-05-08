@@ -57,6 +57,7 @@ class myToyota_API
     const VEHICLE_REMOTE_REFRESH_STATUS = '/v1/global/remote/refresh-status'; // commande clim ? (POST)
 
     //Parameters
+    const CLIENT_VERSION = '2.14.0';
     private $username;
     private $password;
     private $vin;
@@ -126,6 +127,18 @@ class myToyota_API
 
     //fin zone de tests ************************************************************************
 
+    private function guidv4($data = null) {
+        try {
+            $data = $data ?? random_bytes(16);
+            assert(strlen($data) == 16);
+            $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+            $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+            return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        } catch (\Exception $e) {
+            log::add('myToyota', 'error', '| Erreur dans guidv4: ' . $e->getMessage());
+            throw new \Exception('Impossible de générer un UUID');
+        }
+    }
 
     public function  __construct($username, $password, $vin, $brand, $fichierLog)
     {
@@ -140,7 +153,7 @@ class myToyota_API
         $this->fichierLog = $fichierLog;
         $this->timeout = 60;
 
-        if (file_exists(dirname(__FILE__).'/../data/myToyota_' . $this->vin . '_token.json')) {
+        if (file_exists(dirname(__FILE__).'/../../data/myToyota_' . $this->vin . '_token.json')) {
             $this->loadToken();
 		}
 		else  {
@@ -206,28 +219,6 @@ class myToyota_API
         ];
     }
 
-
-	private function _setDefaultHeaders()   {				//Define default headers
-		
-		// $datetime = (new \DateTime('now', new DateTimeZone(config::byKey('timezone'))))->format('c');
-		$headers = [
-          'x-appbrand: ' . $this->brand,
-          'x-osname: iOS',
-          'user-agent: Toyota/134 CFNetwork/1410.0.3 Darwin/22.6.0',
-          'x-region: EU',
-          'region: EU',
-          'brand: ' . $this->brand,
-          'x-channel: ONEAPP',
-          'x-osversion: 16.7.2',
-          'x-brand: ' . $this->brand,
-          'accept-language: fr-FR,fr;q=0.9',
-          'x-appversion: 2.4.2',
-          'accept: */*',
-          'accept-api-version: resource=2.0, protocol=1.0',
-        ];
-     return $headers;
-	}
-
     private function createToken() {
 
 		$this->uuid = null;
@@ -240,7 +231,7 @@ class myToyota_API
 
 	private function loadToken() {
 	
-		$array = json_decode(file_get_contents(dirname(__FILE__).'/../data/myToyota_' . $this->vin . '_token.json'), true);
+		$array = json_decode(file_get_contents(dirname(__FILE__).'/../../data/myToyota_' . $this->vin . '_token.json'), true);
 		$this->uuid = $array['uuid'];
 		$this->access_token = $array['access_token'];
 		$this->refresh_token = $array['refresh_token'];
@@ -256,7 +247,7 @@ class myToyota_API
 			'refresh_token' => $this->refresh_token,
             'token_expiration' => $this->token_expiration,
 		);
-		file_put_contents(dirname(__FILE__).'/../data/myToyota_' . $this->vin . '_token.json', json_encode($array));
+		file_put_contents(dirname(__FILE__).'/../../data/myToyota_' . $this->vin . '_token.json', json_encode($array));
 	}
 
 
@@ -283,7 +274,6 @@ class myToyota_API
         //Stage 1 - Callbacks
         $url = $this::AUTHENTICATE_URL;
         $method = 'POST';
-        $headers = $this->_setDefaultHeaders();
         $headers = [
             'x-correlationid: B10AD742-22D0-4211-8B25-B213BE9A8A00',
             'Cookie: route=e8e8b55de08efd3c4b34265c0069d319',
@@ -291,20 +281,19 @@ class myToyota_API
                       
         $result1 = $this->_request($url, $method, null, $headers);
         $data1 = $result1->body;
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 1 - body : ' . $data1);
+        log::add($fichierLog, 'info', '| Result getToken() myToyota - Stage 1 - body : ' . $data1);
         
         
         //Stage 2 - set Username
         $url = $this::AUTHENTICATE_URL;
         $method = 'POST';
-        $headers = $this->_setDefaultHeaders();
         $headers = [
             'x-correlationid: BDD02A22-CD76-4877-90A9-196EDA5DC695',
             'content-type: application/json',
         ];
                       
         $result2 = $this->_request($url, $method, $data1, $headers);
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 2 - body : ' . $result2->body);
+        log::add($fichierLog, 'info', '| Result getToken() myToyota - Stage 2 - body : ' . $result2->body);
         $data2 = $result2->body;
         $data2 = json_decode($data2, true);
         $data2['callbacks'][0]['input'][0]['value'] = $this->username;
@@ -314,14 +303,13 @@ class myToyota_API
         //Stage 3 - set Password
         $url = $this::AUTHENTICATE_URL;
         $method = 'POST';
-        $headers = $this->_setDefaultHeaders();
         $headers = [
             'x-correlationid: BDD02A22-CD76-4877-90A9-196EDA5DC695',
             'content-type: application/json',
         ];
                        
         $result3 = $this->_request($url, $method, $data2, $headers);
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 3 - body : ' . $result3->body);
+        log::add($fichierLog, 'info', '| Result getToken() myToyota - Stage 3 - body : ' . $result3->body);
         $data3 = $result3->body;
         $data3 = json_decode($data3, true);
         $data3['callbacks'][0]['input'][0]['value'] = $this->password;
@@ -331,7 +319,6 @@ class myToyota_API
         //Stage 4 - get tokenId
         $url = $this::AUTHENTICATE_URL;
         $method = 'POST';
-        $headers = $this->_setDefaultHeaders();
         $headers = [
             'x-correlationid: BDD02A22-CD76-4877-90A9-196EDA5DC695',
             'content-type: application/json',
@@ -340,13 +327,12 @@ class myToyota_API
         $result4 = $this->_request($url, $method, $data3, $headers);
         $data4 = json_decode($result4->body, true);
         $tokenId = $data4['tokenId'];
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 4 - tokenId : ' . $tokenId);
+        log::add($fichierLog, 'info', '| Result getToken() myToyota - Stage 4 - tokenId : ' . $tokenId);
 
 
         //Stage 5 - get authorizationCode
         $url = $this::AUTHORIZE_URL;
         $method = 'GET';
-        $headers = $this->_setDefaultHeaders();
         $headers = [
             'x-correlationid: 0F34C246-11F3-4584-AB13-0EA5DA96CB41',
             'Cookie: iPlanetDirectoryPro='.$tokenId,
@@ -358,13 +344,12 @@ class myToyota_API
         {
             $authorizationCode = $matches[1];
         }
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 5 - authorizationCode : ' . $authorizationCode);
+        log::add($fichierLog, 'info', '| Result getToken() myToyota - Stage 5 - authorizationCode : ' . $authorizationCode);
 
 
         //Stage 6 - exchangeToken
         $url = $this::ACCESS_TOKEN_URL;
         $method = 'POST';
-        $headers = $this->_setDefaultHeaders();
         $headers = [
             'authorization: Basic b25lYXBwOm9uZWFwcA==',
             'x-correlationid: E422A08C-1A04-415E-BB08-2386EE06CF90',
@@ -380,7 +365,7 @@ class myToyota_API
         $data = http_build_query($data);
                 
         $result6 = $this->_request($url, $method, $data, $headers);
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota - Stage 6 - body : ' . $result6->body);
+        log::add($fichierLog, 'info', '| Result getToken() myToyota - Stage 6 - body : ' . $result6->body);
         $data6 = json_decode($result6->body, true);
         
         //$this->uuid = '';
@@ -388,13 +373,13 @@ class myToyota_API
       
       	
         $uuid = json_decode(base64_decode(strtr($expToken[1], '-_', '+/,'), true));
-      	log::add($fichierLog, 'debug', '| uuid: ' . $uuid->{'uuid'});
+      	log::add($fichierLog, 'info', '| uuid: ' . $uuid->{'uuid'});
         $this->uuid = $uuid->{'uuid'};
         $this->access_token = $data6['access_token'];
         $this->refresh_token = $data6['refresh_token'];
         $this->token_expiration = time() + $data6['expires_in'];
         $this->saveToken();
-        log::add($fichierLog, 'debug', '| Result getToken() myToyota : ' . __('Token sauvegardé', __FILE__));
+        log::add($fichierLog, 'info', '| Result getToken() myToyota : ' . __('Token sauvegardé', __FILE__));
 
     }
 
@@ -403,7 +388,6 @@ class myToyota_API
     {
             $url = $this::ACCESS_TOKEN_URL;
             $method = 'POST';
-            $headers = $this->_setDefaultHeaders();
             $headers = [
                 'authorization: Basic b25lYXBwOm9uZWFwcA==',
                 'x-correlationid: E422A08C-1A04-415E-BB08-2386EE06CF90',
@@ -439,14 +423,19 @@ class myToyota_API
     }
 
 	private function _setHeadersUpdate()   {				//Define headers update data
+
         $headers = [
             'content-type: application/json',
             'x-api-key: tTZipv6liF74PwMfk9Ed68AQ0bISswwf3iHQdqcF',
+            'API-KEY: tTZipv6liF74PwMfk9Ed68AQ0bISswwf3iHQdqcF',
             'x-guid: ' . $this->uuid,
             'guid: ' . $this->uuid,
             'authorization: Bearer ' . $this->access_token,
             'x-channel: ONEAPP',
-            'x-brand: ' . $this->brand,
+            'x-client-ref: ' . hash_hmac('sha256', $this->uuid, self::CLIENT_VERSION),
+            'x-correlationid: ' . $this->guidv4(),
+            'x-appversion: ' . self::CLIENT_VERSION,
+              'x-brand: ' . $this->brand,
             'user-agent: okhttp/4.10.0',
             'vin: ' . $this->vin,
         ];
@@ -499,16 +488,6 @@ class myToyota_API
 		$url = $this::API_BASE_URL . $this::VEHICLE_REMOTE_CLIMATE_STATUS;
         $headers = $this->_setHeadersUpdate();
         log::add($fichierLog, 'debug', '| Url : '. $url);      
-		$return = $this->_request($url, 'GET', null, $headers);
-		return $return;
-    }
-
-    public function getClimateRemoteStatus()
-    {
-        $this->_checkAuth();
-		$url = $this::API_BASE_URL . $this::VEHICLE_CLIMATE_REMOTE_STATUS;
-        $headers = $this->_setHeadersUpdate();
-        log::add('myToyota', 'debug', '| Url : '. $url);      
 		$return = $this->_request($url, 'GET', null, $headers);
 		return $return;
     }
